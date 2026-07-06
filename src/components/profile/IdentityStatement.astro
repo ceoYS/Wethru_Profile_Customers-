@@ -1,0 +1,16 @@
+---
+interface Props {
+  statement: string;
+  support?: string;
+}
+
+const { statement, support } = Astro.props;
+---
+
+<section class="profile-section profile-section--loose" aria-label="핵심 소개">
+  <div class="identity">
+    <span class="identity__mark" aria-hidden="true">”</span>
+    <p class="identity__statement">{statement}</p>
+    {support && <p class="identity__support">{support}</p>}
+  </div>
+</section>

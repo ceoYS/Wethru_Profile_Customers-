@@ -1,0 +1,88 @@
+---
+import { publishedCustomers, draftCustomers } from "../data/customer-index";
+import "../styles/global.css";
+import "../styles/profile-base.css";
+import "../styles/themes/navy-black-white.css";
+import "../styles/themes/warm-editorial.css";
+import "../styles/themes/graphite-minimal.css";
+
+// Operator dashboard — internal showcase, not a public landing page.
+---
+
+<html lang="ko" data-theme="navy-black-white">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>WeThru Profile Customers</title>
+    <meta
+      name="description"
+      content="WeThru 고객 온라인 명함/프로필 관리 대시보드"
+    />
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+  <body>
+    <div class="profile-shell">
+      <main class="dashboard">
+        <span class="eyebrow">WeThru — Profile Factory</span>
+        <h1 class="dashboard__title">WeThru Profile Customers</h1>
+        <p class="dashboard__subtitle">
+          고객 온라인 명함/프로필 관리 페이지입니다. 새 고객은
+          <code>npm run new:profile</code>로 추가하고, 배포 전
+          <code>npm run validate:customers</code>를 실행합니다.
+        </p>
+
+        <div class="dashboard__grid">
+          {publishedCustomers.map((customer) => (
+            <a class="customer-card" href={`/profiles/${customer.slug}/`}>
+              <div class="customer-card__meta">
+                <span class="eyebrow">{customer.person.roleLine}</span>
+                <span class="customer-card__status customer-card__status--published">
+                  published
+                </span>
+              </div>
+              <h2 class="customer-card__name">
+                {customer.person.name}
+                {customer.person.englishName && ` · ${customer.person.englishName}`}
+              </h2>
+              <p class="customer-card__tagline">{customer.person.tagline}</p>
+              <p class="customer-card__tags">
+                <span>{customer.theme}</span>
+                <span>{customer.layout}</span>
+              </p>
+            </a>
+          ))}
+        </div>
+
+        {draftCustomers.length > 0 && (
+          <p class="dashboard__drafts">
+            Drafts:{" "}
+            {draftCustomers.map((customer, index) => (
+              <>
+                {index > 0 && " · "}
+                <a href={`/profiles/${customer.slug}/`}>
+                  {customer.person.name || customer.slug}
+                </a>
+              </>
+            ))}
+          </p>
+        )}
+      </main>
+
+      <footer class="wethru-footer">
+        <p class="wethru-footer__mark">WeThru internal — do not share</p>
+      </footer>
+    </div>
+  </body>
+</html>
+
+<style>
+  code {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    color: var(--accent);
+    border: 1px solid var(--line-soft);
+    border-radius: 4px;
+    padding: 0.1em 0.4em;
+  }
+</style>

@@ -1,0 +1,31 @@
+---
+import type { ProfileProof } from "../../types/profile";
+
+interface Props {
+  proofs: ProfileProof[];
+}
+
+const { proofs } = Astro.props;
+---
+
+{proofs.length > 0 && (
+  <section class="profile-section--tight" aria-label="주요 성과">
+    <dl class="proof-strip">
+      {proofs.map((proof) => (
+        <div class="proof-strip__item" title={proof.description}>
+          <dt class="proof-strip__label" set:text={proof.label} />
+          <dd class="proof-strip__value" set:text={proof.value} />
+        </div>
+      ))}
+    </dl>
+  </section>
+)}
+
+<style>
+  /* dt visually below dd is confusing for screen readers — keep DOM order
+     label→value but render value first via flex. */
+  .proof-strip__item {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+</style>

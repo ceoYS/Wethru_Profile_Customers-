@@ -1,0 +1,38 @@
+---
+import type { ProfileExperience } from "../../types/profile";
+
+interface Props {
+  experiences: ProfileExperience[];
+  sectionNumber?: string;
+}
+
+const { experiences, sectionNumber = "02" } = Astro.props;
+---
+
+{experiences.length > 0 && (
+  <section class="profile-section" aria-labelledby="experience-title">
+    <div class="section-head">
+      <span class="section-head__number" aria-hidden="true">{sectionNumber}</span>
+      <h2 class="section-head__title" id="experience-title">경험</h2>
+      <span class="section-head__rule" aria-hidden="true"></span>
+    </div>
+
+    <ol class="timeline">
+      {experiences.map((experience) => (
+        <li class="timeline-entry">
+          <p class="timeline-entry__period">{experience.period}</p>
+          <h3 class="timeline-entry__company">{experience.company}</h3>
+          <p class="timeline-entry__role">{experience.role}</p>
+          <p class="timeline-entry__description">{experience.description}</p>
+          {experience.bullets.length > 0 && (
+            <ul class="timeline-entry__bullets">
+              {experience.bullets.map((bullet) => (
+                <li>{bullet}</li>
+              ))}
+            </ul>
+          )}
+        </li>
+      ))}
+    </ol>
+  </section>
+)}

@@ -1,0 +1,49 @@
+---
+import type { ProfileProject } from "../../types/profile";
+
+interface Props {
+  projects: ProfileProject[];
+  sectionNumber?: string;
+}
+
+const { projects, sectionNumber = "03" } = Astro.props;
+---
+
+{projects.length > 0 && (
+  <section class="profile-section" aria-labelledby="projects-title">
+    <div class="section-head">
+      <span class="section-head__number" aria-hidden="true">{sectionNumber}</span>
+      <h2 class="section-head__title" id="projects-title">프로젝트</h2>
+      <span class="section-head__rule" aria-hidden="true"></span>
+    </div>
+
+    <div class="project-list">
+      {projects.map((project) => (
+        <article class="project-card">
+          <div class="project-card__meta">
+            <div>
+              <h3 class="project-card__title">{project.title}</h3>
+              <p class="project-card__role">{project.role}</p>
+            </div>
+            <span class="project-card__period">{project.period}</span>
+          </div>
+
+          <dl class="project-card__steps">
+            <div class="project-step">
+              <dt>문제</dt>
+              <dd>{project.problem}</dd>
+            </div>
+            <div class="project-step">
+              <dt>접근</dt>
+              <dd>{project.approach}</dd>
+            </div>
+            <div class="project-step project-step--result">
+              <dt>결과</dt>
+              <dd>{project.result}</dd>
+            </div>
+          </dl>
+        </article>
+      ))}
+    </div>
+  </section>
+)}

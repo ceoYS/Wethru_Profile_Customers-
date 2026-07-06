@@ -1,0 +1,76 @@
+---
+import type { ProfileContact } from "../../types/profile";
+import CopyLinkButton from "../shared/CopyLinkButton.astro";
+
+interface Props {
+  contact: ProfileContact;
+  name: string;
+  sectionNumber?: string;
+}
+
+const { contact, name, sectionNumber = "04" } = Astro.props;
+const showEmail = Boolean(contact.email && contact.showEmail);
+// Phone is intentionally never rendered here. See src/types/profile.ts.
+---
+
+<section class="profile-section profile-section--loose" aria-labelledby="contact-title">
+  <div class="section-head">
+    <span class="section-head__number" aria-hidden="true">{sectionNumber}</span>
+    <h2 class="section-head__title" id="contact-title">Contact</h2>
+    <span class="section-head__rule" aria-hidden="true"></span>
+  </div>
+
+  <div class="contact-cta">
+    <p class="contact-cta__title">함께 이야기해보고 싶다면</p>
+    <p class="contact-cta__note">
+      협업, 채용, 프로젝트 제안 모두 환영합니다. 이메일을 남겨주시면
+      {name}님이 직접 확인합니다.
+    </p>
+
+    <div class="contact-cta__actions">
+      {showEmail && (
+        <a class="btn btn--primary" href={`mailto:${contact.email}`}>
+          이메일 보내기
+        </a>
+      )}
+      <CopyLinkButton label="이 프로필 공유하기" />
+    </div>
+
+    {showEmail && <p class="contact-cta__email">{contact.email}</p>}
+
+    {contact.links && contact.links.length > 0 && (
+      <ul class="contact-cta__links">
+        {contact.links.map((link) => (
+          <li>
+            <a href={link.href} rel="noopener noreferrer" target="_blank">
+              {link.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    )}
+  </div>
+</section>
+
+<style>
+  .contact-cta__links {
+    display: flex;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .contact-cta__links a {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 0.15rem;
+  }
+
+  .contact-cta__links a:hover {
+    border-bottom-color: var(--accent);
+  }
+</style>

@@ -1,0 +1,923 @@
+/* ==========================================================================
+   WeThru Profile Factory — structural layer
+   Everything here is keyed off theme tokens; nothing hardcodes color.
+   Layout variants ([data-layout=…]) rearrange the same sections so two
+   customers with the same theme still don't read as the same page.
+   ========================================================================== */
+
+.profile-shell {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-main {
+  width: min(100%, 68rem);
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 4vw, 2.5rem);
+  flex: 1;
+}
+
+/* --------------------------------------------------------------------------
+   Section rhythm — spacing deliberately uneven (9/7/10/8rem cadence) so the
+   page scrolls with editorial pacing instead of uniform template gaps.
+   -------------------------------------------------------------------------- */
+
+.profile-section {
+  padding-block: clamp(3.5rem, 9vw, 6.5rem);
+  border-top: 1px solid var(--line-soft);
+}
+
+.profile-section--tight {
+  padding-block: clamp(2.25rem, 6vw, 4rem);
+}
+
+.profile-section--loose {
+  padding-block: clamp(4.5rem, 11vw, 8rem);
+}
+
+.section-head {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: clamp(1.75rem, 4vw, 3rem);
+}
+
+.section-head__number {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--section-number-color);
+  letter-spacing: 0.1em;
+}
+
+.section-head__title {
+  font-size: clamp(1.35rem, 3vw, 1.9rem);
+  letter-spacing: -0.01em;
+}
+
+.section-head__rule {
+  flex: 1;
+  height: 1px;
+  background: var(--line-soft);
+  align-self: center;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: var(--eyebrow-tracking);
+  color: var(--muted);
+}
+
+/* --------------------------------------------------------------------------
+   Hero
+   -------------------------------------------------------------------------- */
+
+.hero {
+  padding-block: clamp(1.5rem, 4vw, 5rem) clamp(2.5rem, 6vw, 5rem);
+  display: grid;
+  gap: clamp(1.75rem, 4vw, 4rem);
+}
+
+.hero__copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.1rem;
+}
+
+.hero__eyebrow-row {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  width: 100%;
+}
+
+.hero__eyebrow-row::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--line-soft);
+}
+
+.hero__name {
+  font-size: clamp(2.6rem, 8vw, 4.4rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
+.hero__english-name {
+  display: block;
+  margin-top: 0.35rem;
+  font-family: var(--font-display);
+  font-size: clamp(0.95rem, 2.4vw, 1.25rem);
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: 0.24em;
+  color: var(--accent);
+}
+
+.hero__tagline {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 3.4vw, 1.8rem);
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--accent-strong);
+  max-width: 24ch;
+}
+
+.hero__summary {
+  font-size: clamp(0.95rem, 2.2vw, 1.05rem);
+  color: var(--muted);
+  max-width: 54ch;
+}
+
+.hero__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.badge {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  padding: 0.32rem 0.75rem;
+  white-space: nowrap;
+}
+
+.hero__cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.35rem;
+}
+
+/* --------------------------------------------------------------------------
+   Buttons
+   -------------------------------------------------------------------------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.78rem 1.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  border-radius: var(--radius-card);
+  transition: background-color 160ms ease, color 160ms ease,
+    border-color 160ms ease, transform 160ms ease;
+}
+
+.btn--primary {
+  background: var(--accent-strong);
+  color: var(--bg);
+  border: 1px solid var(--accent-strong);
+}
+
+.btn--primary:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+
+.btn--ghost {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--line);
+}
+
+.btn--ghost:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.btn--ghost[data-copied="true"] {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* --------------------------------------------------------------------------
+   Portrait — framed as an artifact, not an <img> dropped on the page.
+   Offset hairline frame + single glow bridges a white-background photo
+   into a dark UI without harsh edges.
+   -------------------------------------------------------------------------- */
+
+.portrait {
+  position: relative;
+  width: min(100%, 24rem);
+  margin-inline: auto;
+}
+
+.portrait__frame {
+  position: relative;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-photo);
+  background: var(--surface);
+  box-shadow: var(--photo-glow);
+  overflow: hidden;
+}
+
+.portrait__frame::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  border-radius: inherit;
+  /* Soft inner vignette melts a white studio backdrop into the navy field. */
+  box-shadow: inset 0 0 42px 6px color-mix(in srgb, var(--bg) 55%, transparent);
+}
+
+.portrait__frame img {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  object-position: top center;
+}
+
+/* Offset corner rule — the one decorative move this layout allows itself. */
+.portrait::after {
+  content: "";
+  position: absolute;
+  top: 0.9rem;
+  right: -0.9rem;
+  bottom: -0.9rem;
+  left: 0.9rem;
+  z-index: -1;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-photo);
+}
+
+.portrait__caption {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 0.85rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* Fallback when profile.webp has not been added yet: monogram card,
+   never a stock face. JS adds data-missing on img error. */
+.portrait__fallback {
+  display: none;
+  aspect-ratio: 4 / 5;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 0.75rem;
+  background: linear-gradient(160deg, var(--surface-strong), var(--surface));
+}
+
+.portrait__frame[data-missing="true"] img {
+  display: none;
+}
+
+.portrait__frame[data-missing="true"] .portrait__fallback {
+  display: flex;
+}
+
+.portrait__monogram {
+  font-family: var(--font-display);
+  font-size: 4rem;
+  font-style: italic;
+  color: var(--accent);
+  letter-spacing: 0.08em;
+}
+
+.portrait__fallback-note {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* --------------------------------------------------------------------------
+   Proof strip — small, dense, hairline-separated. Confident, not boastful.
+   -------------------------------------------------------------------------- */
+
+.proof-strip {
+  border-block: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr));
+}
+
+.proof-strip__item {
+  padding: 1.1rem 1rem 1.2rem;
+  text-align: center;
+  border-left: 1px solid var(--line-soft);
+}
+
+.proof-strip__item:first-child {
+  border-left: none;
+}
+
+.proof-strip__value {
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 2.6vw, 1.5rem);
+  font-weight: 600;
+  color: var(--accent-strong);
+  letter-spacing: 0.01em;
+}
+
+.proof-strip__label {
+  margin-top: 0.3rem;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* --------------------------------------------------------------------------
+   Identity statement — one oversized line, given room to breathe.
+   -------------------------------------------------------------------------- */
+
+.identity {
+  text-align: left;
+  max-width: 46rem;
+}
+
+.identity__mark {
+  font-family: var(--font-display);
+  font-size: 3rem;
+  line-height: 0.5;
+  color: var(--section-number-color);
+  display: block;
+  margin-bottom: 1.4rem;
+}
+
+.identity__statement {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 4.6vw, 2.7rem);
+  font-weight: 500;
+  line-height: 1.35;
+  color: var(--accent-strong);
+}
+
+.identity__support {
+  margin-top: 1.5rem;
+  font-size: clamp(0.95rem, 2.2vw, 1.05rem);
+  color: var(--muted);
+  max-width: 58ch;
+}
+
+/* --------------------------------------------------------------------------
+   Strengths — 2×2 on desktop with a vertical stagger on the even column
+   so it never reads as a bootstrap card row.
+   -------------------------------------------------------------------------- */
+
+.strength-grid {
+  display: grid;
+  gap: 1.1rem;
+}
+
+.strength-card {
+  position: relative;
+  padding: 1.6rem 1.5rem 1.7rem;
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+}
+
+.strength-card::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 1.5rem;
+  width: 2.25rem;
+  height: 2px;
+  background: var(--accent);
+}
+
+/* Widen the top rule progressively — sibling cards stop being clones. */
+.strength-card:nth-child(2)::before { width: 3.25rem; }
+.strength-card:nth-child(3)::before { width: 4.25rem; }
+.strength-card:nth-child(4)::before { width: 5.25rem; }
+
+.strength-card__index {
+  position: absolute;
+  top: 1.35rem;
+  right: 1.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--section-number-color);
+  letter-spacing: 0.12em;
+}
+
+.strength-card__eyebrow {
+  display: block;
+  margin-bottom: 0.85rem;
+}
+
+.strength-card__title {
+  font-size: 1.12rem;
+  margin-bottom: 0.55rem;
+  color: var(--accent-strong);
+}
+
+.strength-card__description {
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+@media (min-width: 768px) {
+  .strength-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.4rem;
+  }
+
+  .strength-card:nth-child(even) {
+    transform: translateY(1.35rem);
+  }
+
+  .strength-grid {
+    padding-bottom: 1.35rem; /* room for the staggered column */
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Experience — vertical timeline, not a résumé table.
+   -------------------------------------------------------------------------- */
+
+.timeline {
+  position: relative;
+  display: grid;
+  gap: clamp(2.25rem, 5vw, 3.5rem);
+  padding-left: 1.75rem;
+}
+
+.timeline::before {
+  content: "";
+  position: absolute;
+  top: 0.4rem;
+  bottom: 0.4rem;
+  left: 0.31rem;
+  width: 1px;
+  background: linear-gradient(var(--line), var(--line-soft));
+}
+
+.timeline-entry {
+  position: relative;
+}
+
+.timeline-entry::before {
+  content: "";
+  position: absolute;
+  top: 0.42rem;
+  left: -1.75rem;
+  width: 0.65rem;
+  height: 0.65rem;
+  border: 1px solid var(--accent);
+  background: var(--bg);
+  border-radius: 50%;
+}
+
+.timeline-entry__period {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+}
+
+.timeline-entry__company {
+  margin-top: 0.4rem;
+  font-size: clamp(1.15rem, 2.6vw, 1.35rem);
+  color: var(--accent-strong);
+}
+
+.timeline-entry__role {
+  margin-top: 0.15rem;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--accent);
+}
+
+.timeline-entry__description {
+  margin-top: 0.8rem;
+  font-size: 0.95rem;
+  color: var(--text);
+  max-width: 58ch;
+}
+
+.timeline-entry__bullets {
+  margin-top: 0.85rem;
+  display: grid;
+  gap: 0.45rem;
+  max-width: 58ch;
+}
+
+.timeline-entry__bullets li {
+  position: relative;
+  padding-left: 1.1rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.timeline-entry__bullets li::before {
+  content: "—";
+  position: absolute;
+  left: 0;
+  color: var(--section-number-color);
+}
+
+/* --------------------------------------------------------------------------
+   Projects — editorial cards with an explicit 문제 → 접근 → 결과 spine.
+   -------------------------------------------------------------------------- */
+
+.project-list {
+  display: grid;
+  gap: 1.4rem;
+}
+
+.project-card {
+  padding: 1.7rem 1.6rem 1.8rem;
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+}
+
+.project-card__meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  border-bottom: 1px solid var(--line-soft);
+  padding-bottom: 0.9rem;
+}
+
+.project-card__title {
+  font-size: 1.08rem;
+  color: var(--accent-strong);
+}
+
+.project-card__role {
+  margin-top: 0.25rem;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 0.88rem;
+  color: var(--accent);
+}
+
+.project-card__period {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.project-card__steps {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.project-step {
+  display: grid;
+  grid-template-columns: 4.5rem 1fr;
+  gap: 0.9rem;
+  align-items: start;
+}
+
+.project-step dt {
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--section-number-color);
+  padding-top: 0.25rem;
+}
+
+.project-step dd {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.project-step--result dd {
+  color: var(--accent-strong);
+}
+
+@media (min-width: 900px) {
+  .project-list {
+    grid-template-columns: repeat(3, 1fr);
+    align-items: stretch;
+  }
+
+  /* Middle card sits slightly lower — breaks the perfect row. */
+  .project-card:nth-child(2) {
+    transform: translateY(1.25rem);
+  }
+
+  .project-list {
+    padding-bottom: 1.25rem;
+  }
+
+  .project-step {
+    grid-template-columns: 1fr;
+    gap: 0.3rem;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Contact CTA
+   -------------------------------------------------------------------------- */
+
+.contact-cta {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.4rem;
+}
+
+.contact-cta__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 4vw, 2.2rem);
+  font-weight: 500;
+  color: var(--accent-strong);
+}
+
+.contact-cta__note {
+  font-size: 0.95rem;
+  color: var(--muted);
+  max-width: 40ch;
+}
+
+.contact-cta__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.contact-cta__email {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+/* --------------------------------------------------------------------------
+   WeThru footer — present, quiet.
+   -------------------------------------------------------------------------- */
+
+.wethru-footer {
+  border-top: 1px solid var(--line-soft);
+  padding: 1.5rem clamp(1.25rem, 4vw, 2.5rem) 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  width: min(100%, 68rem);
+  margin-inline: auto;
+}
+
+.wethru-footer__mark {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.wethru-footer__mark a {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+
+.wethru-footer__mark a:hover {
+  border-bottom-color: var(--accent);
+}
+
+/* ==========================================================================
+   LAYOUT VARIANTS
+   Same sections, different architecture. Choosing a layout per customer is
+   what keeps the factory from producing clones.
+   ========================================================================== */
+
+/* --- editorial-split: hero split left copy / right portrait ------------- */
+
+@media (min-width: 900px) {
+  [data-layout="editorial-split"] .hero {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    align-items: center;
+  }
+
+  [data-layout="editorial-split"] .portrait {
+    margin-inline: 0 0.9rem;
+    justify-self: end;
+  }
+}
+
+/* Mobile order for editorial-split: photo → name → tagline → summary →
+   CTA → badges (badges demoted below the fold; CTA must stay in view). */
+@media (max-width: 899px) {
+  [data-layout="editorial-split"] .hero__media {
+    order: -1;
+  }
+
+  [data-layout="editorial-split"] .portrait {
+    width: min(100%, 17rem);
+  }
+
+  [data-layout="editorial-split"] .portrait__frame img,
+  [data-layout="editorial-split"] .portrait__fallback {
+    aspect-ratio: 1 / 1;
+    object-position: top center;
+  }
+
+  [data-layout="editorial-split"] .hero__badges {
+    order: 10;
+  }
+}
+
+/* --- dossier: centered narrow column, portrait small and inline --------- */
+
+[data-layout="dossier"] .hero {
+  grid-template-columns: 1fr;
+  justify-items: center;
+  text-align: center;
+}
+
+[data-layout="dossier"] .hero__copy {
+  align-items: center;
+}
+
+[data-layout="dossier"] .hero__tagline,
+[data-layout="dossier"] .hero__summary {
+  margin-inline: auto;
+}
+
+[data-layout="dossier"] .portrait {
+  width: min(100%, 15rem);
+}
+
+[data-layout="dossier"] .hero__media {
+  order: -1;
+}
+
+[data-layout="dossier"] .identity {
+  margin-inline: auto;
+  text-align: center;
+}
+
+/* --- magazine: full-bleed feel, oversized name, portrait offset right ---- */
+
+@media (min-width: 900px) {
+  [data-layout="magazine"] .hero {
+    grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
+    align-items: end;
+  }
+
+  [data-layout="magazine"] .hero__name {
+    font-size: clamp(3.5rem, 10vw, 6.5rem);
+  }
+
+  [data-layout="magazine"] .portrait {
+    transform: translateY(2.5rem);
+  }
+}
+
+/* --- minimal-card: everything compressed into a business-card block ------ */
+
+[data-layout="minimal-card"] .profile-main {
+  width: min(100%, 46rem);
+}
+
+[data-layout="minimal-card"] .hero {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+  padding: clamp(1.75rem, 5vw, 3rem);
+  margin-top: clamp(1.5rem, 5vw, 3.5rem);
+}
+
+[data-layout="minimal-card"] .portrait {
+  width: min(100%, 12rem);
+}
+
+/* --------------------------------------------------------------------------
+   Index (operator dashboard) — intentionally utilitarian but composed.
+   -------------------------------------------------------------------------- */
+
+.dashboard {
+  width: min(100%, 60rem);
+  margin-inline: auto;
+  padding: clamp(2.5rem, 7vw, 5rem) clamp(1.25rem, 4vw, 2.5rem) 4rem;
+  flex: 1;
+}
+
+.dashboard__title {
+  font-size: clamp(1.8rem, 5vw, 2.6rem);
+  letter-spacing: -0.02em;
+}
+
+.dashboard__subtitle {
+  margin-top: 0.75rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+  max-width: 60ch;
+}
+
+.dashboard__grid {
+  margin-top: clamp(2rem, 5vw, 3rem);
+  display: grid;
+  gap: 1.1rem;
+  grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+}
+
+.customer-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding: 1.5rem 1.4rem;
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-card);
+  text-decoration: none;
+  transition: border-color 160ms ease, transform 160ms ease;
+}
+
+.customer-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.customer-card__meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.customer-card__status {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.22rem 0.55rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--line);
+  color: var(--muted);
+}
+
+.customer-card__status--published {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.customer-card__name {
+  font-size: 1.25rem;
+  color: var(--accent-strong);
+}
+
+.customer-card__tagline {
+  font-size: 0.9rem;
+  color: var(--muted);
+  flex: 1;
+}
+
+.customer-card__tags {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.1em;
+  color: var(--section-number-color);
+  text-transform: uppercase;
+}
+
+.dashboard__drafts {
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line-soft);
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.dashboard__drafts a {
+  color: var(--accent);
+}

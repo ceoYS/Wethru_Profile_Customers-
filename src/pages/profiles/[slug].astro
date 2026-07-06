@@ -1,0 +1,43 @@
+---
+import ProfilePage from "../../layouts/ProfilePage.astro";
+import ProfileHero from "../../components/profile/ProfileHero.astro";
+import ProofStrip from "../../components/profile/ProofStrip.astro";
+import IdentityStatement from "../../components/profile/IdentityStatement.astro";
+import StrengthGrid from "../../components/profile/StrengthGrid.astro";
+import ExperienceTimeline from "../../components/profile/ExperienceTimeline.astro";
+import ProjectHighlights from "../../components/profile/ProjectHighlights.astro";
+import ContactCTA from "../../components/profile/ContactCTA.astro";
+import { customers } from "../../data/customer-index";
+import type { CustomerProfile } from "../../types/profile";
+
+export function getStaticPaths() {
+  // Drafts are built too (for preview) but carry noindex — see ProfilePage.
+  return customers.map((customer) => ({
+    params: { slug: customer.slug },
+    props: { customer },
+  }));
+}
+
+interface Props {
+  customer: CustomerProfile;
+}
+
+const { customer } = Astro.props;
+---
+
+<ProfilePage customer={customer}>
+  <ProfileHero customer={customer} />
+  <ProofStrip proofs={customer.proofs} />
+  <IdentityStatement
+    statement={customer.person.tagline}
+    support={customer.person.summary}
+  />
+  <StrengthGrid strengths={customer.strengths} sectionNumber="01" />
+  <ExperienceTimeline experiences={customer.experiences} sectionNumber="02" />
+  <ProjectHighlights projects={customer.projects} sectionNumber="03" />
+  <ContactCTA
+    contact={customer.contact}
+    name={customer.person.name}
+    sectionNumber="04"
+  />
+</ProfilePage>

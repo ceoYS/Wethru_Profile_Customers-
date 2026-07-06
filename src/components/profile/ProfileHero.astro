@@ -1,0 +1,93 @@
+---
+import type { CustomerProfile } from "../../types/profile";
+import CopyLinkButton from "../shared/CopyLinkButton.astro";
+
+interface Props {
+  customer: CustomerProfile;
+}
+
+const { customer } = Astro.props;
+const { person, contact, badges, slug } = customer;
+
+const monogram = person.englishName
+  ? person.englishName
+      .split(/\s+/)
+      .map((word) => word.charAt(0))
+      .join("")
+      .slice(0, 3)
+  : person.name.charAt(0);
+
+const showEmailCta = Boolean(contact.email && contact.showEmail);
+---
+
+<header class="hero" aria-label={`${person.name} 프로필 소개`}>
+  <div class="hero__copy">
+    <div class="hero__eyebrow-row">
+      <span class="eyebrow">{person.roleLine}</span>
+    </div>
+
+    <h1 class="hero__name">
+      {person.name}
+      {person.englishName && (
+        <span class="hero__english-name">{person.englishName}</span>
+      )}
+    </h1>
+
+    <p class="hero__tagline">{person.tagline}</p>
+    <p class="hero__summary">{person.summary}</p>
+
+    <div class="hero__cta">
+      {showEmailCta && (
+        <a class="btn btn--primary" href={`mailto:${contact.email}`}>
+          이메일로 문의하기
+        </a>
+      )}
+      <CopyLinkButton />
+    </div>
+
+    {badges.length > 0 && (
+      <ul class="hero__badges" aria-label="전문 분야">
+        {badges.map((badge) => (
+          <li class="badge">{badge}</li>
+        ))}
+      </ul>
+    )}
+  </div>
+
+  <div class="hero__media">
+    <figure class="portrait">
+      <div class="portrait__frame" data-portrait-frame>
+        <img
+          src={person.photo.src}
+          alt={person.photo.alt}
+          width="480"
+          height="600"
+          loading="eager"
+          fetchpriority="high"
+        />
+        <div class="portrait__fallback" aria-hidden="true">
+          <span class="portrait__monogram">{monogram}</span>
+          <span class="portrait__fallback-note">{person.roleLine}</span>
+        </div>
+      </div>
+      <figcaption class="portrait__caption">
+        <span>{person.englishName ?? person.name}</span>
+        <span>WT — {slug}</span>
+      </figcaption>
+    </figure>
+  </div>
+</header>
+
+<script>
+  // If the portrait file has not been added to /public yet, swap in the
+  // monogram fallback instead of showing a broken image.
+  document.querySelectorAll<HTMLElement>("[data-portrait-frame]").forEach((frame) => {
+    const img = frame.querySelector("img");
+    if (!img) return;
+    const markMissing = () => {
+      frame.dataset.missing = "true";
+    };
+    if (img.complete && img.naturalWidth === 0) markMissing();
+    img.addEventListener("error", markMissing);
+  });
+</script>

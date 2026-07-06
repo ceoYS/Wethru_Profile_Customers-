@@ -1,0 +1,56 @@
+/* ==========================================================================
+   Theme: navy-black-white
+   Cold, precise, consulting-dossier. Dark navy field, hairline structure,
+   serif display accents against a geometric sans body. No gradient washes,
+   no glassmorphism — depth comes from layered navy surfaces and one
+   restrained glow behind the portrait.
+   ========================================================================== */
+
+[data-theme="navy-black-white"] {
+  --bg: #05070d;
+  --bg-soft: #0b1020;
+  --surface: #101827;
+  --surface-strong: #162033;
+  --text: #f8fafc;
+  --muted: #aab4c3;
+  --line: rgba(255, 255, 255, 0.14);
+  --line-soft: rgba(255, 255, 255, 0.07);
+  --accent: #c9d7ff;
+  --accent-strong: #ffffff;
+  --navy: #071a3d;
+
+  --font-display: "Didot", "Playfair Display", Georgia, "Times New Roman",
+    "Apple SD Gothic Neo", "Noto Serif KR", serif;
+  --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", "Pretendard",
+    "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+  --font-mono: "SF Mono", "Cascadia Code", "JetBrains Mono", ui-monospace,
+    Menlo, Consolas, monospace;
+
+  /* Sharp geometry: this theme almost never rounds corners. */
+  --radius-card: 2px;
+  --radius-pill: 999px;
+  --radius-photo: 4px;
+
+  --shadow-card: 0 1px 0 rgba(255, 255, 255, 0.04) inset;
+  --photo-glow: 0 0 90px 8px rgba(201, 215, 255, 0.16);
+
+  --eyebrow-tracking: 0.22em;
+  --section-number-color: rgba(201, 215, 255, 0.38);
+}
+
+/* Theme-specific texture: faint vertical hairlines like a briefing document
+   margin. Kept extremely low-contrast so it reads as paper grain, not decor. */
+[data-theme="navy-black-white"] .profile-shell {
+  background:
+    linear-gradient(var(--line-soft), var(--line-soft)) 50% 0 / 1px 100% no-repeat,
+    radial-gradient(1200px 600px at 85% -5%, rgba(7, 26, 61, 0.85), transparent 70%),
+    var(--bg);
+}
+
+@media (max-width: 767px) {
+  [data-theme="navy-black-white"] .profile-shell {
+    background:
+      radial-gradient(700px 380px at 90% -4%, rgba(7, 26, 61, 0.85), transparent 70%),
+      var(--bg);
+  }
+}

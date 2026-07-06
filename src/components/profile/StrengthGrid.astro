@@ -1,0 +1,35 @@
+---
+import type { ProfileStrength } from "../../types/profile";
+
+interface Props {
+  strengths: ProfileStrength[];
+  sectionNumber?: string;
+}
+
+const { strengths, sectionNumber = "01" } = Astro.props;
+---
+
+{strengths.length > 0 && (
+  <section class="profile-section" aria-labelledby="strengths-title">
+    <div class="section-head">
+      <span class="section-head__number" aria-hidden="true">{sectionNumber}</span>
+      <h2 class="section-head__title" id="strengths-title">일하는 방식</h2>
+      <span class="section-head__rule" aria-hidden="true"></span>
+    </div>
+
+    <div class="strength-grid">
+      {strengths.map((strength, index) => (
+        <article class="strength-card">
+          <span class="strength-card__index" aria-hidden="true">
+            {String(index + 1).padStart(2, "0")}
+          </span>
+          {strength.eyebrow && (
+            <span class="eyebrow strength-card__eyebrow">{strength.eyebrow}</span>
+          )}
+          <h3 class="strength-card__title">{strength.title}</h3>
+          <p class="strength-card__description">{strength.description}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+)}

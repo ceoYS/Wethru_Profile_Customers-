@@ -1,0 +1,49 @@
+/* ==========================================================================
+   Theme: graphite-minimal
+   Near-monochrome light theme. Swiss-grid restraint: one slate accent,
+   zero decoration, mono eyebrows, square corners. Use for customers in
+   engineering, finance, legal — anywhere sober beats expressive.
+   ========================================================================== */
+
+[data-theme="graphite-minimal"] {
+  --bg: #f4f5f7;
+  --bg-soft: #eceef1;
+  --surface: #ffffff;
+  --surface-strong: #e4e7eb;
+  --text: #17191d;
+  --muted: #5c636e;
+  --line: rgba(23, 25, 29, 0.18);
+  --line-soft: rgba(23, 25, 29, 0.08);
+  --accent: #3b4a63;
+  --accent-strong: #17191d;
+  --navy: #2a3446;
+
+  /* Display face is the same sans as the body, pushed heavier — the
+     minimal look comes from weight contrast, not typeface contrast. */
+  --font-display: -apple-system, BlinkMacSystemFont, "Segoe UI", "Pretendard",
+    "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+  --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", "Pretendard",
+    "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+  --font-mono: "SF Mono", "Cascadia Code", ui-monospace, Menlo, Consolas,
+    monospace;
+
+  --radius-card: 0px;
+  --radius-pill: 2px;
+  --radius-photo: 0px;
+
+  --shadow-card: none;
+  --photo-glow: none;
+
+  --eyebrow-tracking: 0.28em;
+  --section-number-color: rgba(59, 74, 99, 0.4);
+}
+
+[data-theme="graphite-minimal"] .profile-shell {
+  background: var(--bg);
+}
+
+/* Minimal theme keeps cards flat and separated by rules, not shadows. */
+[data-theme="graphite-minimal"] .strength-card,
+[data-theme="graphite-minimal"] .project-card {
+  border-width: 1px 1px 3px 1px;
+}

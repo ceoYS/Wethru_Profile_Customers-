@@ -1,0 +1,25 @@
+---
+interface Props {
+  /** URL to copy. Defaults to the current page URL at click time. */
+  url?: string;
+  label?: string;
+}
+
+const { url, label = "프로필 링크 복사" } = Astro.props;
+---
+
+<button
+  type="button"
+  class="btn btn--ghost"
+  data-copy-link
+  data-copy-url={url}
+  data-label={label}
+  aria-label="프로필 링크를 클립보드에 복사"
+>
+  {label}
+</button>
+
+<script>
+  import { initCopyLinkButtons } from "../../scripts/copy-link";
+  initCopyLinkButtons();
+</script>
