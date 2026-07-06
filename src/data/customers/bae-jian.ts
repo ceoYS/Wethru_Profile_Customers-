@@ -5,21 +5,27 @@ export const profile: CustomerProfile = {
   theme: "navy-black-white",
   layout: "editorial-split",
   status: "published",
+  locales: ["ko", "en"],
 
   seo: {
-    title: "배지안 | Marketing & Strategy Profile",
+    title: "배지안 | Data-Driven Marketing Strategist",
     description:
-      "소비자 리서치, 데이터 정리, 캠페인 기획을 연결해 브랜드와 서비스가 고객에게 닿는 방식을 설계하는 배지안님의 온라인 프로필입니다.",
+      "AI Transformation, 마케팅 자동화, 데이터 클리닝, 퍼포먼스 마케팅을 연결해 마케팅 운영을 설계하는 배지안님의 온라인 프로필입니다.",
     ogImage: "/og/placeholder-og.svg",
   },
 
   person: {
     name: "배지안",
     englishName: "BAE JIAN",
-    roleLine: "Marketing & Strategy",
-    tagline: "데이터를 읽고, 사람의 선택을 설계합니다.",
-    summary:
-      "소비자 리서치, 데이터 정리, 캠페인 기획을 연결해 브랜드와 서비스의 접점을 설계합니다. 스타트업 데이터 플랫폼 운영, B2B 제조 플랫폼 마케팅, IMC·PR 캠페인 프로젝트를 경험하며 정보를 구조화하고 실행 가능한 메시지로 바꾸는 일을 해왔습니다.",
+    roleLine: "Data-Driven Marketing Strategist",
+    tagline: {
+      ko: "데이터와 자동화로, 마케팅이 더 정확하게 움직이도록 설계합니다.",
+      en: "Designing smarter marketing systems with data, automation, and AI transformation.",
+    },
+    summary: {
+      ko: "배지안은 AI Transformation, 마케팅 자동화, 데이터 클리닝, 퍼포먼스 마케팅을 연결해 마케팅 운영이 더 빠르고 정확하게 움직이도록 설계하는 데이터 드리븐 마케팅 전략가입니다. EY컨설팅에서 대기업 마케팅 자동화 프로젝트를 경험했고, 스타트업·제조 플랫폼·브랜드 캠페인 프로젝트를 통해 리서치, 광고 운영, UX 분석, 콘텐츠 전략을 실행해왔습니다.",
+      en: "Jian Bae is a data-driven marketing strategist focused on AI Transformation, marketing automation, data cleaning, and performance marketing. She has supported marketing automation initiatives at EY Consulting and built practical experience across startup data platforms, B2B manufacturing marketing, UX analytics, and brand campaign projects.",
+    },
     photo: {
       src: "/images/customers/bae-jian/profile.webp",
       alt: "배지안 프로필 사진",
@@ -30,113 +36,243 @@ export const profile: CustomerProfile = {
     email: "Jian.bae.biz@gmail.com",
     showEmail: true,
     showPhone: false,
+    links: [
+      { label: "LinkedIn", href: "https://www.linkedin.com/in/jianbaebiz/" },
+      { label: "Portfolio", href: "https://buly.kr/FAdcFvx" },
+    ],
   },
 
   badges: [
-    "Marketing Strategy",
-    "Consumer Research",
-    "Brand Communication",
-    "Data Curation",
-    "IMC / PR",
-    "Service Operation",
+    "AI Transformation",
+    "Marketing Automation",
+    "Data Cleaning",
+    "Keyword Intelligence",
+    "Performance Marketing",
+    "UX Analytics",
+  ],
+
+  skills: [
+    "AI Transformation",
+    "Marketing Automation",
+    "Data Cleaning",
+    "Keyword Intelligence",
+    "Performance Marketing",
+    "UX Analytics",
+    "Google Analytics",
+    "Looker Studio",
+    "Hotjar",
+    "Microsoft Clarity",
+    "Google Ads",
+    "Naver SA/DA",
+    "Figma",
+    "Photoshop",
+    "Canva",
+    "JIRA",
+    "SharePoint",
+    "n8n",
   ],
 
   strengths: [
     {
-      eyebrow: "Research",
-      title: "Consumer Research",
-      description:
-        "소비자 리서치와 시장 분석을 바탕으로 캠페인의 방향과 메시지를 설계합니다.",
+      eyebrow: "AX",
+      title: "AI Transformation",
+      description: {
+        ko: "AI Agent와 자동화 워크플로우를 기획해 마케팅 조직이 실제 업무에서 쓰는 시스템으로 만듭니다.",
+        en: "Plans AI agents and automation workflows that marketing teams actually use in day-to-day operations.",
+      },
     },
     {
       eyebrow: "Data",
-      title: "Data Curation",
-      description:
-        "스타트업·VC 데이터를 수집·정제하며 정보의 구조와 흐름을 다뤘습니다.",
+      title: {
+        ko: "Data Cleaning & Keyword Intelligence",
+        en: "Data Cleaning & Keyword Intelligence",
+      },
+      description: {
+        ko: "대규모 원시 데이터를 정제하고 키워드 지표를 구조화해 의사결정의 기준을 만듭니다.",
+        en: "Cleans large-scale raw data and structures keyword metrics into decision-ready signals.",
+      },
     },
     {
-      eyebrow: "Communication",
-      title: "Brand Communication",
-      description:
-        "IMC·PR 프로젝트에서 메시지, 채널, 경험 설계를 연결했습니다.",
+      eyebrow: "Performance",
+      title: "Performance Marketing",
+      description: {
+        ko: "Google·Naver 광고 운영과 성과 분석으로 예산이 정확한 곳에서 움직이게 합니다.",
+        en: "Runs Google and Naver campaigns and ties every budget decision to measured outcomes.",
+      },
     },
     {
-      eyebrow: "Operation",
-      title: "Service Operation",
-      description:
-        "서비스 운영, CRM, UI/UX 개선을 통해 사용자 접점을 개선했습니다.",
+      eyebrow: "UX",
+      title: "UX Analytics",
+      description: {
+        ko: "Hotjar, Microsoft Clarity로 사용자 행동을 분석해 전환이 막히는 구간을 개선합니다.",
+        en: "Analyzes user behavior with Hotjar and Microsoft Clarity to fix the points where conversion stalls.",
+      },
     },
   ],
 
   experiences: [
     {
-      company: "볼트앤너트",
-      role: "Marketing Intern / Junior Marketer",
-      period: "2023.04 ~ 2023.09",
-      description:
-        "B2B 제조 플랫폼 ‘바로발주’의 마케팅 운영과 고객 접점 개선을 담당했습니다.",
+      company: { ko: "EY컨설팅", en: "EY Consulting" },
+      role: "Consultant / TC-Tech, Transformation Technology",
+      period: "2025.09 ~ Present",
+      description: {
+        ko: "국내 전자 대기업의 마케팅 자동화(AX) 프로젝트에서 PMO 운영, AI Agent·AI workflow 구축 기획, AI Marketing Trend 리서치, 키워드 지표 트래킹, 데이터 수집·분석 업무를 수행했습니다.",
+        en: "Supported the planning and operational execution of a Marketing AI Transformation initiative for a leading electronics corporation, including PMO operations, AI Agent/workflow planning, AI marketing trend research, keyword tracking, and data analysis.",
+      },
       bullets: [
-        "오프라인 행사 기획·운영을 통해 스타트업과 제조업체 간 네트워크 형성",
-        "콜드메일, 고객 문의 응대, CRM 관리로 잠재 고객 접점 관리",
-        "퍼포먼스 마케팅 운영 및 성과 분석",
-        "블로그·SNS 채널과 제조 상식 콘텐츠 기획",
+        {
+          ko: "Marketing AX 프로젝트 운영 및 PMO 지원",
+          en: "Marketing AX project operations and PMO support",
+        },
+        {
+          ko: "AI Agent / AI workflow 구축 기획",
+          en: "Planned AI Agent and AI workflow builds",
+        },
+        {
+          ko: "AI Marketing Trend 리서치",
+          en: "AI marketing trend research",
+        },
+        {
+          ko: "키워드 지표 트래킹 및 데이터 수집·분석",
+          en: "Keyword metric tracking with data collection and analysis",
+        },
+        {
+          ko: "1M+ raw data entries / 40k+ keywords 구조화",
+          en: "Structured 1M+ raw data entries and 40k+ keywords",
+        },
       ],
     },
     {
-      company: "마크앤컴퍼니",
-      role: "Marketing & Service Operation Intern",
-      period: "2022.10 ~ 2023.02",
-      description:
-        "스타트업 데이터 플랫폼 ‘혁신의숲’의 데이터 운영과 서비스 개선 기획을 지원했습니다.",
+      company: { ko: "볼트앤너트", en: "BOLT&NUT" },
+      role: "Junior Marketer",
+      period: "2023.04 ~ 2023.09",
+      description: {
+        ko: "바로발주 서비스의 디지털 광고, 온라인 마케팅 전략, SEO, UX 분석, CRM 운영을 담당했습니다.",
+        en: "Executed digital marketing, SEO, UX analytics, CRM, and campaign operations for the Baro Order B2B manufacturing platform.",
+      },
       bullets: [
-        "1,000개 이상 스타트업 및 VC 데이터 수집·정제·입력",
-        "검색 및 분류 체계 개선",
-        "서비스 홈페이지 UI/UX 기획 지원",
-        "데이터 관리 프로세스 표준화",
+        {
+          ko: "Google/Naver 기반 디지털 광고 기획 및 운영",
+          en: "Planned and ran digital ad campaigns on Google and Naver",
+        },
+        {
+          ko: "Hotjar, Microsoft Clarity 기반 사용자 행동 분석",
+          en: "Analyzed user behavior with Hotjar and Microsoft Clarity",
+        },
+        {
+          ko: "Figma 기반 UI/UX 개선안 도출",
+          en: "Drafted UI/UX improvements in Figma",
+        },
+        {
+          ko: "CRM 콜드메일 및 고객 접점 관리",
+          en: "Managed CRM cold outreach and customer touchpoints",
+        },
+        {
+          ko: "콘텐츠 및 광고 소재 기획",
+          en: "Planned content and ad creatives",
+        },
       ],
+    },
+    {
+      company: { ko: "마크앤컴퍼니", en: "MARK&COMPANY" },
+      role: "Marketing Intern",
+      period: "2022.10 ~ 2023.02",
+      description: {
+        ko: "혁신의숲 서비스에서 스타트업·VC 데이터 관리, 시장 리서치, 서비스 운영 자료 정리를 수행했습니다.",
+        en: "Managed startup and VC data records, supported market research, and prepared service operation materials for the Innovation Forest platform.",
+      },
+      bullets: [
+        {
+          ko: "1,000+ 스타트업 및 VC 데이터 수집·검수",
+          en: "Collected and verified data on 1,000+ startups and VCs",
+        },
+        {
+          ko: "시장 및 마케팅 리서치 지원",
+          en: "Supported market and marketing research",
+        },
+        {
+          ko: "서비스 운영 자료 정리 및 보고서 작성",
+          en: "Organized service operation materials and wrote reports",
+        },
+      ],
+    },
+  ],
+
+  additionalExperiences: [
+    {
+      company: "YEOLHANSHI",
+      role: "Project Intern",
+      period: "2024.02 ~ 2024.03",
+    },
+    {
+      company: "DECANT",
+      role: "Marketing Intern",
+      period: "2023.07 ~ 2023.08",
     },
   ],
 
   projects: [
     {
       title: "SoME Consulting Society",
-      role: "학술부 부장",
+      role: { ko: "학술부 부장", en: "Academic Team Lead" },
       period: "2022.06 ~ 2022.12",
-      problem:
-        "소상공인의 온라인 접점과 메뉴·가격 구조가 정리되지 않은 문제를 다뤘습니다.",
-      approach:
-        "네이버 플레이스, 인스타그램 채널, 메뉴 구성, 가격 구조를 함께 개선했습니다.",
-      result: "프로젝트 후 매출 25% 이상 증가 사례를 만들었습니다.",
+      problem: {
+        ko: "소상공인의 온라인 접점과 메뉴·가격 구조가 정리되지 않은 문제를 다뤘습니다.",
+        en: "A local business had a scattered online presence and an unstructured menu and pricing setup.",
+      },
+      approach: {
+        ko: "네이버 플레이스, 인스타그램 채널, 메뉴 구성, 가격 구조를 함께 개선했습니다.",
+        en: "Reworked the Naver Place listing, Instagram channel, menu structure, and pricing together.",
+      },
+      result: {
+        ko: "프로젝트 후 매출 25% 이상 증가 사례를 만들었습니다.",
+        en: "Sales grew more than 25% after the project.",
+      },
     },
     {
       title: "LG Electronics Brand Campaign",
       role: "Team Lead",
       period: "2024.03 ~ 2024.12",
-      problem:
-        "LG전자 ‘틔운 미니’의 제품 메시지를 소비자 경험 중심으로 전달해야 했습니다.",
-      approach:
-        "TVC 및 IMC 전략 제안서를 기획하고 일정, 예산, KPI를 포함한 실행안을 설계했습니다.",
-      result:
-        "LG전자 마케팅팀 및 광고대행사 실무진 대상 최종 발표에서 긍정적인 평가를 받았습니다.",
+      problem: {
+        ko: "LG전자 ‘틔운 미니’의 제품 메시지를 소비자 경험 중심으로 전달해야 했습니다.",
+        en: "LG's tiiun mini needed its product message reframed around the consumer experience.",
+      },
+      approach: {
+        ko: "TVC 및 IMC 전략 제안서를 기획하고 일정, 예산, KPI를 포함한 실행안을 설계했습니다.",
+        en: "Built a TVC and IMC strategy proposal with a full execution plan covering schedule, budget, and KPIs.",
+      },
+      result: {
+        ko: "LG전자 마케팅팀 및 광고대행사 실무진 대상 최종 발표에서 긍정적인 평가를 받았습니다.",
+        en: "The final presentation was well received by LG's marketing team and agency practitioners.",
+      },
     },
     {
       title: "PRM × Lotte Duty Free",
       role: "Team Lead",
       period: "2024.03 ~ 2024.12",
-      problem:
-        "면세업계 침체 이후 MZ세대의 오프라인 경험을 온라인 구매로 연결해야 했습니다.",
-      approach:
-        "소비자 리서치를 바탕으로 팝업스토어, SNS 챌린지, 리워드 프로그램을 결합했습니다.",
-      result: "최종 경쟁 PT에서 2등을 수상했습니다.",
+      problem: {
+        ko: "면세업계 침체 이후 MZ세대의 오프라인 경험을 온라인 구매로 연결해야 했습니다.",
+        en: "After the duty-free downturn, Gen MZ's offline experiences had to be reconnected to online purchases.",
+      },
+      approach: {
+        ko: "소비자 리서치를 바탕으로 팝업스토어, SNS 챌린지, 리워드 프로그램을 결합했습니다.",
+        en: "Combined a pop-up store, a social challenge, and a rewards program grounded in consumer research.",
+      },
+      result: {
+        ko: "최종 경쟁 PT에서 2등을 수상했습니다.",
+        en: "Won 2nd place in the final competitive pitch.",
+      },
     },
   ],
 
   proofs: [
-    { value: "1,000+", label: "Startup & VC Data" },
-    { value: "25%+", label: "Sales Growth Case" },
+    { value: "1M+", label: "Raw Data Entries" },
+    { value: "40k+", label: "Keywords Structured" },
     { value: "TOEIC 965", label: "English" },
     { value: "OPIc IH", label: "Speaking" },
-    { value: "2nd", label: "PR Competition" },
+    { value: "+27%", label: "UX Retention" },
+    { value: "1,000+", label: "Startup & VC Data" },
+    { value: "AX", label: "Marketing AX Project" },
   ],
 
   privacy: {

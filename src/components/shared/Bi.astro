@@ -1,0 +1,16 @@
+---
+/**
+ * Bilingual UI chrome text (section titles, button labels, fixed copy).
+ * Both languages are always rendered; CSS shows the active one.
+ * Safe on ko-only profiles too — data-lang never becomes "en" there,
+ * so the English span simply stays hidden.
+ */
+interface Props {
+  ko: string;
+  en: string;
+}
+
+const { ko, en } = Astro.props;
+---
+
+<span class="lang lang--ko">{ko}</span><span class="lang lang--en" lang="en">{en}</span>

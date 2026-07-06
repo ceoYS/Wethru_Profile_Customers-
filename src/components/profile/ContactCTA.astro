@@ -1,5 +1,6 @@
 ---
 import type { ProfileContact } from "../../types/profile";
+import Bi from "../shared/Bi.astro";
 import CopyLinkButton from "../shared/CopyLinkButton.astro";
 
 interface Props {
@@ -21,19 +22,23 @@ const showEmail = Boolean(contact.email && contact.showEmail);
   </div>
 
   <div class="contact-cta">
-    <p class="contact-cta__title">함께 이야기해보고 싶다면</p>
+    <p class="contact-cta__title">
+      <Bi ko="함께 이야기해보고 싶다면" en="Let's talk" />
+    </p>
     <p class="contact-cta__note">
-      협업, 채용, 프로젝트 제안 모두 환영합니다. 이메일을 남겨주시면
-      {name}님이 직접 확인합니다.
+      <Bi
+        ko={`협업, 채용, 프로젝트 제안 모두 환영합니다. 이메일을 남겨주시면 ${name}님이 직접 확인합니다.`}
+        en="Open to collaboration, hiring, and project inquiries — every email is read personally."
+      />
     </p>
 
     <div class="contact-cta__actions">
       {showEmail && (
         <a class="btn btn--primary" href={`mailto:${contact.email}`}>
-          이메일 보내기
+          <Bi ko="이메일 보내기" en="Send an email" />
         </a>
       )}
-      <CopyLinkButton label="이 프로필 공유하기" />
+      <CopyLinkButton label="이 프로필 공유하기" labelEn="Share this profile" />
     </div>
 
     {showEmail && <p class="contact-cta__email">{contact.email}</p>}

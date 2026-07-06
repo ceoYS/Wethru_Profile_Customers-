@@ -22,8 +22,8 @@
      minimal look comes from weight contrast, not typeface contrast. */
   --font-display: -apple-system, BlinkMacSystemFont, "Segoe UI", "Pretendard",
     "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
-  --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", "Pretendard",
-    "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+  --font-body: "Pretendard", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
   --font-mono: "SF Mono", "Cascadia Code", ui-monospace, Menlo, Consolas,
     monospace;
 

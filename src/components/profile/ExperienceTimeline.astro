@@ -1,19 +1,32 @@
 ---
-import type { ProfileExperience } from "../../types/profile";
+import type {
+  ProfileAdditionalExperience,
+  ProfileExperience,
+} from "../../types/profile";
+import Bi from "../shared/Bi.astro";
+import LText from "../shared/LText.astro";
 
 interface Props {
   experiences: ProfileExperience[];
+  /** Short stints rendered as compact one-line rows under the timeline. */
+  additionalExperiences?: ProfileAdditionalExperience[];
   sectionNumber?: string;
 }
 
-const { experiences, sectionNumber = "02" } = Astro.props;
+const {
+  experiences,
+  additionalExperiences = [],
+  sectionNumber = "02",
+} = Astro.props;
 ---
 
 {experiences.length > 0 && (
   <section class="profile-section" aria-labelledby="experience-title">
     <div class="section-head">
       <span class="section-head__number" aria-hidden="true">{sectionNumber}</span>
-      <h2 class="section-head__title" id="experience-title">경험</h2>
+      <h2 class="section-head__title" id="experience-title">
+        <Bi ko="경험" en="Experience" />
+      </h2>
       <span class="section-head__rule" aria-hidden="true"></span>
     </div>
 
@@ -21,18 +34,35 @@ const { experiences, sectionNumber = "02" } = Astro.props;
       {experiences.map((experience) => (
         <li class="timeline-entry">
           <p class="timeline-entry__period">{experience.period}</p>
-          <h3 class="timeline-entry__company">{experience.company}</h3>
-          <p class="timeline-entry__role">{experience.role}</p>
-          <p class="timeline-entry__description">{experience.description}</p>
+          <h3 class="timeline-entry__company"><LText value={experience.company} /></h3>
+          <p class="timeline-entry__role"><LText value={experience.role} /></p>
+          <p class="timeline-entry__description"><LText value={experience.description} /></p>
           {experience.bullets.length > 0 && (
             <ul class="timeline-entry__bullets">
               {experience.bullets.map((bullet) => (
-                <li>{bullet}</li>
+                <li><LText value={bullet} /></li>
               ))}
             </ul>
           )}
         </li>
       ))}
     </ol>
+
+    {additionalExperiences.length > 0 && (
+      <div class="timeline-extra">
+        <p class="eyebrow timeline-extra__eyebrow">
+          <Bi ko="추가 경험" en="Additional Experience" />
+        </p>
+        <ul class="timeline-extra__list">
+          {additionalExperiences.map((extra) => (
+            <li class="timeline-extra__row">
+              <span class="timeline-extra__company"><LText value={extra.company} /></span>
+              <span class="timeline-extra__role"><LText value={extra.role} /></span>
+              <span class="timeline-extra__period">{extra.period}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
   </section>
 )}

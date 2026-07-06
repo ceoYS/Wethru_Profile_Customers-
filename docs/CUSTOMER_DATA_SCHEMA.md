@@ -10,15 +10,32 @@
 | `theme` | `navy-black-white` \| `warm-editorial` \| `graphite-minimal` | ✔ | 색/타이포/질감 preset |
 | `layout` | `editorial-split` \| `dossier` \| `magazine` \| `minimal-card` | ✔ | 구조 preset |
 | `status` | `draft` \| `published` | ✔ | draft는 빌드되지만 noindex + 대시보드에 작게 표시 |
+| `locales` | `("ko" \| "en")[]` | | 기본 `["ko"]`. `"en"` 포함 시 KO/EN 토글 렌더링 |
 | `seo` | object | ✔ | title / description / ogImage |
 | `person` | object | ✔ | 이름, tagline, summary, photo |
 | `contact` | object | ✔ | email/링크. phone은 기본 비노출 |
 | `badges` | string[] | | hero 전문 분야 태그 |
+| `skills` | string[] | | 도구/스킬 chip 스트립 (언어 중립, strengths 아래) |
 | `strengths` | array | | 일하는 방식 카드 (2×2 그리드) |
 | `experiences` | array | | 경력 타임라인 |
+| `additionalExperiences` | array | | 짧은 경력 — 타임라인 아래 한 줄 compact 행 (company/role/period) |
 | `projects` | array | | 문제/접근/결과 구조 |
 | `proofs` | array | | 숫자 성과 스트립. value + label 필수 |
 | `privacy` | object | ✔ | 아래 참조 |
+
+## LocalizedString (ko/en)
+
+언어가 필요한 필드(tagline, summary, roleLine, strengths, experiences, projects, proofs.label 등)는
+두 형태를 모두 허용한다:
+
+```ts
+tagline: "한 문장",                          // 단일 언어 — 모든 언어에서 그대로 표시
+tagline: { ko: "한 문장", en: "One line" },  // 토글 시 전환
+```
+
+- 기본 언어는 ko. JS가 꺼져 있으면 ko만 보인다 (양쪽 모두 HTML에 렌더링, CSS로 전환).
+- `locales`에 `"en"`이 없으면 토글이 렌더링되지 않으므로 `{ ko, en }` 값도 ko만 보인다.
+- 검증: localized 값에 `en`이 비어 있으면 에러, `locales: ["ko","en"]`인데 tagline/summary가 단일 언어면 경고.
 
 ## person
 
@@ -56,6 +73,8 @@ privacy: {
 - slug/name/tagline/summary/photo.alt/seo.title/seo.description 누락
 - slug 형식 불량, 파일명 불일치, 중복
 - theme/layout/status 값 불량
+- `locales` 값 불량 (`ko`/`en` 외 값, `ko` 미포함, 빈 배열)
+- localized 필드(`{ ko, en }`)의 en 텍스트 누락
 - `hideAddress`/`hideBirthDate`가 true가 아님
 - 원문에 address/birthDate/birthday 패턴 존재
 - proofs 항목에 value 또는 label 누락
@@ -65,5 +84,6 @@ privacy: {
 - `showPhone: true` (노출 의도 재확인)
 - published인데 email 없음
 - published인데 사진 파일 없음 (모노그램 fallback으로 배포됨)
+- `locales`에 `"en"`이 있는데 tagline/summary가 단일 언어
 - strengths/experiences/projects 비어 있음
 - TODO 문자열 잔존

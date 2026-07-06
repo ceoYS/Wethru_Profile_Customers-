@@ -36,6 +36,15 @@ async function copyText(text: string): Promise<boolean> {
   return fallbackCopy(text);
 }
 
+const FEEDBACK = {
+  ko: { done: "복사 완료", fail: "복사 실패 — 주소창을 이용해주세요" },
+  en: { done: "Link copied", fail: "Copy failed — use the address bar" },
+} as const;
+
+function activeLanguage(): keyof typeof FEEDBACK {
+  return document.documentElement.dataset.lang === "en" ? "en" : "ko";
+}
+
 export function initCopyLinkButtons(): void {
   const buttons = document.querySelectorAll<HTMLButtonElement>("[data-copy-link]");
 
@@ -43,19 +52,22 @@ export function initCopyLinkButtons(): void {
     if (button.dataset.bound === "true") return;
     button.dataset.bound = "true";
 
-    const idleLabel = button.dataset.label ?? button.textContent?.trim() ?? "링크 복사";
+    // Snapshot markup, not text — the idle label may contain bilingual
+    // .lang--ko / .lang--en spans that must survive the reset.
+    const idleMarkup = button.innerHTML;
     let resetTimer: ReturnType<typeof setTimeout> | undefined;
 
     button.addEventListener("click", async () => {
       const url = button.dataset.copyUrl || window.location.href;
       const ok = await copyText(url);
 
-      button.textContent = ok ? "복사 완료" : "복사 실패 — 주소창을 이용해주세요";
+      const feedback = FEEDBACK[activeLanguage()];
+      button.textContent = ok ? feedback.done : feedback.fail;
       button.dataset.copied = String(ok);
 
       if (resetTimer) clearTimeout(resetTimer);
       resetTimer = setTimeout(() => {
-        button.textContent = idleLabel;
+        button.innerHTML = idleMarkup;
         delete button.dataset.copied;
       }, RESET_DELAY_MS);
     });

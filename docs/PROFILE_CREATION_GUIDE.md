@@ -59,10 +59,22 @@ tagline 인터뷰 질문 (고객이 문장을 못 주는 경우):
 
 ## 4. 사진 (5분)
 
-- `public/images/customers/{slug}/profile.webp`
-- 세로형(4:5) 권장, 800px 이상
-- 변환: `cwebp input.jpg -q 85 -o profile.webp` 또는 온라인 변환기
+- 원본은 `pictures/`에 두고 (gitignore — 커밋 금지), 웹용 webp만 git에 포함한다
+- `public/images/customers/{slug}/profile.webp` — 세로형(4:5) 권장, 800px 이상
+- 변환 (sharp — rotate로 EXIF 회전 보정, 폭 1200 제한, 품질 88):
+
+```bash
+node -e "import('sharp').then(({default:s}) => s('pictures/원본.jpg').rotate().resize({width:1200,withoutEnlargement:true}).webp({quality:88}).toFile('public/images/customers/{slug}/profile.webp'))"
+```
+
 - 사진이 없으면 페이지는 모노그램 fallback으로 렌더링된다 (배포는 가능하지만 권장하지 않음)
+- 이력서/자소서 등 원본 PDF는 `private/customers/{slug}/source/`에 보관한다 (gitignore — 공개 저장소에 올라가지 않음)
+
+## 4.5 한국어/영어 지원 (선택)
+
+- 고객이 영문 버전을 원하면 `locales: ["ko", "en"]`을 추가하고,
+  tagline/summary/strengths/experiences/projects의 각 필드를 `{ ko: "...", en: "..." }`로 채운다
+- 토글은 자동으로 hero에 렌더링된다. 단일 언어 고객은 아무것도 바꿀 필요 없다
 
 ## 5. 검증 → 미리보기 → 발행 (5분)
 

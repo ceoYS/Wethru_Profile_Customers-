@@ -23,6 +23,16 @@ export type ProfileLayout =
 
 export type ProfileStatus = "draft" | "published";
 
+export type ProfileLocale = "ko" | "en";
+
+/**
+ * A string that may carry an English translation.
+ * Plain strings stay valid — existing single-language customers keep working.
+ * When a profile lists "en" in `locales`, the language toggle renders and
+ * any `{ ko, en }` values switch with it (plain strings show as-is in both).
+ */
+export type LocalizedString = string | { ko: string; en: string };
+
 export interface ProfileSeo {
   title: string;
   description: string;
@@ -41,11 +51,11 @@ export interface ProfilePerson {
   name: string;
   englishName?: string;
   /** Short discipline line, e.g. "Marketing & Strategy". */
-  roleLine: string;
+  roleLine: LocalizedString;
   /** One sentence that defines how this person works. */
-  tagline: string;
+  tagline: LocalizedString;
   /** 2–4 sentence introduction shown in the hero. */
-  summary: string;
+  summary: LocalizedString;
   photo: ProfilePhoto;
 }
 
@@ -64,33 +74,43 @@ export interface ProfileContact {
 }
 
 export interface ProfileStrength {
-  title: string;
+  title: LocalizedString;
   /** Small label above the title, e.g. "Research". */
   eyebrow?: string;
-  description: string;
+  description: LocalizedString;
 }
 
 export interface ProfileExperience {
-  company: string;
-  role: string;
+  company: LocalizedString;
+  role: LocalizedString;
   period: string;
-  description: string;
-  bullets: string[];
+  description: LocalizedString;
+  bullets: LocalizedString[];
+}
+
+/**
+ * Minor experience shown as a compact one-line row under the main timeline —
+ * keeps the page short while still recording shorter stints.
+ */
+export interface ProfileAdditionalExperience {
+  company: LocalizedString;
+  role: LocalizedString;
+  period: string;
 }
 
 export interface ProfileProject {
-  title: string;
-  role: string;
+  title: LocalizedString;
+  role: LocalizedString;
   period: string;
-  problem: string;
-  approach: string;
-  result: string;
+  problem: LocalizedString;
+  approach: LocalizedString;
+  result: LocalizedString;
 }
 
 export interface ProfileProof {
   /** The number or short fact, e.g. "1,000+". */
   value: string;
-  label: string;
+  label: LocalizedString;
   description?: string;
 }
 
@@ -108,12 +128,22 @@ export interface CustomerProfile {
   theme: ProfileTheme;
   layout: ProfileLayout;
   status: ProfileStatus;
+  /**
+   * Languages this profile supports. Defaults to ["ko"].
+   * Include "en" to render the KO/EN toggle — every LocalizedString field
+   * should then carry an `en` translation (the validator warns otherwise).
+   */
+  locales?: readonly ProfileLocale[];
   seo: ProfileSeo;
   person: ProfilePerson;
   contact: ProfileContact;
   badges: string[];
+  /** Language-neutral tool/skill chips, e.g. "Google Analytics", "n8n". */
+  skills?: string[];
   strengths: ProfileStrength[];
   experiences: ProfileExperience[];
+  /** Short stints rendered as compact rows under the timeline. */
+  additionalExperiences?: ProfileAdditionalExperience[];
   projects: ProfileProject[];
   proofs: ProfileProof[];
   privacy: ProfilePrivacy;

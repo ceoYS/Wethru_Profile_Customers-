@@ -21,8 +21,8 @@
 
   --font-display: "Didot", "Playfair Display", Georgia, "Times New Roman",
     "Apple SD Gothic Neo", "Noto Serif KR", serif;
-  --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", "Pretendard",
-    "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+  --font-body: "Pretendard", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
   --font-mono: "SF Mono", "Cascadia Code", "JetBrains Mono", ui-monospace,
     Menlo, Consolas, monospace;
 

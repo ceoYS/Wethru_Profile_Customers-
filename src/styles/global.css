@@ -2,7 +2,13 @@
    WeThru Profile Factory — global reset & base
    Theme files (src/styles/themes/*.css) own every color/typography token.
    This file only sets structure-neutral defaults.
+
+   Fonts: Pretendard is self-hosted from the npm package (bundled by Astro,
+   no CDN / external request) — Korean body text renders consistently on
+   every OS instead of falling to Malgun Gothic on Windows.
    ========================================================================== */
+
+@import "pretendard/dist/web/static/pretendard.css";
 
 *,
 *::before,
@@ -21,7 +27,15 @@ html {
 
 body {
   min-height: 100dvh;
-  font-family: var(--font-body);
+  font-family: var(
+    --font-body,
+    "Pretendard",
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif
+  );
   background: var(--bg);
   color: var(--text);
   line-height: 1.6;
@@ -116,6 +130,22 @@ p {
   clip: rect(0 0 0 0);
   white-space: nowrap;
   border: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Language switching (KO/EN)
+   Both languages are server-rendered as .lang--ko / .lang--en spans;
+   <html data-lang> decides which one is visible. Default (and JS-off)
+   state is Korean — data-lang is only ever set to "en" by the toggle
+   script on profiles that opt into locales: ["ko", "en"].
+   -------------------------------------------------------------------------- */
+
+html:not([data-lang="en"]) .lang--en {
+  display: none !important;
+}
+
+html[data-lang="en"] .lang--ko {
+  display: none !important;
 }
 
 @media (prefers-reduced-motion: reduce) {

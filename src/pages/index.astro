@@ -1,5 +1,6 @@
 ---
 import { publishedCustomers, draftCustomers } from "../data/customer-index";
+import { localize } from "../utils/i18n";
 import "../styles/global.css";
 import "../styles/profile-base.css";
 import "../styles/themes/navy-black-white.css";
@@ -36,7 +37,7 @@ import "../styles/themes/graphite-minimal.css";
           {publishedCustomers.map((customer) => (
             <a class="customer-card" href={`/profiles/${customer.slug}/`}>
               <div class="customer-card__meta">
-                <span class="eyebrow">{customer.person.roleLine}</span>
+                <span class="eyebrow">{localize(customer.person.roleLine)}</span>
                 <span class="customer-card__status customer-card__status--published">
                   published
                 </span>
@@ -45,7 +46,7 @@ import "../styles/themes/graphite-minimal.css";
                 {customer.person.name}
                 {customer.person.englishName && ` · ${customer.person.englishName}`}
               </h2>
-              <p class="customer-card__tagline">{customer.person.tagline}</p>
+              <p class="customer-card__tagline">{localize(customer.person.tagline)}</p>
               <p class="customer-card__tags">
                 <span>{customer.theme}</span>
                 <span>{customer.layout}</span>

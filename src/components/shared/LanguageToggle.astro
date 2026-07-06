@@ -1,0 +1,34 @@
+---
+/**
+ * KO / EN language toggle. Render only when the profile supports English
+ * (customer.locales includes "en") — ProfileHero handles that check.
+ * Default language is Korean; the choice persists in localStorage.
+ */
+---
+
+<div class="lang-toggle" role="group" aria-label="언어 선택 / Language">
+  <button
+    type="button"
+    class="lang-toggle__btn"
+    data-lang-btn="ko"
+    aria-pressed="true"
+    aria-label="한국어로 보기"
+  >
+    KO
+  </button>
+  <span class="lang-toggle__divider" aria-hidden="true"></span>
+  <button
+    type="button"
+    class="lang-toggle__btn"
+    data-lang-btn="en"
+    aria-pressed="false"
+    aria-label="View in English"
+  >
+    EN
+  </button>
+</div>
+
+<script>
+  import { initLanguageToggle } from "../../scripts/language-toggle";
+  initLanguageToggle();
+</script>

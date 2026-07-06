@@ -43,13 +43,31 @@ src/data/customers/{slug}.ts
 ## 이미지 위치
 
 ```
-public/images/customers/{slug}/profile.webp
+public/images/customers/{slug}/profile.webp   # 웹 게시용 (git 포함)
+pictures/                                     # 원본 사진 (gitignore — 절대 커밋 금지)
+private/customers/{slug}/source/              # 이력서 등 원본 PDF (gitignore — 절대 커밋 금지)
 ```
 
-⚠️ **배지안(bae-jian) 프로필 사진은 아직 없습니다.**
-`public/images/customers/bae-jian/profile.webp`를 직접 넣어야 합니다 (세로형 4:5, 800px+ 권장).
+원본 → webp 변환 (sharp, devDependency):
+
+```bash
+node -e "import('sharp').then(({default:s}) => s('pictures/원본.jpg').rotate().resize({width:1200,withoutEnlargement:true}).webp({quality:88}).toFile('public/images/customers/{slug}/profile.webp'))"
+```
+
 사진이 없는 동안 페이지는 모노그램 fallback으로 렌더링됩니다 (깨진 이미지는 표시되지 않음).
-OG 이미지도 현재 공용 placeholder(`/og/placeholder-og.svg`)이므로, 고객별 PNG(1200×630) 제작 후 교체하세요.
+OG 이미지는 현재 공용 placeholder(`/og/placeholder-og.svg`)이므로, 고객별 PNG(1200×630) 제작 후 교체하세요.
+
+## 폰트
+
+본문 폰트는 **Pretendard** (npm 패키지 self-hosted, CDN/외부 요청 없음).
+`src/styles/global.css`에서 import하며, theme별 `--font-body` 토큰이 Pretendard를 우선합니다.
+
+## 한국어/영어 토글
+
+- 고객 데이터에 `locales: ["ko", "en"]`을 선언하면 hero에 KO/EN 토글이 렌더링됩니다.
+- 언어가 필요한 필드는 `"문자열"` 또는 `{ ko: "...", en: "..." }` 둘 다 허용 (`LocalizedString`).
+- 기본 언어는 ko이며 JS가 꺼져 있어도 ko 텍스트가 보입니다. 선택 언어는 localStorage에 유지됩니다.
+- URL은 바뀌지 않습니다 (`/ko`, `/en` 라우트 없음).
 
 ## 검증
 
@@ -73,6 +91,7 @@ npm run domains:map          # 도메인 매핑 검증
 - 전화번호 기본 노출 금지 (`showPhone: true`는 검증 경고 대상)
 - 이메일은 CTA 영역에서만 사용
 - 고객 확인 전 임의 정보 추가 금지
+- 원본 이력서/자소서 PDF와 원본 사진은 `private/`, `pictures/`에만 보관 (둘 다 gitignore — 공개 저장소/`public/`에 올리지 않음)
 
 ## 구조
 

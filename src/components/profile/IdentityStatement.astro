@@ -1,7 +1,10 @@
 ---
+import type { LocalizedString } from "../../types/profile";
+import LText from "../shared/LText.astro";
+
 interface Props {
-  statement: string;
-  support?: string;
+  statement: LocalizedString;
+  support?: LocalizedString;
 }
 
 const { statement, support } = Astro.props;
@@ -10,7 +13,7 @@ const { statement, support } = Astro.props;
 <section class="profile-section profile-section--loose" aria-label="핵심 소개">
   <div class="identity">
     <span class="identity__mark" aria-hidden="true">”</span>
-    <p class="identity__statement">{statement}</p>
-    {support && <p class="identity__support">{support}</p>}
+    <p class="identity__statement"><LText value={statement} /></p>
+    {support && <p class="identity__support"><LText value={support} /></p>}
   </div>
 </section>

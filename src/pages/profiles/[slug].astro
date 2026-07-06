@@ -4,6 +4,7 @@ import ProfileHero from "../../components/profile/ProfileHero.astro";
 import ProofStrip from "../../components/profile/ProofStrip.astro";
 import IdentityStatement from "../../components/profile/IdentityStatement.astro";
 import StrengthGrid from "../../components/profile/StrengthGrid.astro";
+import SkillsStrip from "../../components/profile/SkillsStrip.astro";
 import ExperienceTimeline from "../../components/profile/ExperienceTimeline.astro";
 import ProjectHighlights from "../../components/profile/ProjectHighlights.astro";
 import ContactCTA from "../../components/profile/ContactCTA.astro";
@@ -33,7 +34,12 @@ const { customer } = Astro.props;
     support={customer.person.summary}
   />
   <StrengthGrid strengths={customer.strengths} sectionNumber="01" />
-  <ExperienceTimeline experiences={customer.experiences} sectionNumber="02" />
+  <SkillsStrip skills={customer.skills ?? []} />
+  <ExperienceTimeline
+    experiences={customer.experiences}
+    additionalExperiences={customer.additionalExperiences}
+    sectionNumber="02"
+  />
   <ProjectHighlights projects={customer.projects} sectionNumber="03" />
   <ContactCTA
     contact={customer.contact}

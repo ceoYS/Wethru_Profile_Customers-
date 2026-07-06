@@ -1,0 +1,24 @@
+---
+/**
+ * Renders a LocalizedString from customer data.
+ * Plain string → rendered as-is (visible in every language).
+ * { ko, en }  → both rendered; CSS shows the one matching <html data-lang>.
+ */
+import type { LocalizedString } from "../../types/profile";
+import { isLocalized } from "../../utils/i18n";
+
+interface Props {
+  value?: LocalizedString;
+}
+
+const { value } = Astro.props;
+---
+
+{isLocalized(value) ? (
+  <>
+    <span class="lang lang--ko">{value.ko}</span>
+    <span class="lang lang--en" lang="en">{value.en}</span>
+  </>
+) : (
+  value
+)}

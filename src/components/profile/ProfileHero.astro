@@ -1,6 +1,10 @@
 ---
 import type { CustomerProfile } from "../../types/profile";
+import { hasEnglish } from "../../utils/i18n";
+import Bi from "../shared/Bi.astro";
 import CopyLinkButton from "../shared/CopyLinkButton.astro";
+import LanguageToggle from "../shared/LanguageToggle.astro";
+import LText from "../shared/LText.astro";
 
 interface Props {
   customer: CustomerProfile;
@@ -8,6 +12,7 @@ interface Props {
 
 const { customer } = Astro.props;
 const { person, contact, badges, slug } = customer;
+const bilingual = hasEnglish(customer);
 
 const monogram = person.englishName
   ? person.englishName
@@ -23,7 +28,8 @@ const showEmailCta = Boolean(contact.email && contact.showEmail);
 <header class="hero" aria-label={`${person.name} 프로필 소개`}>
   <div class="hero__copy">
     <div class="hero__eyebrow-row">
-      <span class="eyebrow">{person.roleLine}</span>
+      <span class="eyebrow"><LText value={person.roleLine} /></span>
+      {bilingual && <LanguageToggle />}
     </div>
 
     <h1 class="hero__name">
@@ -33,13 +39,13 @@ const showEmailCta = Boolean(contact.email && contact.showEmail);
       )}
     </h1>
 
-    <p class="hero__tagline">{person.tagline}</p>
-    <p class="hero__summary">{person.summary}</p>
+    <p class="hero__tagline"><LText value={person.tagline} /></p>
+    <p class="hero__summary"><LText value={person.summary} /></p>
 
     <div class="hero__cta">
       {showEmailCta && (
         <a class="btn btn--primary" href={`mailto:${contact.email}`}>
-          이메일로 문의하기
+          <Bi ko="이메일로 문의하기" en="Get in touch" />
         </a>
       )}
       <CopyLinkButton />
@@ -67,7 +73,7 @@ const showEmailCta = Boolean(contact.email && contact.showEmail);
         />
         <div class="portrait__fallback" aria-hidden="true">
           <span class="portrait__monogram">{monogram}</span>
-          <span class="portrait__fallback-note">{person.roleLine}</span>
+          <span class="portrait__fallback-note"><LText value={person.roleLine} /></span>
         </div>
       </div>
       <figcaption class="portrait__caption">

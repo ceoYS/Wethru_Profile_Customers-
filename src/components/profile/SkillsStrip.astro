@@ -1,0 +1,27 @@
+---
+/**
+ * Compact, unnumbered strip of language-neutral tool/skill chips.
+ * Deliberately quieter than the numbered sections — it supports the
+ * strengths grid rather than competing with it.
+ */
+import Bi from "../shared/Bi.astro";
+
+interface Props {
+  skills: string[];
+}
+
+const { skills } = Astro.props;
+---
+
+{skills.length > 0 && (
+  <section class="profile-section profile-section--tight" aria-labelledby="skills-title">
+    <p class="eyebrow skills-strip__eyebrow" id="skills-title">
+      <Bi ko="도구 & 스킬" en="Tools & Skills" />
+    </p>
+    <ul class="skills-strip" aria-label="도구 및 스킬 목록">
+      {skills.map((skill) => (
+        <li class="badge">{skill}</li>
+      ))}
+    </ul>
+  </section>
+)}

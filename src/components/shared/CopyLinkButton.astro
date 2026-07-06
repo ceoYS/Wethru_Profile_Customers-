@@ -1,11 +1,18 @@
 ---
+import Bi from "./Bi.astro";
+
 interface Props {
   /** URL to copy. Defaults to the current page URL at click time. */
   url?: string;
   label?: string;
+  labelEn?: string;
 }
 
-const { url, label = "프로필 링크 복사" } = Astro.props;
+const {
+  url,
+  label = "프로필 링크 복사",
+  labelEn = "Copy profile link",
+} = Astro.props;
 ---
 
 <button
@@ -13,10 +20,9 @@ const { url, label = "프로필 링크 복사" } = Astro.props;
   class="btn btn--ghost"
   data-copy-link
   data-copy-url={url}
-  data-label={label}
-  aria-label="프로필 링크를 클립보드에 복사"
+  aria-label="프로필 링크를 클립보드에 복사 / Copy profile link"
 >
-  {label}
+  <Bi ko={label} en={labelEn} />
 </button>
 
 <script>

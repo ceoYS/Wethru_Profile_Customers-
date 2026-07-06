@@ -41,13 +41,33 @@ function warn(file, message) {
   warnings.push(`  ⚠ [${file}] ${message}`);
 }
 
+const LOCALES = ["ko", "en"];
+
+/**
+ * Unwrap a LocalizedString (plain string or { ko, en }) to its Korean text.
+ * Returns null when the shape is invalid.
+ */
+function localizedText(value) {
+  if (typeof value === "string") return value;
+  if (value && typeof value === "object" && typeof value.ko === "string") {
+    return value.ko;
+  }
+  return null;
+}
+
 function requireText(file, value, label) {
-  if (typeof value !== "string" || value.trim() === "") {
+  const text = localizedText(value);
+  if (text === null || text.trim() === "") {
     err(file, `${label} is missing or empty`);
     return false;
   }
-  if (value.includes("TODO")) {
+  const en = typeof value === "object" ? value.en : undefined;
+  if (text.includes("TODO") || (typeof en === "string" && en.includes("TODO"))) {
     warn(file, `${label} still contains TODO`);
+  }
+  if (typeof value === "object" && (typeof en !== "string" || en.trim() === "")) {
+    err(file, `${label} is localized but its "en" text is missing or empty`);
+    return false;
   }
   return true;
 }
@@ -133,6 +153,33 @@ for (const entry of entries) {
     err(file, `status "${profile.status}" invalid. Available: ${STATUSES.join(", ")}`);
   }
 
+  // Locales (optional; defaults to ko-only).
+  if (profile.locales !== undefined) {
+    if (!Array.isArray(profile.locales) || profile.locales.length === 0) {
+      err(file, "locales must be a non-empty array when present");
+    } else {
+      for (const locale of profile.locales) {
+        if (!LOCALES.includes(locale)) {
+          err(file, `locales contains "${locale}". Available: ${LOCALES.join(", ")}`);
+        }
+      }
+      if (!profile.locales.includes("ko")) {
+        err(file, 'locales must include "ko" — Korean is the default language');
+      }
+      if (profile.locales.includes("en")) {
+        // The KO/EN toggle will render — hero copy needs English text.
+        for (const [label, value] of [
+          ["person.tagline", profile.person?.tagline],
+          ["person.summary", profile.person?.summary],
+        ]) {
+          if (typeof value === "string") {
+            warn(file, `locales includes "en" but ${label} has no en translation`);
+          }
+        }
+      }
+    }
+  }
+
   // 4. Required content.
   requireText(file, profile.person?.name, "person.name");
   requireText(file, profile.person?.tagline, "person.tagline");
@@ -173,7 +220,8 @@ for (const entry of entries) {
 
   // 7. Proofs.
   (profile.proofs ?? []).forEach((proof, index) => {
-    if (!proof?.value || !proof?.label) {
+    const label = localizedText(proof?.label);
+    if (!proof?.value || !label || label.trim() === "") {
       err(file, `proofs[${index}] needs both value and label`);
     }
   });

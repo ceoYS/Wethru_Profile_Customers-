@@ -1,5 +1,7 @@
 ---
 import type { ProfileProject } from "../../types/profile";
+import Bi from "../shared/Bi.astro";
+import LText from "../shared/LText.astro";
 
 interface Props {
   projects: ProfileProject[];
@@ -13,7 +15,9 @@ const { projects, sectionNumber = "03" } = Astro.props;
   <section class="profile-section" aria-labelledby="projects-title">
     <div class="section-head">
       <span class="section-head__number" aria-hidden="true">{sectionNumber}</span>
-      <h2 class="section-head__title" id="projects-title">프로젝트</h2>
+      <h2 class="section-head__title" id="projects-title">
+        <Bi ko="프로젝트" en="Projects" />
+      </h2>
       <span class="section-head__rule" aria-hidden="true"></span>
     </div>
 
@@ -22,24 +26,24 @@ const { projects, sectionNumber = "03" } = Astro.props;
         <article class="project-card">
           <div class="project-card__meta">
             <div>
-              <h3 class="project-card__title">{project.title}</h3>
-              <p class="project-card__role">{project.role}</p>
+              <h3 class="project-card__title"><LText value={project.title} /></h3>
+              <p class="project-card__role"><LText value={project.role} /></p>
             </div>
             <span class="project-card__period">{project.period}</span>
           </div>
 
           <dl class="project-card__steps">
             <div class="project-step">
-              <dt>문제</dt>
-              <dd>{project.problem}</dd>
+              <dt><Bi ko="문제" en="Problem" /></dt>
+              <dd><LText value={project.problem} /></dd>
             </div>
             <div class="project-step">
-              <dt>접근</dt>
-              <dd>{project.approach}</dd>
+              <dt><Bi ko="접근" en="Approach" /></dt>
+              <dd><LText value={project.approach} /></dd>
             </div>
             <div class="project-step project-step--result">
-              <dt>결과</dt>
-              <dd>{project.result}</dd>
+              <dt><Bi ko="결과" en="Result" /></dt>
+              <dd><LText value={project.result} /></dd>
             </div>
           </dl>
         </article>

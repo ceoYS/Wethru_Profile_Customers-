@@ -2,6 +2,7 @@
 import type { CustomerProfile } from "../types/profile";
 import SkipLink from "../components/shared/SkipLink.astro";
 import WeThruFooter from "../components/profile/WeThruFooter.astro";
+import { hasEnglish } from "../utils/i18n";
 import "../styles/global.css";
 import "../styles/profile-base.css";
 import "../styles/themes/navy-black-white.css";
@@ -14,16 +15,40 @@ interface Props {
 
 const { customer } = Astro.props;
 const { seo, person, status } = customer;
+const bilingual = hasEnglish(customer);
 
 const site = Astro.site ?? new URL("https://profile.wethru.com");
 const canonicalUrl = new URL(`/profiles/${customer.slug}/`, site);
 const ogImageUrl = seo.ogImage ? new URL(seo.ogImage, site) : undefined;
 ---
 
-<html lang="ko" data-theme={customer.theme} data-layout={customer.layout}>
+<html
+  lang="ko"
+  data-lang="ko"
+  data-theme={customer.theme}
+  data-layout={customer.layout}
+>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {bilingual && (
+      // Re-apply the saved language before first paint so an EN visitor
+      // never sees a Korean flash. Ko-only profiles skip this entirely —
+      // their data-lang stays "ko" no matter what localStorage says.
+      <script is:inline>
+        (function () {
+          try {
+            var lang = localStorage.getItem("wethru-profile-lang");
+            if (lang === "en" || lang === "ko") {
+              document.documentElement.dataset.lang = lang;
+              document.documentElement.lang = lang;
+            }
+          } catch (error) {
+            /* storage blocked — keep the server-rendered Korean default */
+          }
+        })();
+      </script>
+    )}
     <title>{seo.title}</title>
     <meta name="description" content={seo.description} />
     <link rel="canonical" href={canonicalUrl} />

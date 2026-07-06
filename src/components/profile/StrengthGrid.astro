@@ -1,5 +1,7 @@
 ---
 import type { ProfileStrength } from "../../types/profile";
+import Bi from "../shared/Bi.astro";
+import LText from "../shared/LText.astro";
 
 interface Props {
   strengths: ProfileStrength[];
@@ -13,7 +15,9 @@ const { strengths, sectionNumber = "01" } = Astro.props;
   <section class="profile-section" aria-labelledby="strengths-title">
     <div class="section-head">
       <span class="section-head__number" aria-hidden="true">{sectionNumber}</span>
-      <h2 class="section-head__title" id="strengths-title">일하는 방식</h2>
+      <h2 class="section-head__title" id="strengths-title">
+        <Bi ko="일하는 방식" en="How I Work" />
+      </h2>
       <span class="section-head__rule" aria-hidden="true"></span>
     </div>
 
@@ -26,8 +30,8 @@ const { strengths, sectionNumber = "01" } = Astro.props;
           {strength.eyebrow && (
             <span class="eyebrow strength-card__eyebrow">{strength.eyebrow}</span>
           )}
-          <h3 class="strength-card__title">{strength.title}</h3>
-          <p class="strength-card__description">{strength.description}</p>
+          <h3 class="strength-card__title"><LText value={strength.title} /></h3>
+          <p class="strength-card__description"><LText value={strength.description} /></p>
         </article>
       ))}
     </div>

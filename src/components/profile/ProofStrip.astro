@@ -1,5 +1,6 @@
 ---
 import type { ProfileProof } from "../../types/profile";
+import LText from "../shared/LText.astro";
 
 interface Props {
   proofs: ProfileProof[];
@@ -13,8 +14,8 @@ const { proofs } = Astro.props;
     <dl class="proof-strip">
       {proofs.map((proof) => (
         <div class="proof-strip__item" title={proof.description}>
-          <dt class="proof-strip__label" set:text={proof.label} />
-          <dd class="proof-strip__value" set:text={proof.value} />
+          <dt class="proof-strip__label"><LText value={proof.label} /></dt>
+          <dd class="proof-strip__value">{proof.value}</dd>
         </div>
       ))}
     </dl>

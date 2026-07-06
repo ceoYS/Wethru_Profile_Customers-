@@ -102,6 +102,43 @@
   background: var(--line-soft);
 }
 
+/* Language toggle — quiet mono chrome so it reads as document furniture,
+   not a feature button. Rendered only on profiles with locales: ["ko","en"]. */
+.lang-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.hero__eyebrow-row .lang-toggle {
+  order: 2; /* eyebrow → hairline rule (::after) → toggle */
+}
+
+.lang-toggle__btn {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  color: var(--muted);
+  padding: 0.25rem 0.1rem;
+  border-bottom: 1px solid transparent;
+  transition: color 160ms ease, border-color 160ms ease;
+}
+
+.lang-toggle__btn:hover {
+  color: var(--accent);
+}
+
+.lang-toggle__btn[aria-pressed="true"] {
+  color: var(--accent-strong);
+  border-bottom-color: var(--accent);
+}
+
+.lang-toggle__divider {
+  width: 1px;
+  height: 0.8rem;
+  background: var(--line);
+}
+
 .hero__name {
   font-size: clamp(2.6rem, 8vw, 4.4rem);
   font-weight: 700;
@@ -453,6 +490,23 @@
 }
 
 /* --------------------------------------------------------------------------
+   Skills — one quiet chip strip under the strengths grid. Reuses .badge so
+   every theme styles it for free.
+   -------------------------------------------------------------------------- */
+
+.skills-strip__eyebrow {
+  display: block;
+  margin-bottom: 0.85rem;
+}
+
+.skills-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  max-width: 60rem;
+}
+
+/* --------------------------------------------------------------------------
    Experience — vertical timeline, not a résumé table.
    -------------------------------------------------------------------------- */
 
@@ -536,6 +590,49 @@
   position: absolute;
   left: 0;
   color: var(--section-number-color);
+}
+
+/* Compact rows for short stints — recorded, not celebrated. */
+.timeline-extra {
+  margin-top: clamp(2rem, 4vw, 2.75rem);
+  padding-top: 1.35rem;
+  border-top: 1px solid var(--line-soft);
+}
+
+.timeline-extra__eyebrow {
+  display: block;
+}
+
+.timeline-extra__list {
+  margin-top: 0.9rem;
+  display: grid;
+  gap: 0.55rem;
+  max-width: 58ch;
+}
+
+.timeline-extra__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 1rem;
+  font-size: 0.88rem;
+}
+
+.timeline-extra__company {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.timeline-extra__role {
+  color: var(--muted);
+}
+
+.timeline-extra__period {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  color: var(--muted);
 }
 
 /* --------------------------------------------------------------------------
