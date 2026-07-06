@@ -149,7 +149,8 @@
 .hero__english-name {
   display: block;
   margin-top: 0.35rem;
-  font-family: var(--font-display);
+  /* latin-only editorial accent; themes without --font-accent keep display */
+  font-family: var(--font-accent, var(--font-display));
   font-size: clamp(0.95rem, 2.4vw, 1.25rem);
   font-weight: 400;
   font-style: italic;
@@ -329,7 +330,7 @@
 }
 
 .portrait__monogram {
-  font-family: var(--font-display);
+  font-family: var(--font-accent, var(--font-display));
   font-size: 4rem;
   font-style: italic;
   color: var(--accent);
@@ -391,7 +392,7 @@
 }
 
 .identity__mark {
-  font-family: var(--font-display);
+  font-family: var(--font-accent, var(--font-display));
   font-size: 3rem;
   line-height: 0.5;
   color: var(--section-number-color);

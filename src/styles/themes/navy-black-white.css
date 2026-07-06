@@ -1,8 +1,9 @@
 /* ==========================================================================
    Theme: navy-black-white
    Cold, precise, consulting-dossier. Dark navy field, hairline structure,
-   serif display accents against a geometric sans body. No gradient washes,
-   no glassmorphism — depth comes from layered navy surfaces and one
+   Pretendard display over a geometric sans body, with a serif-italic accent
+   reserved for latin editorial marks (english name, monogram). No gradient
+   washes, no glassmorphism — depth comes from layered navy surfaces and one
    restrained glow behind the portrait.
    ========================================================================== */
 
@@ -19,8 +20,12 @@
   --accent-strong: #ffffff;
   --navy: #071a3d;
 
-  --font-display: "Didot", "Playfair Display", Georgia, "Times New Roman",
-    "Apple SD Gothic Neo", "Noto Serif KR", serif;
+  /* Korean display text must not fall through to generic serif (Batang/궁서
+     on Windows) — display is Pretendard; serif lives only in --font-accent,
+     which is applied to latin-only editorial marks. */
+  --font-display: "Pretendard", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  --font-accent: "Didot", "Playfair Display", Georgia, "Times New Roman", serif;
   --font-body: "Pretendard", system-ui, -apple-system, BlinkMacSystemFont,
     "Segoe UI", sans-serif;
   --font-mono: "SF Mono", "Cascadia Code", "JetBrains Mono", ui-monospace,
