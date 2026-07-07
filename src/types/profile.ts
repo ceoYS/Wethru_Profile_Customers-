@@ -56,6 +56,11 @@ export interface ProfilePerson {
   tagline: LocalizedString;
   /** 2–4 sentence introduction shown in the hero. */
   summary: LocalizedString;
+  /**
+   * Support line under the identity statement (mid-page section).
+   * Falls back to `summary` when omitted.
+   */
+  identitySupport?: LocalizedString;
   photo: ProfilePhoto;
 }
 

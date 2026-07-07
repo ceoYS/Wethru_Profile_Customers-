@@ -31,7 +31,7 @@ const { customer } = Astro.props;
   <ProofStrip proofs={customer.proofs} />
   <IdentityStatement
     statement={customer.person.tagline}
-    support={customer.person.summary}
+    support={customer.person.identitySupport ?? customer.person.summary}
   />
   <StrengthGrid strengths={customer.strengths} sectionNumber="01" />
   <SkillsStrip skills={customer.skills ?? []} />

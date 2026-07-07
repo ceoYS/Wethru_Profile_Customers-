@@ -43,7 +43,8 @@ tagline: { ko: "한 문장", en: "One line" },  // 토글 시 전환
 - `englishName` — hero에서 세리프 이탤릭으로 표시, 모노그램 fallback의 이니셜 소스
 - `roleLine` ✔ — 직군 한 줄 (예: "Marketing & Strategy")
 - `tagline` ✔ — hero + identity statement 두 곳에 사용되는 핵심 문장
-- `summary` ✔ — 2~4문장
+- `summary` ✔ — 2~4문장 (hero 소개)
+- `identitySupport` — 가운데 identity 섹션의 보조 문장. 없으면 `summary`가 그대로 쓰임
 - `photo.src` ✔ — `/images/customers/{slug}/profile.webp`
 - `photo.alt` ✔ — 누락 시 검증 실패
 

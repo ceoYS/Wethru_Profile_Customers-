@@ -19,12 +19,16 @@ export const profile: CustomerProfile = {
     englishName: "BAE JIAN",
     roleLine: "Data-Driven Marketing Strategist",
     tagline: {
-      ko: "데이터와 자동화로, 마케팅이 더 정확하게 움직이도록 설계합니다.",
-      en: "Designing smarter marketing systems with data, automation, and AI transformation.",
+      ko: "데이터와 자동화로, 피드백이 반영된 시도로 정확한 마케팅 성과를 보여주는 팀",
+      en: "A team that turns data, automation, and feedback-driven iteration into precise marketing results.",
     },
     summary: {
-      ko: "배지안은 AI Transformation, 마케팅 자동화, 데이터 클리닝, 퍼포먼스 마케팅을 연결해 마케팅 운영이 더 빠르고 정확하게 움직이도록 설계하는 데이터 드리븐 마케팅 전략가입니다. EY컨설팅에서 대기업 마케팅 자동화 프로젝트를 경험했고, 스타트업·제조 플랫폼·브랜드 캠페인 프로젝트를 통해 리서치, 광고 운영, UX 분석, 콘텐츠 전략을 실행해왔습니다.",
-      en: "Jian Bae is a data-driven marketing strategist focused on AI Transformation, marketing automation, data cleaning, and performance marketing. She has supported marketing automation initiatives at EY Consulting and built practical experience across startup data platforms, B2B manufacturing marketing, UX analytics, and brand campaign projects.",
+      ko: "AI Transformation, 마케팅 자동화, 데이터 클리닝, 퍼포먼스 마케팅을 연결해 마케팅 운영이 더 빠르고 정확하게 움직이도록 설계하는 데이터 드리븐 마케팅 전략가입니다.",
+      en: "A data-driven marketing strategist connecting AI Transformation, marketing automation, data cleaning, and performance marketing to make marketing operations faster and more precise.",
+    },
+    identitySupport: {
+      ko: "현재 EY컨설팅에서 대기업 마케팅 자동화 컨설팅 중이며 스타트업·제조 플랫폼·브랜드 캠페인 프로젝트를 통해 리서치, 광고 운영, UX 분석, 콘텐츠 전략을 실행해왔습니다.",
+      en: "Currently consulting on enterprise marketing automation at EY Consulting, with hands-on experience in research, ad operations, UX analytics, and content strategy across startup, manufacturing-platform, and brand campaign projects.",
     },
     photo: {
       src: "/images/customers/bae-jian/profile.webp",

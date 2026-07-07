@@ -184,6 +184,9 @@ for (const entry of entries) {
   requireText(file, profile.person?.name, "person.name");
   requireText(file, profile.person?.tagline, "person.tagline");
   requireText(file, profile.person?.summary, "person.summary");
+  if (profile.person?.identitySupport !== undefined) {
+    requireText(file, profile.person.identitySupport, "person.identitySupport");
+  }
   requireText(file, profile.person?.photo?.alt, "person.photo.alt");
   requireText(file, profile.seo?.title, "seo.title");
   requireText(file, profile.seo?.description, "seo.description");
