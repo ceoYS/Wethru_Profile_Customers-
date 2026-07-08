@@ -19,8 +19,8 @@ export const profile: CustomerProfile = {
     englishName: "BAE JIAN",
     roleLine: "Data-Driven Marketing Strategist",
     tagline: {
-      ko: "데이터와 자동화로, 피드백이 반영된 시도로 정확한 마케팅 성과를 보여주는 팀원",
-      en: "A teammate who turns data, automation, and feedback-driven iteration into precise marketing results.",
+      ko: "데이터와 자동화로, 피드백이 성과로 이어지는 마케팅을 설계합니다.",
+      en: "Designing marketing systems where data, automation, and feedback translate into measurable outcomes.",
     },
     summary: {
       ko: "AI Transformation, 마케팅 자동화, 데이터 클리닝, 퍼포먼스 마케팅을 연결해 마케팅 운영이 더 빠르고 정확하게 움직이도록 설계하는 데이터 드리븐 마케팅 전략가입니다.",
@@ -120,8 +120,8 @@ export const profile: CustomerProfile = {
       role: "Consultant / TC-Tech, Transformation Technology",
       period: "2025.09 ~ Present",
       description: {
-        ko: "국내 전자 대기업의 마케팅 자동화(AX) 프로젝트에서 PMO 운영, AI Agent·AI workflow 구축 기획, AI Marketing Trend 리서치, 키워드 지표 트래킹, 데이터 수집·분석 업무를 수행했습니다.",
-        en: "Supported the planning and operational execution of a Marketing AI Transformation initiative for a leading electronics corporation, including PMO operations, AI Agent/workflow planning, AI marketing trend research, keyword tracking, and data analysis.",
+        ko: "국내 전자 대기업 마케팅 자동화(AX) 프로젝트에서 PMO 운영, AI Agent·workflow 기획, 트렌드 리서치, 키워드 지표 트래킹, 데이터 분석 수행",
+        en: "Marketing AX project for a leading electronics corporation — PMO operations, AI agent/workflow planning, trend research, keyword tracking, and data analysis.",
       },
       bullets: [
         {
@@ -151,8 +151,8 @@ export const profile: CustomerProfile = {
       role: "Junior Marketer",
       period: "2023.04 ~ 2023.09",
       description: {
-        ko: "바로발주 서비스의 디지털 광고, 온라인 마케팅 전략, SEO, UX 분석, CRM 운영을 담당했습니다.",
-        en: "Executed digital marketing, SEO, UX analytics, CRM, and campaign operations for the Baro Order B2B manufacturing platform.",
+        ko: "바로발주 서비스의 디지털 광고, SEO, UX 분석, CRM 운영 담당",
+        en: "Digital ads, SEO, UX analytics, and CRM for the Baro Order B2B manufacturing platform.",
       },
       bullets: [
         {
@@ -182,8 +182,8 @@ export const profile: CustomerProfile = {
       role: "Marketing Intern",
       period: "2022.10 ~ 2023.02",
       description: {
-        ko: "혁신의숲 서비스에서 스타트업·VC 데이터 관리, 시장 리서치, 서비스 운영 자료 정리를 수행했습니다.",
-        en: "Managed startup and VC data records, supported market research, and prepared service operation materials for the Innovation Forest platform.",
+        ko: "혁신의숲 서비스의 스타트업·VC 데이터 관리, 시장 리서치, 운영 자료 정리",
+        en: "Startup and VC data management, market research, and operation materials for the Innovation Forest platform.",
       },
       bullets: [
         {
@@ -221,15 +221,15 @@ export const profile: CustomerProfile = {
       role: { ko: "학술부 부장", en: "Academic Team Lead" },
       period: "2022.06 ~ 2022.12",
       problem: {
-        ko: "소상공인의 온라인 접점과 메뉴·가격 구조가 정리되지 않은 문제를 다뤘습니다.",
-        en: "A local business had a scattered online presence and an unstructured menu and pricing setup.",
+        ko: "소상공인의 온라인 접점과 메뉴·가격 구조가 정리되지 않은 상태.",
+        en: "A local business with a scattered online presence and unstructured menu and pricing.",
       },
       approach: {
-        ko: "네이버 플레이스, 인스타그램 채널, 메뉴 구성, 가격 구조를 함께 개선했습니다.",
-        en: "Reworked the Naver Place listing, Instagram channel, menu structure, and pricing together.",
+        ko: "네이버 플레이스, 인스타그램 채널, 메뉴 구성, 가격 구조 개선.",
+        en: "Reworked the Naver Place listing, Instagram channel, menu structure, and pricing.",
       },
       result: {
-        ko: "프로젝트 후 매출 25% 이상 증가 사례를 만들었습니다.",
+        ko: "프로젝트 후 매출 25% 이상 증가.",
         en: "Sales grew more than 25% after the project.",
       },
     },
@@ -238,16 +238,16 @@ export const profile: CustomerProfile = {
       role: "Team Lead",
       period: "2024.03 ~ 2024.12",
       problem: {
-        ko: "LG전자 ‘틔운 미니’의 제품 메시지를 소비자 경험 중심으로 전달해야 했습니다.",
+        ko: "LG전자 ‘틔운 미니’ 제품 메시지를 소비자 경험 중심으로 재정의.",
         en: "LG's tiiun mini needed its product message reframed around the consumer experience.",
       },
       approach: {
-        ko: "TVC 및 IMC 전략 제안서를 기획하고 일정, 예산, KPI를 포함한 실행안을 설계했습니다.",
-        en: "Built a TVC and IMC strategy proposal with a full execution plan covering schedule, budget, and KPIs.",
+        ko: "TVC·IMC 전략 제안서와 일정·예산·KPI 포함 실행안 설계.",
+        en: "A TVC and IMC strategy proposal with an execution plan covering schedule, budget, and KPIs.",
       },
       result: {
-        ko: "LG전자 마케팅팀 및 광고대행사 실무진 대상 최종 발표에서 긍정적인 평가를 받았습니다.",
-        en: "The final presentation was well received by LG's marketing team and agency practitioners.",
+        ko: "LG전자 마케팅팀·광고대행사 실무진 대상 최종 발표에서 긍정적 평가.",
+        en: "Well received by LG's marketing team and agency practitioners at the final presentation.",
       },
     },
     {
@@ -255,15 +255,15 @@ export const profile: CustomerProfile = {
       role: "Team Lead",
       period: "2024.03 ~ 2024.12",
       problem: {
-        ko: "면세업계 침체 이후 MZ세대의 오프라인 경험을 온라인 구매로 연결해야 했습니다.",
+        ko: "면세업계 침체 이후 MZ세대의 오프라인 경험을 온라인 구매로 연결 필요.",
         en: "After the duty-free downturn, Gen MZ's offline experiences had to be reconnected to online purchases.",
       },
       approach: {
-        ko: "소비자 리서치를 바탕으로 팝업스토어, SNS 챌린지, 리워드 프로그램을 결합했습니다.",
-        en: "Combined a pop-up store, a social challenge, and a rewards program grounded in consumer research.",
+        ko: "소비자 리서치 기반 팝업스토어, SNS 챌린지, 리워드 프로그램 결합.",
+        en: "A pop-up store, social challenge, and rewards program grounded in consumer research.",
       },
       result: {
-        ko: "최종 경쟁 PT에서 2등을 수상했습니다.",
+        ko: "최종 경쟁 PT 2위 수상.",
         en: "Won 2nd place in the final competitive pitch.",
       },
     },

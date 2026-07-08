@@ -9,7 +9,7 @@ interface Props {
   sectionNumber?: string;
 }
 
-const { contact, name, sectionNumber = "04" } = Astro.props;
+const { contact, sectionNumber = "04" } = Astro.props;
 const showEmail = Boolean(contact.email && contact.showEmail);
 // Phone is intentionally never rendered here. See src/types/profile.ts.
 ---
@@ -23,22 +23,26 @@ const showEmail = Boolean(contact.email && contact.showEmail);
 
   <div class="contact-cta">
     <p class="contact-cta__title">
-      <Bi ko="함께 이야기해보고 싶다면" en="Let's talk" />
+      <Bi ko="연락하기" en="Contact" />
     </p>
     <p class="contact-cta__note">
       <Bi
-        ko={`협업, 채용, 프로젝트 제안 모두 환영합니다. 이메일을 남겨주시면 ${name}님이 직접 확인합니다.`}
-        en="Open to collaboration, hiring, and project inquiries — every email is read personally."
+        ko="협업, 채용, 프로젝트 제안은 이메일로 남겨주세요."
+        en="For collaboration, hiring, or project inquiries, please send an email."
       />
     </p>
 
     <div class="contact-cta__actions">
       {showEmail && (
-        <a class="btn btn--primary" href={`mailto:${contact.email}`}>
-          <Bi ko="이메일 보내기" en="Send an email" />
+        <a
+          class="btn btn--primary"
+          href={`mailto:${contact.email}`}
+          aria-label="이메일로 연락 / Send an email"
+        >
+          <Bi ko="이메일" en="Email" />
         </a>
       )}
-      <CopyLinkButton label="이 프로필 공유하기" labelEn="Share this profile" />
+      <CopyLinkButton label="프로필 URL" labelEn="Profile URL" />
     </div>
 
     {showEmail && <p class="contact-cta__email">{contact.email}</p>}

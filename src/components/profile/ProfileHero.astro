@@ -44,8 +44,12 @@ const showEmailCta = Boolean(contact.email && contact.showEmail);
 
     <div class="hero__cta">
       {showEmailCta && (
-        <a class="btn btn--primary" href={`mailto:${contact.email}`}>
-          <Bi ko="이메일로 문의하기" en="Get in touch" />
+        <a
+          class="btn btn--primary"
+          href={`mailto:${contact.email}`}
+          aria-label="이메일로 연락 / Send an email"
+        >
+          <Bi ko="이메일" en="Email" />
         </a>
       )}
       <CopyLinkButton />

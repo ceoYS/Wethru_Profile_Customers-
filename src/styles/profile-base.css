@@ -149,13 +149,15 @@
 .hero__english-name {
   display: block;
   margin-top: 0.35rem;
-  /* latin-only editorial accent; themes without --font-accent keep display */
-  font-family: var(--font-accent, var(--font-display));
-  font-size: clamp(0.95rem, 2.4vw, 1.25rem);
-  font-weight: 400;
-  font-style: italic;
-  letter-spacing: 0.24em;
-  color: var(--accent);
+  /* Same family as the Korean name — only size, tracking, and weight set it
+     apart, so the two names read as one unit, not two competing typefaces. */
+  font-family: var(--font-display);
+  font-size: clamp(0.95rem, 2.4vw, 1.2rem);
+  font-weight: 500;
+  font-style: normal;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
 }
 
 .hero__tagline {
@@ -253,6 +255,21 @@
 
   .customer-card:hover {
     transform: translateY(-2px);
+  }
+
+  /* Keyword chips lift and gain a faint accent glow on hover — a premium
+     interaction cue, kept weaker than the portrait glow. Defined only in the
+     hover-capable query so a tap can't leave it stuck on touch devices. */
+  .badge {
+    transition: transform 180ms ease, border-color 180ms ease,
+      box-shadow 180ms ease, color 180ms ease;
+  }
+
+  .badge:hover {
+    transform: translateY(-2px) scale(1.01);
+    border-color: color-mix(in srgb, var(--accent) 55%, var(--line));
+    box-shadow: 0 0 18px color-mix(in srgb, var(--accent) 22%, transparent);
+    color: var(--accent-strong);
   }
 }
 
