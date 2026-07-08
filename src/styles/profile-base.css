@@ -226,7 +226,6 @@
 .btn--primary:hover {
   background: var(--accent);
   border-color: var(--accent);
-  transform: translateY(-1px);
 }
 
 .btn--ghost {
@@ -243,6 +242,58 @@
 .btn--ghost[data-copied="true"] {
   border-color: var(--accent);
   color: var(--accent);
+}
+
+/* Lift-on-hover only where a real pointer can hover — prevents the
+   translate from sticking after a tap on touch screens. */
+@media (hover: hover) and (pointer: fine) {
+  .btn--primary:hover {
+    transform: translateY(-1px);
+  }
+
+  .customer-card:hover {
+    transform: translateY(-2px);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Mobile refinements — shared-on-phone profile, so the small screen is the
+   primary QA target (390×844 baseline).
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 480px) {
+  /* CTAs: one comfortable tap target per row instead of two cramped,
+     unevenly-wrapping buttons. */
+  .hero__cta,
+  .contact-cta__actions {
+    width: 100%;
+  }
+
+  .hero__cta .btn,
+  .contact-cta__actions .btn {
+    flex: 1 1 100%;
+    padding-block: 0.85rem;
+  }
+
+  /* Let the role line wrap on its own without squeezing the KO/EN toggle. */
+  .hero__eyebrow-row .eyebrow {
+    min-width: 0;
+  }
+
+  .hero__eyebrow-row .lang-toggle {
+    flex: 0 0 auto;
+  }
+
+  /* Denser chips so the skills strip and demoted hero badges take fewer rows. */
+  .skills-strip,
+  .hero__badges {
+    gap: 0.4rem;
+  }
+
+  .badge {
+    font-size: 0.64rem;
+    padding: 0.28rem 0.6rem;
+  }
 }
 
 /* --------------------------------------------------------------------------
@@ -774,6 +825,8 @@
   font-size: 0.78rem;
   letter-spacing: 0.06em;
   color: var(--muted);
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 
 /* --------------------------------------------------------------------------
@@ -837,7 +890,9 @@
   }
 
   [data-layout="editorial-split"] .portrait {
-    width: min(100%, 17rem);
+    /* Smaller on phones so name + tagline stay in the first viewport
+       instead of being pushed below a full-width portrait. */
+    width: min(60vw, 13.5rem);
   }
 
   [data-layout="editorial-split"] .portrait__frame img,
@@ -960,7 +1015,6 @@
 
 .customer-card:hover {
   border-color: var(--accent);
-  transform: translateY(-2px);
 }
 
 .customer-card__meta {

@@ -53,6 +53,12 @@
 }
 
 @media (max-width: 767px) {
+  [data-theme="navy-black-white"] {
+    /* Softer, tighter glow on phones — the 90px spread reads as a bright
+       halo on a small screen. */
+    --photo-glow: 0 0 46px 4px rgba(201, 215, 255, 0.1);
+  }
+
   [data-theme="navy-black-white"] .profile-shell {
     background:
       radial-gradient(700px 380px at 90% -4%, rgba(7, 26, 61, 0.85), transparent 70%),
