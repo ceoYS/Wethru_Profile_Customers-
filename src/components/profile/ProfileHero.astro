@@ -3,6 +3,7 @@ import type { CustomerProfile } from "../../types/profile";
 import { hasEnglish } from "../../utils/i18n";
 import Bi from "../shared/Bi.astro";
 import CopyLinkButton from "../shared/CopyLinkButton.astro";
+import EffectsToggle from "../shared/EffectsToggle.astro";
 import LanguageToggle from "../shared/LanguageToggle.astro";
 import LText from "../shared/LText.astro";
 
@@ -29,7 +30,10 @@ const showEmailCta = Boolean(contact.email && contact.showEmail);
   <div class="hero__copy">
     <div class="hero__eyebrow-row">
       <span class="eyebrow"><LText value={person.roleLine} /></span>
-      {bilingual && <LanguageToggle />}
+      <div class="hero__controls">
+        {bilingual && <LanguageToggle />}
+        <EffectsToggle />
+      </div>
     </div>
 
     <h1 class="hero__name">

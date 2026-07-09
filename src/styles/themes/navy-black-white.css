@@ -37,7 +37,17 @@
   --radius-photo: 4px;
 
   --shadow-card: 0 1px 0 rgba(255, 255, 255, 0.04) inset;
-  --photo-glow: 0 0 90px 8px rgba(201, 215, 255, 0.16);
+  /* Portrait signature: a crisp blue hairline ring + soft blue halo + a real
+     drop shadow. Premium blue glow, not a neon tube — the alphas stay low so
+     the photo never looks blurred and never outshines the copy. */
+  --photo-glow:
+    0 0 0 1px rgba(191, 227, 255, 0.22),
+    0 0 34px rgba(80, 150, 255, 0.18),
+    0 24px 70px rgba(0, 0, 0, 0.35);
+  --photo-glow-hover:
+    0 0 0 1px rgba(191, 227, 255, 0.42),
+    0 0 46px rgba(80, 150, 255, 0.3),
+    0 26px 80px rgba(0, 0, 0, 0.42);
 
   --eyebrow-tracking: 0.22em;
   --section-number-color: rgba(201, 215, 255, 0.38);
@@ -54,9 +64,16 @@
 
 @media (max-width: 767px) {
   [data-theme="navy-black-white"] {
-    /* Softer, tighter glow on phones — the 90px spread reads as a bright
-       halo on a small screen. */
-    --photo-glow: 0 0 46px 4px rgba(201, 215, 255, 0.1);
+    /* Softer, tighter glow on phones — the desktop spread reads as a bright
+       halo on a small screen, and the copy must win over the photo. */
+    --photo-glow:
+      0 0 0 1px rgba(191, 227, 255, 0.18),
+      0 0 22px rgba(80, 150, 255, 0.12),
+      0 16px 44px rgba(0, 0, 0, 0.3);
+    --photo-glow-hover:
+      0 0 0 1px rgba(191, 227, 255, 0.24),
+      0 0 26px rgba(80, 150, 255, 0.16),
+      0 18px 48px rgba(0, 0, 0, 0.34);
   }
 
   [data-theme="navy-black-white"] .profile-shell {

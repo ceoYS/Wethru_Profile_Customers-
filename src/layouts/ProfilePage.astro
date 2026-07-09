@@ -25,12 +25,28 @@ const ogImageUrl = seo.ogImage ? new URL(seo.ogImage, site) : undefined;
 <html
   lang="ko"
   data-lang="ko"
+  data-effects="on"
   data-theme={customer.theme}
   data-layout={customer.layout}
 >
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline>
+      // Re-apply the saved interaction-effects choice before first paint so a
+      // returning "off" visitor never sees hover effects flash on. Runs on
+      // every profile; the default stays "on" when unset or storage is blocked.
+      (function () {
+        try {
+          var fx = localStorage.getItem("wethru-profile-effects");
+          if (fx === "on" || fx === "off") {
+            document.documentElement.dataset.effects = fx;
+          }
+        } catch (error) {
+          /* storage blocked — keep the server-rendered "on" default */
+        }
+      })();
+    </script>
     {bilingual && (
       // Re-apply the saved language before first paint so an EN visitor
       // never sees a Korean flash. Ko-only profiles skip this entirely —

@@ -19,8 +19,8 @@ export const profile: CustomerProfile = {
     englishName: "BAE JIAN",
     roleLine: "Data-Driven Marketing Strategist",
     tagline: {
-      ko: "데이터와 자동화로, 피드백이 성과로 이어지는 마케팅을 설계합니다.",
-      en: "Designing marketing systems where data, automation, and feedback translate into measurable outcomes.",
+      ko: "데이터와 자동화로, 피드백이 성과로 이어지는 마케팅 구조를 설계합니다.",
+      en: "Designing marketing systems where data, automation, and feedback turn into measurable outcomes.",
     },
     summary: {
       ko: "AI Transformation, 마케팅 자동화, 데이터 클리닝, 퍼포먼스 마케팅을 연결해 마케팅 운영이 더 빠르고 정확하게 움직이도록 설계하는 데이터 드리븐 마케팅 전략가입니다.",

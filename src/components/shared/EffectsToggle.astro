@@ -1,0 +1,29 @@
+---
+/**
+ * Interaction-effects on/off toggle. Renders on every profile (not language
+ * dependent), sitting beside the KO/EN toggle. Default is on; the choice
+ * persists in localStorage and is re-applied before first paint by an inline
+ * script in ProfilePage.astro. Without JS the control is inert and the
+ * server-rendered "on" default stays — layout never depends on it.
+ */
+import Bi from "./Bi.astro";
+---
+
+<button
+  type="button"
+  class="effects-toggle"
+  data-effects-toggle
+  aria-pressed="true"
+  aria-label="효과 켜고 끄기 / Toggle interaction effects"
+>
+  <span class="effects-toggle__label"><Bi ko="효과" en="Effects" /></span>
+  <span class="effects-toggle__state" aria-hidden="true">
+    <span class="effects-toggle__on">ON</span>
+    <span class="effects-toggle__off">OFF</span>
+  </span>
+</button>
+
+<script>
+  import { initEffectsToggle } from "../../scripts/effects-toggle";
+  initEffectsToggle();
+</script>
