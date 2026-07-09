@@ -1,42 +1,60 @@
 /* ==========================================================================
    Theme: cobalt-air
-   Bright, airy, premium light theme built on a shallow cobalt blue. A near-
-   white sky field lit by a soft cobalt aurora, deep-cobalt display type over
-   Pretendard body, gently rounded cards, and blue-tinted (never black) soft
-   shadows. Depth comes from light and a restrained blue halo — no neon, no
-   glassmorphism, no SF glow. Use for people-facing, trend-led, commerce or
-   brand work where the tone should read clean and confident, not dark.
+   Bright, airy, hand-directed light theme built on a three-stop cobalt palette.
+   A near-white sky lit by an asymmetric cobalt aurora, a faint paper grain to
+   kill digital flatness, deep-cobalt display type over Pretendard, and cards
+   whose texture, radius and shadow differ by role so the page never reads as a
+   grid of clones. Depth comes from light and a blue halo — no neon, no
+   glassmorphism, no SF glow.
 
-   Contrast floor (all AA): text on bg 13:1, muted 5.6:1, --accent 4.6:1,
-   --accent-strong 6:1. Bright tokens (--sky / aurora) are decoration only and
-   never carry text.
+   Felt palette (what the eye reads as the theme's colour):
+     --cobalt      #599CFF  primary — aurora core, portrait halo, active glow
+     --cobalt-soft #A1C9FF  soft    — hover glow, badge fill, wash
+     --cobalt-pale #A9CFFF  pale    — surface tint, borders, outer aurora
+
+   Because the three brand cobalts are bright, text never uses them raw. Body,
+   links, titles and button labels ride --accent / --accent-strong: deeper
+   cobalt derivatives held to AA. The brights carry decoration only.
+
+   Contrast floor (all AA on the near-white field):
+     --text 12:1, --muted 5.9:1, --accent 5.1:1, --accent-strong 6.6:1.
+   The felt brights (--cobalt / soft / pale, aurora) are decoration and never
+   sit behind text.
    ========================================================================== */
 
 [data-theme="cobalt-air"] {
   color-scheme: light;
 
-  --bg: #f5f9ff;
-  --bg-soft: #e8f1ff;
+  /* --- Felt palette — the three brand cobalts, used as decoration only --- */
+  --cobalt: #599cff;
+  --cobalt-soft: #a1c9ff;
+  --cobalt-pale: #a9cfff;
+
+  --bg: #f4f8ff;
+  --bg-soft: #e7f0ff;
   --surface: #ffffff;
-  --surface-strong: #e9f1fe;
-  --text: #10203c;
-  --muted: #53648a;
-  --line: #cbdcf7;
-  --line-soft: #e4edfa;
-  --accent: #3e6bde;
-  --accent-strong: #2a57cc;
+  --surface-strong: #eef4ff;
+  --surface-tint: #f6faff; /* barely-there blue wash — varies card texture */
+  --text: #10203c; /* deep slate navy */
+  --muted: #4d5f86;
+
+  /* Borders are the cobalt itself at low alpha — hairlines read blue, not grey,
+     which ties every edge to the brand without ever carrying text. */
+  --line: rgba(89, 156, 255, 0.32);
+  --line-soft: rgba(89, 156, 255, 0.15);
+
+  /* Text-safe cobalt derivatives (AA on the bright field). */
+  --accent: #2f68d8; /* mid cobalt — links, titles, small accent text (5.1:1) */
+  --accent-strong: #1f55c8; /* deep cobalt — headings, key numbers (6.6:1) */
   --navy: #1b356e;
 
-  /* Decoration only — bright cobalt for the aurora + portrait halo. Never
-     used behind text, so it stays clear of the contrast floor above. */
-  --sky: #5e8fff;
-  --sky-soft: #b9d2ff;
-  --aurora-1: rgba(94, 143, 255, 0.2);
-  --aurora-2: rgba(185, 210, 255, 0.34);
+  /* Decoration-only brights for the aurora + portrait halo. */
+  --sky: #599cff;
+  --sky-soft: #a1c9ff;
+  --aurora-1: rgba(89, 156, 255, 0.22); /* cobalt core, top-right */
+  --aurora-2: rgba(161, 201, 255, 0.3); /* soft haze, top-left */
+  --aurora-3: rgba(169, 207, 255, 0.22); /* pale wash, bottom-right */
 
-  /* Korean display text stays on Pretendard (never falls to a Windows serif).
-     This theme has no serif accent — the identity comes from cobalt + light,
-     not from a typeface swap, which keeps it distinct from warm-editorial. */
   --font-display: "Pretendard", system-ui, -apple-system, BlinkMacSystemFont,
     "Segoe UI", sans-serif;
   --font-body: "Pretendard", system-ui, -apple-system, BlinkMacSystemFont,
@@ -44,38 +62,42 @@
   --font-mono: "SF Mono", "JetBrains Mono", "Cascadia Code", ui-monospace, Menlo,
     Consolas, monospace;
 
-  /* Soft geometry — gentler than navy's 2px, tighter than warm's 14px. */
+  /* Deliberately un-uniform geometry — the anti-clone move lives in the scale
+     itself: chips are almost-square, buttons softer, cards softer still,
+     photo softest. Nothing on the page shares one radius. */
   --radius-card: 12px;
+  --radius-card-lg: 14px; /* projects + proof panel */
   --radius-pill: 999px;
   --radius-photo: 16px;
+  --radius-btn: 11px;
+  --radius-chip: 7px; /* badges — an editorial chip, not a SaaS pill */
 
-  /* Blue-tinted soft shadows: the page floats, it doesn't cast hard ink. */
+  /* Blue-tinted soft shadows: the page floats, it never casts hard ink. */
   --shadow-card:
-    0 2px 16px rgba(42, 87, 204, 0.06),
+    0 3px 20px -8px rgba(89, 156, 255, 0.16),
     0 1px 3px rgba(16, 32, 60, 0.05);
 
   /* Portrait signature: a thin cobalt ring + soft blue halo + a real soft
-     drop shadow. Bright enough to feel airy, low-alpha enough that the copy
-     always wins and the photo never looks blurred. */
+     drop shadow. Airy but low-alpha, so the copy always wins. */
   --photo-glow:
-    0 0 0 1px rgba(94, 143, 255, 0.28),
-    0 20px 48px -16px rgba(42, 87, 204, 0.3),
-    0 6px 20px rgba(94, 143, 255, 0.14);
+    0 0 0 1px rgba(89, 156, 255, 0.3),
+    0 22px 50px -16px rgba(89, 156, 255, 0.34),
+    0 6px 20px rgba(161, 201, 255, 0.28);
   --photo-glow-hover:
-    0 0 0 1px rgba(94, 143, 255, 0.5),
-    0 26px 60px -16px rgba(42, 87, 204, 0.4),
-    0 8px 26px rgba(94, 143, 255, 0.22);
+    0 0 0 1px rgba(89, 156, 255, 0.52),
+    0 28px 62px -16px rgba(89, 156, 255, 0.44),
+    0 8px 26px rgba(161, 201, 255, 0.4);
 
-  /* Gentler than navy's 0.22em — this theme's eyebrows are Pretendard (see
-     below), and wide Latin tracking spreads Hangul awkwardly. */
   --eyebrow-tracking: 0.06em;
-  --section-number-color: rgba(42, 87, 204, 0.4);
+  --section-number-color: rgba(47, 104, 216, 0.42);
+
+  /* One easing curve for the whole theme — a heavy, hand-tuned settle rather
+     than the default ease. Motion stays low; this is what sells "considered". */
+  --ease-cobalt: cubic-bezier(0.32, 0.72, 0, 1);
 }
 
-/* Micro-labels that carry Korean (role eyebrow, KO/EN + effects toggles, the
-   monogram caption) drop the Latin monospace for Pretendard. Mono spaced the
-   mixed KO/EN text unevenly and read techy against this soft field; the Latin
-   /numeric tags (badges, proof labels, section numbers) keep their mono look. */
+/* Micro-labels that carry Korean drop the Latin monospace for Pretendard so the
+   mixed KO/EN text spaces evenly; the Latin/numeric tags keep their mono look. */
 [data-theme="cobalt-air"] .eyebrow {
   font-family: var(--font-body);
 }
@@ -87,66 +109,333 @@
   letter-spacing: 0.05em;
 }
 
-/* Signature atmosphere: a soft cobalt aurora on a near-white sky. A bright
-   halo top-right, a paler blue haze top-left, and a gentle vertical fade —
-   premium and airy, deliberately not a dark field or a flat wash. */
+/* --------------------------------------------------------------------------
+   Atmosphere — an asymmetric cobalt aurora over a near-white sky, plus a
+   faint fractal-noise grain so the field never reads as flat AI vector.
+   Corners are deliberately unbalanced: a bright core top-right, a soft haze
+   top-left, a pale wash bleeding off the bottom-right.
+   -------------------------------------------------------------------------- */
+
 [data-theme="cobalt-air"] .profile-shell {
+  position: relative;
   background:
-    radial-gradient(1150px 640px at 84% -10%, var(--aurora-1), transparent 60%),
-    radial-gradient(760px 520px at 2% 2%, var(--aurora-2), transparent 58%),
-    linear-gradient(180deg, #fbfdff 0%, var(--bg) 46%);
+    radial-gradient(1000px 560px at 86% -12%, var(--aurora-1), transparent 52%),
+    radial-gradient(720px 520px at -6% 4%, var(--aurora-2), transparent 55%),
+    radial-gradient(940px 720px at 112% 116%, var(--aurora-3), transparent 60%),
+    linear-gradient(176deg, #fbfdff 0%, var(--bg) 54%);
 }
 
-/* Signature type: the name carries a quiet two-tone cobalt gradient — deep to
-   bright — while the English sub-name stays a solid muted slate. Falls back to
-   a solid deep cobalt where background-clip:text isn't supported. */
+/* Paper grain — fixed, behind content, pointer-inert. Multiply keeps it a
+   whisper of tooth on the white, not visible speckle. */
+[data-theme="cobalt-air"] .profile-shell::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.03;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Content rides above the grain. Scoped so bae-jian's stacking is untouched. */
+[data-theme="cobalt-air"] .profile-main,
+[data-theme="cobalt-air"] .wethru-footer {
+  position: relative;
+  z-index: 1;
+}
+
+/* --------------------------------------------------------------------------
+   Hero type — the name carries a three-stop cobalt gradient that brightens
+   toward the tail (deep → mid → bright cobalt) so the identity reads as the
+   brand's blue while the dark stops keep it legible. English sub-name stays a
+   quiet muted slate. Role line is pulled toward the accent so it never fades.
+   -------------------------------------------------------------------------- */
+
 [data-theme="cobalt-air"] .hero__name {
   color: var(--accent-strong);
+  text-wrap: balance;
 }
 
 @supports ((-webkit-background-clip: text) or (background-clip: text)) {
   [data-theme="cobalt-air"] .hero__name {
-    background: linear-gradient(118deg, var(--accent-strong) 6%, var(--accent) 82%);
+    background: linear-gradient(
+      114deg,
+      var(--accent-strong) 0%,
+      var(--accent) 48%,
+      #4a86f5 100%
+    );
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
     color: transparent;
   }
 
-  /* Keep the uppercase English name solid and quiet, not gradient-filled. */
   [data-theme="cobalt-air"] .hero__english-name {
     -webkit-text-fill-color: var(--muted);
     color: var(--muted);
   }
 }
 
-/* Phones: soften the halo and simplify the aurora so the portrait glow never
-   overpowers the copy on a small bright screen. */
+/* Role eyebrow: blend accent-strong into muted so it stays clearly present
+   (brand: roleLine must not read too faint) without shouting. */
+[data-theme="cobalt-air"] .hero__eyebrow-row .eyebrow {
+  color: color-mix(in srgb, var(--accent-strong) 52%, var(--muted));
+  font-weight: 600;
+}
+
+[data-theme="cobalt-air"] .hero__tagline {
+  text-wrap: balance;
+}
+
+[data-theme="cobalt-air"] .hero__summary,
+[data-theme="cobalt-air"] .identity__support,
+[data-theme="cobalt-air"] .section-head__title,
+[data-theme="cobalt-air"] .identity__statement,
+[data-theme="cobalt-air"] .contact-cta__title {
+  text-wrap: pretty;
+}
+
+/* --------------------------------------------------------------------------
+   Buttons — cobalt, but machined, not a default component. Primary is a
+   top-lit vertical cobalt with an inner highlight; ghost carries a pale-cobalt
+   hairline. Slightly tighter radius than the cards. Hover blooms a bright
+   #599CFF / #A1C9FF glow (governed by the Effects toggle).
+   -------------------------------------------------------------------------- */
+
+[data-theme="cobalt-air"] .btn {
+  border-radius: var(--radius-btn);
+  transition-timing-function: var(--ease-cobalt);
+}
+
+[data-theme="cobalt-air"] .btn--primary {
+  background: linear-gradient(180deg, var(--accent) 0%, var(--accent-strong) 100%);
+  border-color: var(--accent-strong);
+  color: #ffffff;
+  /* Top edge lit with soft brand blue (#A1C9FF) so the most colour-forward
+     element carries a bright-cobalt moment at rest, not only deep fill. The
+     white label band is untouched — white on #599CFF is sub-AA. */
+  box-shadow:
+    0 8px 20px -10px rgba(31, 85, 200, 0.55),
+    inset 0 1px 0 rgba(161, 201, 255, 0.55);
+}
+
+[data-theme="cobalt-air"] .btn--primary:hover {
+  background: linear-gradient(180deg, #3569de 0%, var(--accent) 100%);
+  border-color: var(--accent);
+}
+
+[data-theme="cobalt-air"] .btn--ghost {
+  border-color: var(--line);
+  color: var(--accent-strong);
+}
+
+[data-theme="cobalt-air"] .btn--ghost:hover {
+  border-color: var(--cobalt);
+  color: var(--accent);
+  background: rgba(161, 201, 255, 0.1);
+}
+
+[data-theme="cobalt-air"] .btn--ghost[data-copied="true"] {
+  border-color: var(--cobalt);
+  color: var(--accent);
+}
+
+/* --------------------------------------------------------------------------
+   Badges — a low-tint editorial chip. Almost-square, soft-blue fill, cobalt
+   hairline. Every third chip lifts to a paler wash so a long row gains rhythm
+   instead of reading as identical plastic pills.
+   -------------------------------------------------------------------------- */
+
+[data-theme="cobalt-air"] .badge {
+  border-radius: var(--radius-chip);
+  border-color: var(--line);
+  background: rgba(161, 201, 255, 0.12);
+  color: color-mix(in srgb, var(--accent-strong) 68%, var(--muted));
+  transition-timing-function: var(--ease-cobalt);
+}
+
+[data-theme="cobalt-air"] .hero__badges .badge:nth-child(3n),
+[data-theme="cobalt-air"] .skills-strip .badge:nth-child(4n) {
+  background: rgba(169, 207, 255, 0.22);
+}
+
+/* --------------------------------------------------------------------------
+   Proof strip — brand asks for numbers that read at a glance but never feel
+   like a dashboard. So: a contained, rounded, pale-cobalt panel (not raw
+   hairline bands), tabular figures for clean column alignment, deep-cobalt
+   values.
+   -------------------------------------------------------------------------- */
+
+[data-theme="cobalt-air"] .proof-strip {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card-lg);
+  overflow: hidden;
+  background: linear-gradient(
+    180deg,
+    rgba(169, 207, 255, 0.16) 0%,
+    rgba(161, 201, 255, 0.05) 100%
+  );
+}
+
+[data-theme="cobalt-air"] .proof-strip__item {
+  border-left-color: var(--line-soft);
+}
+
+[data-theme="cobalt-air"] .proof-strip__value {
+  color: var(--accent-strong);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+/* --------------------------------------------------------------------------
+   Strengths — softest cards on the page. A faint diagonal blue wash, low
+   shadow, hairline-soft border; the top accent rule is a cobalt→soft gradient.
+   Even cards flip the wash direction so the 2×2 never reads as a clone grid.
+   -------------------------------------------------------------------------- */
+
+[data-theme="cobalt-air"] .strength-card {
+  background: linear-gradient(168deg, #ffffff 0%, var(--surface-tint) 100%);
+  border-color: var(--line-soft);
+  transition-timing-function: var(--ease-cobalt);
+  box-shadow:
+    0 3px 22px -8px rgba(89, 156, 255, 0.14),
+    0 1px 2px rgba(16, 32, 60, 0.04);
+}
+
+[data-theme="cobalt-air"] .strength-card:nth-child(even) {
+  background: linear-gradient(196deg, var(--surface-tint) 0%, #ffffff 72%);
+}
+
+[data-theme="cobalt-air"] .strength-card::before {
+  height: 2px;
+  background: linear-gradient(90deg, var(--cobalt) 0%, var(--cobalt-soft) 100%);
+}
+
+/* --------------------------------------------------------------------------
+   Projects — firmer than the strength cards: a visible cobalt hairline, a
+   deeper tinted shadow, larger radius. The already-offset middle card also
+   picks up a faint wash so the trio reads as three different objects.
+   -------------------------------------------------------------------------- */
+
+[data-theme="cobalt-air"] .project-card {
+  border-radius: var(--radius-card-lg);
+  border-color: var(--line);
+  background: var(--surface);
+  transition-timing-function: var(--ease-cobalt);
+  box-shadow: 0 8px 28px -14px rgba(31, 85, 200, 0.2);
+}
+
+[data-theme="cobalt-air"] .project-card:nth-child(2) {
+  background: linear-gradient(180deg, var(--surface-tint) 0%, #ffffff 60%);
+}
+
+[data-theme="cobalt-air"] .project-card__meta {
+  border-bottom-color: var(--line);
+}
+
+[data-theme="cobalt-air"] .project-step--result dd {
+  color: var(--accent-strong);
+  font-weight: 600;
+}
+
+/* --------------------------------------------------------------------------
+   Identity statement — a single oversized line, marked by a soft cobalt rule
+   that fades out down its left edge (an editorial pull-quote, not a card).
+   -------------------------------------------------------------------------- */
+
+[data-theme="cobalt-air"] .identity {
+  padding-left: clamp(1rem, 3vw, 1.75rem);
+  border-left: 2px solid;
+  border-image: linear-gradient(180deg, var(--cobalt) 0%, transparent 85%) 1;
+}
+
+/* --------------------------------------------------------------------------
+   Timeline — cobalt nodes with a soft-blue ring, rail fades from cobalt to
+   nothing so the column has a light source rather than a flat grey line.
+   -------------------------------------------------------------------------- */
+
+[data-theme="cobalt-air"] .timeline::before {
+  background: linear-gradient(var(--cobalt), var(--line-soft));
+}
+
+[data-theme="cobalt-air"] .timeline-entry::before {
+  border-color: var(--cobalt);
+  box-shadow: 0 0 0 3px rgba(161, 201, 255, 0.25);
+}
+
+/* --------------------------------------------------------------------------
+   Contact CTA — a soft cobalt bloom rises behind the closing call so the page
+   ends on light, not on a flat panel.
+   -------------------------------------------------------------------------- */
+
+[data-theme="cobalt-air"] .contact-cta {
+  position: relative;
+}
+
+[data-theme="cobalt-air"] .contact-cta::before {
+  content: "";
+  position: absolute;
+  top: -12%;
+  left: 50%;
+  width: min(30rem, 82%);
+  height: 14rem;
+  transform: translateX(-50%);
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(
+    58% 58% at 50% 50%,
+    rgba(89, 156, 255, 0.16) 0%,
+    transparent 70%
+  );
+}
+
+/* --------------------------------------------------------------------------
+   Hover glow — the bright #599CFF / #A1C9FF bloom the Effects toggle governs.
+   Both attributes sit on <html>, so they combine without a descendant space.
+   Only where a real pointer can hover; the base file already drops the lift
+   under prefers-reduced-motion.
+   -------------------------------------------------------------------------- */
+
+@media (hover: hover) and (pointer: fine) {
+  html[data-effects="on"][data-theme="cobalt-air"] .btn--primary:hover {
+    box-shadow:
+      0 12px 28px -10px rgba(89, 156, 255, 0.55),
+      0 0 0 4px rgba(161, 201, 255, 0.32),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  }
+
+  html[data-effects="on"][data-theme="cobalt-air"] .btn--ghost:hover {
+    box-shadow: 0 0 18px rgba(161, 201, 255, 0.45);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Phones — soften the halo and simplify the aurora so the portrait glow never
+   overpowers the copy on a small bright screen. Aurora stays asymmetric.
+   -------------------------------------------------------------------------- */
+
 @media (max-width: 767px) {
   [data-theme="cobalt-air"] {
     --photo-glow:
-      0 0 0 1px rgba(94, 143, 255, 0.22),
-      0 14px 32px -14px rgba(42, 87, 204, 0.24),
-      0 4px 14px rgba(94, 143, 255, 0.1);
+      0 0 0 1px rgba(89, 156, 255, 0.24),
+      0 14px 32px -14px rgba(89, 156, 255, 0.28),
+      0 4px 14px rgba(161, 201, 255, 0.22);
     --photo-glow-hover:
-      0 0 0 1px rgba(94, 143, 255, 0.3),
-      0 16px 36px -14px rgba(42, 87, 204, 0.28),
-      0 5px 16px rgba(94, 143, 255, 0.14);
+      0 0 0 1px rgba(89, 156, 255, 0.34),
+      0 16px 36px -14px rgba(89, 156, 255, 0.32),
+      0 5px 16px rgba(161, 201, 255, 0.3);
   }
 
   [data-theme="cobalt-air"] .profile-shell {
     background:
-      radial-gradient(680px 380px at 92% -6%, var(--aurora-1), transparent 62%),
-      linear-gradient(180deg, #fbfdff 0%, var(--bg) 40%);
+      radial-gradient(700px 400px at 94% -8%, var(--aurora-1), transparent 60%),
+      radial-gradient(560px 420px at -8% 6%, var(--aurora-2), transparent 58%),
+      linear-gradient(180deg, #fbfdff 0%, var(--bg) 42%);
   }
 }
 
-/* Mobile-first hero: demote the longer summary paragraph below the CTA and
-   badges so the first screen reads name → tagline → portrait → CTA → keywords.
-   The primary action then stays in view on short phones instead of being
-   pushed down by a five-line intro. Desktop (two-column hero) is untouched. */
-@media (max-width: 768px) {
-  [data-theme="cobalt-air"][data-layout="editorial-split"] .hero__summary {
-    order: 8;
-  }
-}
+/* Mobile hero order is the shared editorial-split cadence:
+   role/toggles → name → English → tagline → summary → portrait → email → badges.
+   That is exactly the base order (summary before media), so cobalt-air adds no
+   override here — the earlier summary-demote has been removed to match spec. */
