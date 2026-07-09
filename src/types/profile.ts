@@ -13,7 +13,8 @@
 export type ProfileTheme =
   | "navy-black-white"
   | "warm-editorial"
-  | "graphite-minimal";
+  | "graphite-minimal"
+  | "cobalt-air";
 
 export type ProfileLayout =
   | "editorial-split"
@@ -158,6 +159,7 @@ export const PROFILE_THEMES: readonly ProfileTheme[] = [
   "navy-black-white",
   "warm-editorial",
   "graphite-minimal",
+  "cobalt-air",
 ] as const;
 
 export const PROFILE_LAYOUTS: readonly ProfileLayout[] = [

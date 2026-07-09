@@ -1,0 +1,152 @@
+/* ==========================================================================
+   Theme: cobalt-air
+   Bright, airy, premium light theme built on a shallow cobalt blue. A near-
+   white sky field lit by a soft cobalt aurora, deep-cobalt display type over
+   Pretendard body, gently rounded cards, and blue-tinted (never black) soft
+   shadows. Depth comes from light and a restrained blue halo — no neon, no
+   glassmorphism, no SF glow. Use for people-facing, trend-led, commerce or
+   brand work where the tone should read clean and confident, not dark.
+
+   Contrast floor (all AA): text on bg 13:1, muted 5.6:1, --accent 4.6:1,
+   --accent-strong 6:1. Bright tokens (--sky / aurora) are decoration only and
+   never carry text.
+   ========================================================================== */
+
+[data-theme="cobalt-air"] {
+  color-scheme: light;
+
+  --bg: #f5f9ff;
+  --bg-soft: #e8f1ff;
+  --surface: #ffffff;
+  --surface-strong: #e9f1fe;
+  --text: #10203c;
+  --muted: #53648a;
+  --line: #cbdcf7;
+  --line-soft: #e4edfa;
+  --accent: #3e6bde;
+  --accent-strong: #2a57cc;
+  --navy: #1b356e;
+
+  /* Decoration only — bright cobalt for the aurora + portrait halo. Never
+     used behind text, so it stays clear of the contrast floor above. */
+  --sky: #5e8fff;
+  --sky-soft: #b9d2ff;
+  --aurora-1: rgba(94, 143, 255, 0.2);
+  --aurora-2: rgba(185, 210, 255, 0.34);
+
+  /* Korean display text stays on Pretendard (never falls to a Windows serif).
+     This theme has no serif accent — the identity comes from cobalt + light,
+     not from a typeface swap, which keeps it distinct from warm-editorial. */
+  --font-display: "Pretendard", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  --font-body: "Pretendard", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  --font-mono: "SF Mono", "JetBrains Mono", "Cascadia Code", ui-monospace, Menlo,
+    Consolas, monospace;
+
+  /* Soft geometry — gentler than navy's 2px, tighter than warm's 14px. */
+  --radius-card: 12px;
+  --radius-pill: 999px;
+  --radius-photo: 16px;
+
+  /* Blue-tinted soft shadows: the page floats, it doesn't cast hard ink. */
+  --shadow-card:
+    0 2px 16px rgba(42, 87, 204, 0.06),
+    0 1px 3px rgba(16, 32, 60, 0.05);
+
+  /* Portrait signature: a thin cobalt ring + soft blue halo + a real soft
+     drop shadow. Bright enough to feel airy, low-alpha enough that the copy
+     always wins and the photo never looks blurred. */
+  --photo-glow:
+    0 0 0 1px rgba(94, 143, 255, 0.28),
+    0 20px 48px -16px rgba(42, 87, 204, 0.3),
+    0 6px 20px rgba(94, 143, 255, 0.14);
+  --photo-glow-hover:
+    0 0 0 1px rgba(94, 143, 255, 0.5),
+    0 26px 60px -16px rgba(42, 87, 204, 0.4),
+    0 8px 26px rgba(94, 143, 255, 0.22);
+
+  /* Gentler than navy's 0.22em — this theme's eyebrows are Pretendard (see
+     below), and wide Latin tracking spreads Hangul awkwardly. */
+  --eyebrow-tracking: 0.06em;
+  --section-number-color: rgba(42, 87, 204, 0.4);
+}
+
+/* Micro-labels that carry Korean (role eyebrow, KO/EN + effects toggles, the
+   monogram caption) drop the Latin monospace for Pretendard. Mono spaced the
+   mixed KO/EN text unevenly and read techy against this soft field; the Latin
+   /numeric tags (badges, proof labels, section numbers) keep their mono look. */
+[data-theme="cobalt-air"] .eyebrow {
+  font-family: var(--font-body);
+}
+
+[data-theme="cobalt-air"] .lang-toggle__btn,
+[data-theme="cobalt-air"] .effects-toggle,
+[data-theme="cobalt-air"] .portrait__fallback-note {
+  font-family: var(--font-body);
+  letter-spacing: 0.05em;
+}
+
+/* Signature atmosphere: a soft cobalt aurora on a near-white sky. A bright
+   halo top-right, a paler blue haze top-left, and a gentle vertical fade —
+   premium and airy, deliberately not a dark field or a flat wash. */
+[data-theme="cobalt-air"] .profile-shell {
+  background:
+    radial-gradient(1150px 640px at 84% -10%, var(--aurora-1), transparent 60%),
+    radial-gradient(760px 520px at 2% 2%, var(--aurora-2), transparent 58%),
+    linear-gradient(180deg, #fbfdff 0%, var(--bg) 46%);
+}
+
+/* Signature type: the name carries a quiet two-tone cobalt gradient — deep to
+   bright — while the English sub-name stays a solid muted slate. Falls back to
+   a solid deep cobalt where background-clip:text isn't supported. */
+[data-theme="cobalt-air"] .hero__name {
+  color: var(--accent-strong);
+}
+
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  [data-theme="cobalt-air"] .hero__name {
+    background: linear-gradient(118deg, var(--accent-strong) 6%, var(--accent) 82%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+
+  /* Keep the uppercase English name solid and quiet, not gradient-filled. */
+  [data-theme="cobalt-air"] .hero__english-name {
+    -webkit-text-fill-color: var(--muted);
+    color: var(--muted);
+  }
+}
+
+/* Phones: soften the halo and simplify the aurora so the portrait glow never
+   overpowers the copy on a small bright screen. */
+@media (max-width: 767px) {
+  [data-theme="cobalt-air"] {
+    --photo-glow:
+      0 0 0 1px rgba(94, 143, 255, 0.22),
+      0 14px 32px -14px rgba(42, 87, 204, 0.24),
+      0 4px 14px rgba(94, 143, 255, 0.1);
+    --photo-glow-hover:
+      0 0 0 1px rgba(94, 143, 255, 0.3),
+      0 16px 36px -14px rgba(42, 87, 204, 0.28),
+      0 5px 16px rgba(94, 143, 255, 0.14);
+  }
+
+  [data-theme="cobalt-air"] .profile-shell {
+    background:
+      radial-gradient(680px 380px at 92% -6%, var(--aurora-1), transparent 62%),
+      linear-gradient(180deg, #fbfdff 0%, var(--bg) 40%);
+  }
+}
+
+/* Mobile-first hero: demote the longer summary paragraph below the CTA and
+   badges so the first screen reads name → tagline → portrait → CTA → keywords.
+   The primary action then stays in view on short phones instead of being
+   pushed down by a five-line intro. Desktop (two-column hero) is untouched. */
+@media (max-width: 768px) {
+  [data-theme="cobalt-air"][data-layout="editorial-split"] .hero__summary {
+    order: 8;
+  }
+}

@@ -21,7 +21,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const CUSTOMERS_DIR = path.join(ROOT, "src", "data", "customers");
 const PUBLIC_DIR = path.join(ROOT, "public");
 
-const THEMES = ["navy-black-white", "warm-editorial", "graphite-minimal"];
+const THEMES = ["navy-black-white", "warm-editorial", "graphite-minimal", "cobalt-air"];
 const LAYOUTS = ["editorial-split", "dossier", "magazine", "minimal-card"];
 const STATUSES = ["draft", "published"];
 const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
