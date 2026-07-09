@@ -385,7 +385,7 @@ html[data-effects="off"] .effects-toggle__off {
 
   .hero__eyebrow-row .hero__controls {
     flex: 0 0 auto;
-    gap: 0.6rem;
+    gap: 0.55rem;
   }
 
   /* Denser chips so the skills strip and demoted hero badges take fewer rows. */
@@ -397,6 +397,58 @@ html[data-effects="off"] .effects-toggle__off {
   .badge {
     font-size: 0.64rem;
     padding: 0.28rem 0.6rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero {
+    padding-block: clamp(1rem, 4vw, 1.5rem) clamp(2.25rem, 7vw, 3rem);
+  }
+
+  .hero__copy {
+    gap: 0.85rem;
+  }
+
+  .hero__eyebrow-row {
+    align-items: flex-start;
+    column-gap: 0.65rem;
+    row-gap: 0.65rem;
+  }
+
+  .hero__eyebrow-row::after {
+    display: none;
+  }
+
+  .hero__eyebrow-row .eyebrow {
+    flex: 1 1 12rem;
+    min-width: 0;
+    max-width: 14rem;
+    font-size: 0.66rem;
+    line-height: 1.45;
+    letter-spacing: 0.12em;
+  }
+
+  .hero__controls {
+    gap: 0.55rem;
+  }
+
+  .lang-toggle {
+    gap: 0.42rem;
+  }
+
+  .lang-toggle__btn,
+  .effects-toggle {
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+  }
+
+  .effects-toggle {
+    gap: 0.3rem;
+    padding-block: 0.22rem;
+  }
+
+  .lang-toggle__divider {
+    height: 0.72rem;
   }
 }
 
@@ -991,8 +1043,8 @@ html[data-effects="off"] .effects-toggle__off {
   }
 }
 
-/* Mobile order for editorial-split: photo → name → tagline → summary →
-   CTA → badges (badges demoted below the fold; CTA must stay in view). */
+/* Narrow split refinement for tablets and phones. Phones override the order
+   again below so the contact copy leads before the portrait. */
 @media (max-width: 899px) {
   [data-layout="editorial-split"] .hero__media {
     order: -1;
@@ -1012,6 +1064,51 @@ html[data-effects="off"] .effects-toggle__off {
 
   [data-layout="editorial-split"] .hero__badges {
     order: 10;
+  }
+}
+
+/* Phone order for editorial-split: role/toggles → name → English name →
+   tagline → summary → CTA → badges → portrait. */
+@media (max-width: 768px) {
+  [data-layout="editorial-split"] .hero {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  [data-layout="editorial-split"] .hero__copy {
+    order: 1;
+  }
+
+  [data-layout="editorial-split"] .hero__media {
+    order: 2;
+  }
+
+  [data-layout="editorial-split"] .portrait {
+    width: min(62vw, 14rem);
+    margin-inline: auto;
+  }
+
+  [data-layout="editorial-split"] .portrait__frame {
+    aspect-ratio: 1 / 1;
+    max-height: 18rem;
+  }
+
+  [data-layout="editorial-split"] .portrait__frame img,
+  [data-layout="editorial-split"] .portrait__fallback {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: auto;
+    object-fit: cover;
+    object-position: center top;
+  }
+
+  [data-layout="editorial-split"] .portrait__caption {
+    display: none;
+  }
+
+  [data-layout="editorial-split"] .hero__badges .badge:nth-child(n + 5) {
+    display: none;
   }
 }
 
