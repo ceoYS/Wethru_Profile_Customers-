@@ -526,6 +526,51 @@
   }
 }
 
+/* Footer on phones: the base row (justify-between) strands its two mono marks
+   at opposite edges where they crowd and wrap awkwardly under ~400px. Stack
+   them left-aligned so the credit line reads as one quiet block. */
+@media (max-width: 560px) {
+  [data-theme="cobalt-air"] .wethru-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}
+
+/* Mobile portrait + controls. */
+@media (max-width: 768px) {
+  /* The offset corner-rule is a desktop move — it assumes the justified-end
+     portrait. On the centered mobile portrait the down-and-right offset pokes a
+     stray hairline out of the bottom-right and reads as misalignment, not
+     intent. The caption is already hidden here; hide this too. */
+  [data-theme="cobalt-air"] .portrait::after {
+    display: none;
+  }
+
+  /* The toggles are the only interactive controls in the hero top, and at
+     mobile sizes they fell to ~18px tall. Floor the hit area at 24px so they
+     clear WCAG 2.5.8 without changing the quiet underline look. */
+  [data-theme="cobalt-air"] .lang-toggle__btn,
+  [data-theme="cobalt-air"] .effects-toggle {
+    min-height: 24px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  /* Give the centered portrait real breathing room between summary and CTA. */
+  [data-theme="cobalt-air"] .hero__media {
+    margin-block: 0.5rem;
+  }
+}
+
+/* Smallest phones (~320px): drop the control cluster gap so the bilingual
+   KO/EN + EFFECTS toggles stop squeezing the role line into a third line. */
+@media (max-width: 360px) {
+  [data-theme="cobalt-air"] .hero__controls {
+    gap: 0.45rem;
+  }
+}
+
 /* Mobile hero order is the shared editorial-split cadence:
    role/toggles → name → English → tagline → summary → portrait → email → badges.
    That is exactly the base order (summary before media), so cobalt-air adds no
