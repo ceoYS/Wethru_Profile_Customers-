@@ -52,7 +52,7 @@
   --sky: #599cff;
   --sky-soft: #a1c9ff;
   --aurora-1: rgba(89, 156, 255, 0.22); /* cobalt core, top-right */
-  --aurora-2: rgba(161, 201, 255, 0.3); /* soft haze, top-left */
+  --aurora-2: rgba(161, 201, 255, 0.2); /* soft haze, top-left */
   --aurora-3: rgba(169, 207, 255, 0.22); /* pale wash, bottom-right */
 
   --font-display: "Pretendard", system-ui, -apple-system, BlinkMacSystemFont,
@@ -80,13 +80,13 @@
   /* Portrait signature: a thin cobalt ring + soft blue halo + a real soft
      drop shadow. Airy but low-alpha, so the copy always wins. */
   --photo-glow:
-    0 0 0 1px rgba(89, 156, 255, 0.3),
-    0 22px 50px -16px rgba(89, 156, 255, 0.34),
-    0 6px 20px rgba(161, 201, 255, 0.28);
+    0 0 0 1px rgba(89, 156, 255, 0.22),
+    0 18px 44px -18px rgba(89, 156, 255, 0.24),
+    0 5px 16px rgba(161, 201, 255, 0.2);
   --photo-glow-hover:
-    0 0 0 1px rgba(89, 156, 255, 0.52),
-    0 28px 62px -16px rgba(89, 156, 255, 0.44),
-    0 8px 26px rgba(161, 201, 255, 0.4);
+    0 0 0 1px rgba(89, 156, 255, 0.4),
+    0 24px 54px -18px rgba(89, 156, 255, 0.32),
+    0 6px 20px rgba(161, 201, 255, 0.3);
 
   --eyebrow-tracking: 0.06em;
   --section-number-color: rgba(47, 104, 216, 0.42);
@@ -146,35 +146,20 @@
 }
 
 /* --------------------------------------------------------------------------
-   Hero type — the name carries a three-stop cobalt gradient that brightens
-   toward the tail (deep → mid → bright cobalt) so the identity reads as the
-   brand's blue while the dark stops keep it legible. English sub-name stays a
-   quiet muted slate. Role line is pulled toward the accent so it never fades.
+   Hero type — the name is one solid deep-cobalt ink (no gradient clip): the
+   identity reads as the brand's blue by weight and colour, not by a rainbow.
+   English sub-name stays a quiet muted slate. Role line is pulled toward the
+   accent so it never fades.
    -------------------------------------------------------------------------- */
 
 [data-theme="cobalt-air"] .hero__name {
+  /* One confident deep-cobalt ink — no gradient clip at all. A tonal text-clip
+     on the single most focal element was the last gradient-gimmick tell; the
+     earlier build even ran to a bright #4A86F5 tail. Solid reads more premium.
+     Tracking closes up a touch for the display size, kept gentle for Hangul. */
   color: var(--accent-strong);
+  letter-spacing: -0.026em;
   text-wrap: balance;
-}
-
-@supports ((-webkit-background-clip: text) or (background-clip: text)) {
-  [data-theme="cobalt-air"] .hero__name {
-    background: linear-gradient(
-      114deg,
-      var(--accent-strong) 0%,
-      var(--accent) 48%,
-      #4a86f5 100%
-    );
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
-  }
-
-  [data-theme="cobalt-air"] .hero__english-name {
-    -webkit-text-fill-color: var(--muted);
-    color: var(--muted);
-  }
 }
 
 /* Role eyebrow: blend accent-strong into muted so it stays clearly present
@@ -184,16 +169,68 @@
   font-weight: 600;
 }
 
-[data-theme="cobalt-air"] .hero__tagline {
-  text-wrap: balance;
-}
-
 [data-theme="cobalt-air"] .hero__summary,
 [data-theme="cobalt-air"] .identity__support,
 [data-theme="cobalt-air"] .section-head__title,
 [data-theme="cobalt-air"] .identity__statement,
 [data-theme="cobalt-air"] .contact-cta__title {
   text-wrap: pretty;
+}
+
+/* Display-type craft — Pretendard is kept (it's the Toss-adjacent, premium
+   Korean face this subject belongs in), but the display sizes earn their
+   character from weight and optical tracking rather than a bolted-on webface.
+   Headings close their tracking so they read as *set*, not as default UI. */
+[data-theme="cobalt-air"] .section-head__title {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* Long Korean display lines: only a hair of negative tracking. Hangul glyphs
+   are square and don't want the tight set a short Latin/name line can take. */
+[data-theme="cobalt-air"] .identity__statement,
+[data-theme="cobalt-air"] .contact-cta__title {
+  letter-spacing: -0.01em;
+}
+
+[data-theme="cobalt-air"] .hero__tagline {
+  text-wrap: balance;
+  letter-spacing: -0.008em;
+  line-height: 1.28;
+}
+
+/* Labels carrying Korean move to Pretendard so mixed KO/EN spaces evenly — the
+   same remap the theme already applies to eyebrows and toggles. The proof
+   labels and the 문제·접근·결과 project spine were still SF-Mono, showing the
+   uneven system fallback right under the proof numbers. Portrait caption is
+   Latin/numerals only, so it stays mono and just tightens. */
+[data-theme="cobalt-air"] .proof-strip__label,
+[data-theme="cobalt-air"] .project-step dt {
+  font-family: var(--font-body);
+  letter-spacing: 0.08em;
+}
+
+[data-theme="cobalt-air"] .portrait__caption {
+  letter-spacing: 0.1em;
+}
+
+/* Hero grouping (desktop only — the ≤768 editorial-split hero is a
+   display:contents flex column with its own tuned order + gap, so these
+   margins would leak there). One flat gap set name, tagline, summary and CTA
+   equidistant so nothing read as a unit; give the name more air beneath it and
+   let tagline+summary sit close as a single voice, with the CTA set apart. */
+@media (min-width: 769px) {
+  [data-theme="cobalt-air"] .hero__copy {
+    gap: 0.85rem;
+  }
+
+  [data-theme="cobalt-air"] .hero__tagline {
+    margin-top: 0.5rem;
+  }
+
+  [data-theme="cobalt-air"] .hero__cta {
+    margin-top: 0.6rem;
+  }
 }
 
 /* --------------------------------------------------------------------------
@@ -216,8 +253,8 @@
      element carries a bright-cobalt moment at rest, not only deep fill. The
      white label band is untouched — white on #599CFF is sub-AA. */
   box-shadow:
-    0 8px 20px -10px rgba(31, 85, 200, 0.55),
-    inset 0 1px 0 rgba(161, 201, 255, 0.55);
+    0 8px 20px -10px rgba(31, 85, 200, 0.5),
+    inset 0 1px 0 rgba(161, 201, 255, 0.22);
 }
 
 [data-theme="cobalt-air"] .btn--primary:hover {
@@ -285,7 +322,29 @@
 [data-theme="cobalt-air"] .proof-strip__value {
   color: var(--accent-strong);
   font-variant-numeric: tabular-nums;
-  letter-spacing: -0.01em;
+  /* This is a numbers person — let the figures carry real weight and close
+     up their tracking so they read as the proof, not as labels. */
+  font-weight: 720;
+  letter-spacing: -0.02em;
+}
+
+/* Proof strip on phones: the base auto-fit grid wraps (6 items → 3 rows) and
+   the per-item border-left — built for a single row — then strands a hairline
+   at the start of each wrapped row while leaving the wrapped rows themselves
+   undivided. Pin two columns and redraw the dividers as a clean 2-col rule:
+   vertical hairline only between the columns, horizontal between the rows. */
+@media (max-width: 767px) {
+  [data-theme="cobalt-air"] .proof-strip {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  [data-theme="cobalt-air"] .proof-strip__item:nth-child(odd) {
+    border-left: none;
+  }
+
+  [data-theme="cobalt-air"] .proof-strip__item:nth-child(n + 3) {
+    border-top: 1px solid var(--line-soft);
+  }
 }
 
 /* --------------------------------------------------------------------------
@@ -307,9 +366,41 @@
   background: linear-gradient(196deg, var(--surface-tint) 0%, #ffffff 72%);
 }
 
-[data-theme="cobalt-air"] .strength-card::before {
+/* A single quiet tick, one fixed width, solid mid-cobalt. The bright
+   cobalt→soft gradient bar that widened per card was an accent-rail tell that
+   also encoded nothing — the eyebrow already names each strength. */
+[data-theme="cobalt-air"] .strength-card::before,
+[data-theme="cobalt-air"] .strength-card:nth-child(2)::before,
+[data-theme="cobalt-air"] .strength-card:nth-child(3)::before,
+[data-theme="cobalt-air"] .strength-card:nth-child(4)::before {
+  width: 1.75rem;
   height: 2px;
-  background: linear-gradient(90deg, var(--cobalt) 0%, var(--cobalt-soft) 100%);
+  background: var(--accent);
+}
+
+/* The corner index (01–04) triple-encoded "card N" alongside the tick and the
+   eyebrow, and strengths aren't a sequence — so it decorated nothing. Drop it. */
+[data-theme="cobalt-air"] .strength-card__index {
+  display: none;
+}
+
+/* Reserve the deep cobalt for the moments that carry meaning — the name, the
+   proof numbers, result lines, the thesis quote and tagline. The repeated
+   structural titles move to ink so colour signals importance again instead of
+   painting every heading the same blue. */
+[data-theme="cobalt-air"] .strength-card__title,
+[data-theme="cobalt-air"] .project-card__title,
+[data-theme="cobalt-air"] .timeline-entry__company {
+  color: var(--text);
+}
+
+/* Pretendard ships no true italic, so font-style: italic synthesises a slanted
+   oblique that reads cheap. Set the role lines upright and let the accent
+   colour (already present) do the differentiating instead of a faux slant. */
+[data-theme="cobalt-air"] .timeline-entry__role,
+[data-theme="cobalt-air"] .project-card__role {
+  font-style: normal;
+  letter-spacing: 0.01em;
 }
 
 /* --------------------------------------------------------------------------
@@ -400,13 +491,13 @@
 @media (hover: hover) and (pointer: fine) {
   html[data-effects="on"][data-theme="cobalt-air"] .btn--primary:hover {
     box-shadow:
-      0 12px 28px -10px rgba(89, 156, 255, 0.55),
-      0 0 0 4px rgba(161, 201, 255, 0.32),
+      0 12px 26px -12px rgba(89, 156, 255, 0.42),
+      0 0 0 3px rgba(161, 201, 255, 0.2),
       inset 0 1px 0 rgba(255, 255, 255, 0.3);
   }
 
   html[data-effects="on"][data-theme="cobalt-air"] .btn--ghost:hover {
-    box-shadow: 0 0 18px rgba(161, 201, 255, 0.45);
+    box-shadow: 0 0 14px rgba(161, 201, 255, 0.3);
   }
 }
 
