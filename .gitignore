@@ -18,6 +18,12 @@ pnpm-debug.log*
 private/
 pictures/
 
+# stray raw photo originals dropped in the repo root — never publish
+# (optimized portraits live under public/images/customers/<slug>/*.webp)
+/profile_picture.jpg
+/*.jpg
+/*.jpeg
+
 # OS
 .DS_Store
 Thumbs.db

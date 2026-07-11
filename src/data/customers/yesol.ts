@@ -40,7 +40,7 @@ export const profile: CustomerProfile = {
   },
 
   contact: {
-    email: "solelyone@naver.com",
+    email: "ys.cho@tossshopping.com",
     showEmail: true,
     showPhone: false,
   },
