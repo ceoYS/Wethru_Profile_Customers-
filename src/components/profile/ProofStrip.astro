@@ -15,7 +15,7 @@ const { proofs } = Astro.props;
       {proofs.map((proof) => (
         <div class="proof-strip__item" title={proof.description}>
           <dt class="proof-strip__label"><LText value={proof.label} /></dt>
-          <dd class="proof-strip__value">{proof.value}</dd>
+          <dd class="proof-strip__value"><LText value={proof.value} /></dd>
         </div>
       ))}
     </dl>

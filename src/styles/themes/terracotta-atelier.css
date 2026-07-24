@@ -156,7 +156,8 @@
   letter-spacing: -0.02em;
   line-height: 1;
   color: var(--text);
-  overflow-wrap: anywhere;
+  word-break: keep-all;
+  overflow-wrap: normal;
 }
 
 [data-layout="atelier-dossier"] .sb-hero__role {
@@ -292,7 +293,8 @@
   line-height: 1.05;
   letter-spacing: -0.01em;
   color: var(--accent-strong);
-  overflow-wrap: anywhere;
+  word-break: keep-all;
+  overflow-wrap: normal;
 }
 
 [data-layout="atelier-dossier"] .sb-hero__figure--lead .sb-hero__figure-value {
@@ -342,7 +344,7 @@
   gap: clamp(1.75rem, 4vw, 2.5rem);
 }
 
-@media (min-width: 820px) {
+@media (min-width: 900px) {
   /* 5 : 7 — asymmetry establishes the lead without a coloured surface. */
   [data-layout="atelier-dossier"] .sb-awards__body {
     grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
@@ -497,16 +499,6 @@
   max-width: 46ch;
 }
 
-@media (max-width: 899px) {
-  /* Stacked streams: the vertical divider becomes a top hairline. */
-  [data-layout="atelier-dossier"] .sb-practice__stream--exec {
-    padding-top: clamp(2rem, 5vw, 2.75rem);
-    padding-left: 0;
-    border-top: 1px solid var(--line-soft);
-    border-left: 0;
-  }
-}
-
 /* --- Experience → white, wide, hairline timeline ------------------------- */
 
 [data-layout="atelier-dossier"] .timeline::before {
@@ -559,7 +551,7 @@
   color: var(--muted);
 }
 
-@media (min-width: 1000px) {
+@media (min-width: 900px) {
   /* Two streams inside one entry: the account on the left, the record of what
      it produced on the right. Fills the space the single column left empty. */
   [data-layout="atelier-dossier"] .timeline-entry {
@@ -799,7 +791,248 @@ html[data-lang="en"][data-layout="atelier-dossier"]
    Mobile.
    ========================================================================== */
 
-@media (max-width: 560px) {
+@media (max-width: 899px) {
+  /* Every major dossier split becomes one reading column below the desktop
+     breakpoint. Section rhythm tightens without changing the white canvas. */
+  [data-layout="atelier-dossier"]
+    .profile-section:not([aria-labelledby="contact-title"]) {
+    padding-block: clamp(3.25rem, 8vw, 4.25rem);
+  }
+
+  [data-layout="atelier-dossier"] .sb-hero {
+    padding-block: 1.5rem clamp(3rem, 8vw, 4rem);
+  }
+
+  [data-layout="atelier-dossier"] .sb-hero__controls {
+    margin-bottom: 1.25rem;
+  }
+
+  [data-layout="atelier-dossier"] .sb-hero__spread {
+    gap: clamp(2rem, 6vw, 3rem);
+  }
+
+  /* Keep the portrait useful on tablets instead of allowing its 65% desktop
+     share to become an oversized half-page image. */
+  [data-layout="atelier-dossier"] .sb-hero__support {
+    grid-template-columns: minmax(12rem, 16rem) minmax(0, 1fr);
+    gap: clamp(1.25rem, 4vw, 2rem);
+    width: min(100%, 38rem);
+    align-items: center;
+  }
+
+  [data-layout="atelier-dossier"] .sb-hero__portrait {
+    width: 100%;
+    max-width: 16rem;
+  }
+
+  [data-layout="atelier-dossier"] .sb-practice__body {
+    gap: clamp(2rem, 6vw, 2.75rem);
+  }
+
+  [data-layout="atelier-dossier"] .sb-practice__stream--exec {
+    padding-top: clamp(2rem, 6vw, 2.75rem);
+    padding-left: 0;
+    border-top: 1px solid var(--line-soft);
+    border-left: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  [data-layout="atelier-dossier"]
+    .profile-section:not([aria-labelledby="contact-title"]) {
+    padding-block: 2.75rem;
+  }
+
+  [data-layout="atelier-dossier"] .section-head {
+    margin-bottom: 1.4rem;
+  }
+
+  [data-layout="atelier-dossier"] .section-head__title {
+    font-size: 1.3rem;
+  }
+
+  [data-layout="atelier-dossier"] .sb-hero {
+    padding-block: 1.25rem 2.75rem;
+  }
+
+  [data-layout="atelier-dossier"] .sb-hero__controls {
+    margin-bottom: 0.9rem;
+  }
+
+  [data-layout="atelier-dossier"] .sb-hero__spread {
+    gap: 1.75rem;
+  }
+
+  [data-layout="atelier-dossier"] .sb-hero__name {
+    font-size: clamp(3.2rem, 15vw, 4.25rem);
+  }
+
+  [data-layout="atelier-dossier"] .sb-hero__role {
+    margin-top: 0.8rem;
+    font-size: 0.98rem;
+    line-height: 1.55;
+  }
+
+  [data-layout="atelier-dossier"] .sb-hero__statement {
+    margin-top: 1.25rem;
+    font-size: clamp(1.55rem, 6.5vw, 1.8rem);
+    line-height: 1.38;
+    max-width: 22rem;
+  }
+
+  [data-layout="atelier-dossier"] .sb-hero__intro {
+    margin-top: 1rem;
+    font-size: 1rem;
+    line-height: 1.68;
+  }
+
+  /* Phone order follows the DOM: copy → portrait → figures. The portrait and
+     loaded image retain the same 4:5 box; figures use the full row below it. */
+  [data-layout="atelier-dossier"] .sb-hero__support {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.25rem;
+    width: 100%;
+  }
+
+  [data-layout="atelier-dossier"] .sb-hero__portrait {
+    width: min(64vw, 13rem);
+  }
+
+  [data-layout="atelier-dossier"] .sb-hero__figures {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    width: 100%;
+    padding-top: 1.25rem;
+    padding-left: 0;
+    border-top: 1px solid var(--line-soft);
+    border-left: 0;
+  }
+
+  [data-layout="atelier-dossier"] .sb-hero__figures::before {
+    grid-column: 1 / -1;
+    width: 2rem;
+  }
+
+  [data-layout="atelier-dossier"] .sb-hero__figure + .sb-hero__figure {
+    padding-top: 0;
+    padding-left: 1rem;
+    border-top: 0;
+    border-left: 1px solid var(--gray-middle);
+  }
+
+  [data-layout="atelier-dossier"] .sb-hero__figure-key {
+    font-size: 0.86rem;
+    line-height: 1.45;
+  }
+
+  [data-layout="atelier-dossier"] .sb-awards__lead-rule {
+    margin-bottom: 1rem;
+  }
+
+  [data-layout="atelier-dossier"] .sb-awards__lead-value {
+    font-size: clamp(3.2rem, 15vw, 4.5rem);
+    line-height: 0.95;
+    word-break: keep-all;
+    overflow-wrap: normal;
+  }
+
+  [data-layout="atelier-dossier"] .sb-awards__row {
+    gap: 0.9rem;
+    padding-block: 1rem;
+  }
+
+  [data-layout="atelier-dossier"] .sb-awards__row-value {
+    min-width: 5.75rem;
+  }
+
+  [data-layout="atelier-dossier"] .sb-practice__stream-label {
+    margin-bottom: 1rem;
+  }
+
+  [data-layout="atelier-dossier"] .sb-practice__stream--exec {
+    padding-top: 1.75rem;
+  }
+
+  [data-layout="atelier-dossier"] .sb-practice__item + .sb-practice__item {
+    margin-top: 1.35rem;
+    padding-top: 1.35rem;
+  }
+
+  [data-layout="atelier-dossier"] .sb-practice__item-title {
+    font-size: 1.3rem;
+  }
+
+  [data-layout="atelier-dossier"] .sb-practice__item-desc {
+    line-height: 1.65;
+    max-width: none;
+  }
+
+  [data-layout="atelier-dossier"] .timeline-entry__description,
+  [data-layout="atelier-dossier"] .timeline-entry__bullets li {
+    line-height: 1.65;
+  }
+}
+
+@media (max-width: 480px) {
+  [data-layout="atelier-dossier"]
+    .profile-section:not([aria-labelledby="contact-title"]) {
+    padding-block: 2.5rem;
+  }
+
+  [data-layout="atelier-dossier"] .sb-hero__portrait {
+    width: min(60vw, 12rem);
+  }
+
+  [data-layout="atelier-dossier"] .sb-awards__body {
+    gap: 1.5rem;
+  }
+
+  [data-layout="atelier-dossier"] .sb-awards__row {
+    grid-template-columns: minmax(5.75rem, 0.8fr) minmax(0, 1.2fr);
+  }
+
+  /* Reclaim timeline measure while keeping the marker and its hairline. */
+  [data-layout="atelier-dossier"] .timeline {
+    gap: 2rem;
+    padding-left: 1.25rem;
+  }
+
+  [data-layout="atelier-dossier"] .timeline::before {
+    left: 0.24rem;
+  }
+
+  [data-layout="atelier-dossier"] .timeline-entry::before {
+    left: -1.16rem;
+  }
+
+  [data-layout="atelier-dossier"] .timeline-entry__company {
+    font-size: 1.3rem;
+  }
+
+  [data-layout="atelier-dossier"] .timeline-extra__row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.2rem 0.75rem;
+    align-items: baseline;
+  }
+
+  [data-layout="atelier-dossier"] .timeline-extra__company {
+    grid-column: 1 / -1;
+  }
+
+  [data-layout="atelier-dossier"] .timeline-extra__role {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  [data-layout="atelier-dossier"] .timeline-extra__period {
+    grid-column: 2;
+    grid-row: 2;
+    margin-left: 0;
+    text-align: right;
+  }
+
   [data-layout="atelier-dossier"] .contact-cta__actions .btn {
     width: 100%;
   }

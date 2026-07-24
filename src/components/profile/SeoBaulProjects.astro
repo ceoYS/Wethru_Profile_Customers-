@@ -48,9 +48,12 @@ const { projects, sectionNumber = "03" } = Astro.props;
                 >
                   <LText value={project.title} />
                 </h3>
-                <p class="sb-project-item__role"><LText value={project.role} /></p>
+                <p class="sb-project-item__details">
+                  <span class="sb-project-item__role"><LText value={project.role} /></span>
+                  <span class="sb-project-item__detail-separator" aria-hidden="true">·</span>
+                  <span class="sb-project-item__period"><LText value={project.period} /></span>
+                </p>
               </div>
-              <span class="sb-project-item__period">{project.period}</span>
             </header>
 
             <dl class="sb-project-item__steps">
@@ -117,7 +120,7 @@ const { projects, sectionNumber = "03" } = Astro.props;
 
   .sb-project-item__meta {
     display: grid;
-    grid-template-columns: 2.5rem minmax(0, 1fr) auto;
+    grid-template-columns: 2.5rem minmax(0, 1fr);
     column-gap: clamp(0.85rem, 2vw, 1.25rem);
     align-items: start;
   }
@@ -144,7 +147,11 @@ const { projects, sectionNumber = "03" } = Astro.props;
     transition: color 180ms ease;
   }
 
-  .sb-project-item__role {
+  .sb-project-item__details {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.2rem 0.45rem;
     margin-top: 0.25rem;
     font-size: 0.92rem;
     line-height: 1.5;
@@ -152,12 +159,16 @@ const { projects, sectionNumber = "03" } = Astro.props;
     transition: color 180ms ease;
   }
 
+  .sb-project-item__role,
   .sb-project-item__period {
-    padding-top: 0.2rem;
-    font-size: 0.85rem;
-    line-height: 1.4;
-    color: var(--project-copy);
     white-space: nowrap;
+    word-break: keep-all;
+    overflow-wrap: normal;
+    hyphens: none;
+  }
+
+  .sb-project-item__detail-separator {
+    color: var(--project-copy);
     transition: color 180ms ease;
   }
 
@@ -171,7 +182,7 @@ const { projects, sectionNumber = "03" } = Astro.props;
 
   .sb-project-step {
     display: grid;
-    grid-template-columns: 3.25rem minmax(0, 1fr);
+    grid-template-columns: minmax(5.5rem, 6rem) minmax(0, 1fr);
     gap: 1rem;
     align-items: start;
   }
@@ -182,6 +193,10 @@ const { projects, sectionNumber = "03" } = Astro.props;
     font-weight: 600;
     line-height: 1.65;
     color: var(--project-copy);
+    white-space: nowrap;
+    word-break: keep-all;
+    overflow-wrap: normal;
+    hyphens: none;
     transition: color 180ms ease;
   }
 
@@ -190,7 +205,9 @@ const { projects, sectionNumber = "03" } = Astro.props;
     font-size: 1rem;
     line-height: 1.7;
     color: var(--project-copy);
-    overflow-wrap: anywhere;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+    hyphens: none;
     transition: color 180ms ease;
   }
 
@@ -215,7 +232,7 @@ const { projects, sectionNumber = "03" } = Astro.props;
     background-color: var(--accent);
   }
 
-  @media (hover: hover) and (pointer: fine) and (min-width: 561px) {
+  @media (hover: hover) and (pointer: fine) and (min-width: 641px) {
     .sb-project-item:hover {
       --project-number: var(--accent-strong);
       --project-title: var(--text);
@@ -239,23 +256,34 @@ const { projects, sectionNumber = "03" } = Astro.props;
     }
   }
 
-  @media (max-width: 560px) {
+  @media (max-width: 640px) {
     .sb-project-item {
-      padding-inline: 0.95rem;
+      padding: 1.5rem 0.75rem 1.65rem;
     }
 
     .sb-project-item__meta {
-      grid-template-columns: 2rem minmax(0, 1fr) auto;
-      column-gap: 0.75rem;
+      grid-template-columns: 1fr;
+      gap: 0.55rem;
+    }
+
+    .sb-project-item__number {
+      padding-top: 0;
     }
 
     .sb-project-item__steps {
+      gap: 1rem;
+      margin-top: 1.35rem;
       margin-left: 0;
     }
 
     .sb-project-step {
-      grid-template-columns: 2.75rem minmax(0, 1fr);
-      gap: 0.75rem;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0.3rem;
+    }
+
+    .sb-project-step dt {
+      padding-top: 0;
+      line-height: 1.4;
     }
 
     .sb-project-item:focus-visible {

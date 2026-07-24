@@ -33,7 +33,7 @@ const [lead, ...rest] = awards;
     <div class="sb-awards__body">
       <div class="sb-awards__lead">
         <span class="sb-awards__lead-rule" aria-hidden="true"></span>
-        <p class="sb-awards__lead-value">{lead.value}</p>
+        <p class="sb-awards__lead-value"><LText value={lead.value} /></p>
         <p class="sb-awards__lead-label"><LText value={lead.label} /></p>
       </div>
 
@@ -41,7 +41,7 @@ const [lead, ...rest] = awards;
         <ul class="sb-awards__list">
           {rest.map((award) => (
             <li class="sb-awards__row">
-              <span class="sb-awards__row-value">{award.value}</span>
+              <span class="sb-awards__row-value"><LText value={award.value} /></span>
               <span class="sb-awards__row-label"><LText value={award.label} /></span>
             </li>
           ))}

@@ -29,7 +29,7 @@ const { projects, sectionNumber = "03" } = Astro.props;
               <h3 class="project-card__title"><LText value={project.title} /></h3>
               <p class="project-card__role"><LText value={project.role} /></p>
             </div>
-            <span class="project-card__period">{project.period}</span>
+            <span class="project-card__period"><LText value={project.period} /></span>
           </div>
 
           <dl class="project-card__steps">

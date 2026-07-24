@@ -91,7 +91,7 @@ export interface ProfileStrength {
 export interface ProfileExperience {
   company: LocalizedString;
   role: LocalizedString;
-  period: string;
+  period: LocalizedString;
   description: LocalizedString;
   bullets: LocalizedString[];
 }
@@ -103,13 +103,13 @@ export interface ProfileExperience {
 export interface ProfileAdditionalExperience {
   company: LocalizedString;
   role: LocalizedString;
-  period: string;
+  period: LocalizedString;
 }
 
 export interface ProfileProject {
   title: LocalizedString;
   role: LocalizedString;
-  period: string;
+  period: LocalizedString;
   problem: LocalizedString;
   approach: LocalizedString;
   result: LocalizedString;
@@ -117,7 +117,7 @@ export interface ProfileProject {
 
 export interface ProfileProof {
   /** The number or short fact, e.g. "1,000+". */
-  value: string;
+  value: LocalizedString;
   label: LocalizedString;
   description?: string;
 }

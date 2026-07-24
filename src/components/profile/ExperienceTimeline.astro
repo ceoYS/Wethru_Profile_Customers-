@@ -33,7 +33,7 @@ const {
     <ol class="timeline">
       {experiences.map((experience) => (
         <li class="timeline-entry">
-          <p class="timeline-entry__period">{experience.period}</p>
+          <p class="timeline-entry__period"><LText value={experience.period} /></p>
           <h3 class="timeline-entry__company"><LText value={experience.company} /></h3>
           <p class="timeline-entry__role"><LText value={experience.role} /></p>
           <p class="timeline-entry__description"><LText value={experience.description} /></p>
@@ -58,7 +58,7 @@ const {
             <li class="timeline-extra__row">
               <span class="timeline-extra__company"><LText value={extra.company} /></span>
               <span class="timeline-extra__role"><LText value={extra.role} /></span>
-              <span class="timeline-extra__period">{extra.period}</span>
+              <span class="timeline-extra__period"><LText value={extra.period} /></span>
             </li>
           ))}
         </ul>
