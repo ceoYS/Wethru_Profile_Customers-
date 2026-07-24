@@ -1,16 +1,16 @@
 /* ==========================================================================
    Theme: terracotta-atelier · Layout partner: atelier-dossier (seo-baul only)
 
-   The page uses one opening field and one closing band, with a white editorial
-   canvas between them. Colour inside that canvas acts as emphasis, not as a
+   The page uses a white editorial canvas and one closing band. Colour inside
+   that canvas acts as emphasis, not as a
    section boundary. The four scenes, in scroll order:
 
-     Hero      → a tall GRAY field on the right, running off the right edge,
-                 split from the name by a 6px terracotta spine.
+     Hero      → a white 55:45 spread; the right side pairs a persistent 4:5
+                 portrait frame with vertically arranged figures.
      Awards    → oversized TERRACOTTA lead type beside a white recognition
                  register; no coloured section surface.
-     Practice  → two unequal WHITE streams; GREEN marks the research label and
-                 a gray rule separates execution.
+     Practice  → two unequal WHITE career tracks; GREEN marks academic/research
+                 and a gray rule separates startup/operations.
      Contact   → a full-width TERRACOTTA closing band, running off both edges.
 
    Experience and Projects stay white on purpose — the page needs two quiet
@@ -32,7 +32,7 @@
   --text: #20211e;
   --muted: #66645f;
 
-  /* Brand gray (60) — the hero field, hairlines, quiet labels. */
+  /* Brand gray (60) — hairlines and quiet labels. */
   --gray: #8d8a83;
   --gray-light: #efefeb;
   --gray-middle: #d7d6d1;
@@ -40,7 +40,7 @@
   --line: rgba(141, 138, 131, 0.6);
   --line-soft: rgba(141, 138, 131, 0.32);
 
-  /* Brand terracotta — awards typography, closing band, hero spine, and the
+  /* Brand terracotta — awards typography, closing band, hero figures, and the
      currently hovered/focused project. --accent-strong is the AA-on-white ink. */
   --accent: #a85a3a;
   --accent-strong: #7f3f29;
@@ -77,8 +77,7 @@
 }
 
 /* Solid paper. overflow-x is clipped (not hidden — no scroll box is created)
-   so the hero and contact fields can reach the page edge without a horizontal
-   scrollbar. */
+   so the contact field can reach the page edge without a horizontal scrollbar. */
 [data-theme="terracotta-atelier"] .profile-shell {
   background: var(--bg);
   overflow-x: clip;
@@ -107,29 +106,6 @@
   padding-inline: var(--page-gutter);
 }
 
-/* --- Hero field primitive ------------------------------------------------
-   The remaining .sb-field use is the hero's right-running gray plane. Its
-   ::before continues that background past the page edge on wide viewports. */
-
-[data-layout="atelier-dossier"] .sb-field {
-  position: relative;
-  border-radius: 0;
-  box-shadow: none;
-}
-
-[data-layout="atelier-dossier"] .sb-field::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 100vw;
-  background: inherit;
-}
-
-[data-layout="atelier-dossier"] .sb-field--right::before {
-  left: 100%;
-}
-
 /* No uppercase mono eyebrows on this page — non-uppercase, ≥13px, Pretendard
    (mono is routed to Pretendard above). Covers the timeline's "추가 경험". */
 [data-layout="atelier-dossier"] .eyebrow {
@@ -140,7 +116,7 @@
   color: var(--muted);
 }
 
-/* --- Hero: two unequal pages — name spread | gray figures field ---------- */
+/* --- Hero: unequal editorial spread — name | portrait and figures -------- */
 
 [data-layout="atelier-dossier"] .sb-hero {
   padding-block: clamp(2rem, 4.5vw, 3.25rem) clamp(2.75rem, 6vw, 4.25rem);
@@ -159,9 +135,9 @@
 }
 
 @media (min-width: 900px) {
-  /* 58 : 42 — the asymmetry is the point; never a half-and-half split. */
+  /* The portrait frame remains present in both loaded and fallback states. */
   [data-layout="atelier-dossier"] .sb-hero__spread {
-    grid-template-columns: minmax(0, 58fr) minmax(0, 42fr);
+    grid-template-columns: minmax(0, 55fr) minmax(0, 45fr);
     column-gap: clamp(2.5rem, 5vw, 4.5rem);
     align-items: stretch;
   }
@@ -211,40 +187,91 @@
   max-width: 36rem;
 }
 
-/* The GRAY field — the page's largest painted plane. It runs off the right
-   edge of the screen, is divided from the name by a 6px terracotta spine, and
-   holds the two figures at its foot so the empty upper field carries weight. */
-[data-layout="atelier-dossier"] .sb-hero__panel {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  min-height: clamp(19rem, 34vw, 27rem);
-  padding: clamp(1.75rem, 3.5vw, 2.75rem);
-  padding-right: var(--page-gutter);
-  margin-right: calc(-1 * var(--page-gutter));
-  background: var(--gray-light);
-  border-left: 6px solid var(--accent);
+/* The portrait frame and figures occupy the same geometry before and after
+   the real image loads, preventing both layout shift and an empty gray field. */
+[data-layout="atelier-dossier"] .sb-hero__support {
+  display: grid;
+  grid-template-columns: minmax(0, 65fr) minmax(0, 35fr);
+  gap: clamp(1rem, 2vw, 1.5rem);
+  align-items: center;
+  min-width: 0;
 }
 
-@media (max-width: 899px) {
-  /* Stacked: the field runs off both edges instead. */
-  [data-layout="atelier-dossier"] .sb-hero__panel {
-    margin-left: calc(-1 * var(--page-gutter));
-    padding-left: var(--page-gutter);
-    border-left: 0;
-    border-top: 6px solid var(--accent);
-    min-height: 0;
-  }
+[data-layout="atelier-dossier"] .sb-hero__portrait {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: var(--bg-soft);
+  border: 1px solid var(--gray-middle);
+  border-radius: 0;
+  box-shadow: none;
+}
 
-  [data-layout="atelier-dossier"] .sb-hero__panel::before {
-    display: none;
-  }
+[data-layout="atelier-dossier"] .sb-hero__portrait-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.75rem, 1.5vw, 1rem);
+  padding: 1rem;
+  color: var(--gray);
+  text-align: center;
+}
+
+[data-layout="atelier-dossier"] .sb-hero__portrait-monogram {
+  font-size: clamp(2.5rem, 4.5vw, 4rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.035em;
+  color: var(--gray-middle);
+}
+
+[data-layout="atelier-dossier"] .sb-hero__portrait-label {
+  font-size: clamp(0.65rem, 0.8vw, 0.75rem);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.12em;
+}
+
+[data-layout="atelier-dossier"]
+  .sb-hero__portrait--photo-loaded
+  .sb-hero__portrait-placeholder {
+  display: none;
+}
+
+[data-layout="atelier-dossier"] .sb-hero__portrait img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: var(--sb-photo-position, 50% 35%);
+}
+
+/* Author-level image styling must not override the native hidden state while
+   a missing or still-loading source leaves the editorial fallback in place. */
+[data-layout="atelier-dossier"] .sb-hero__portrait img[hidden] {
+  display: none;
 }
 
 [data-layout="atelier-dossier"] .sb-hero__figures {
   display: flex;
   flex-direction: column;
   gap: clamp(1.25rem, 2.5vw, 1.75rem);
+  min-width: 0;
+  padding-left: clamp(1rem, 2vw, 1.5rem);
+  border-left: 1px solid var(--line-soft);
+}
+
+/* The only decorative terracotta in the hero is this short notation rule. */
+[data-layout="atelier-dossier"] .sb-hero__figures::before {
+  content: "";
+  width: 2.5rem;
+  height: 2px;
+  flex: 0 0 auto;
+  background: var(--accent);
 }
 
 [data-layout="atelier-dossier"] .sb-hero__figure {
@@ -264,7 +291,7 @@
   font-weight: 700;
   line-height: 1.05;
   letter-spacing: -0.01em;
-  color: var(--text);
+  color: var(--accent-strong);
   overflow-wrap: anywhere;
 }
 
@@ -277,6 +304,17 @@
   font-size: 0.95rem;
   font-weight: 600;
   color: var(--gray-dark);
+}
+
+[data-layout="atelier-dossier"] .sb-hero__support .sb-hero__figure-value {
+  font-size: clamp(1.35rem, 2vw, 1.75rem);
+}
+
+[data-layout="atelier-dossier"]
+  .sb-hero__support
+  .sb-hero__figure--lead
+  .sb-hero__figure-value {
+  font-size: clamp(1.5rem, 2.4vw, 2rem);
 }
 
 /* --- Section headers: quiet, no per-section badge ------------------------- */
@@ -383,7 +421,7 @@
   color: var(--muted);
 }
 
-/* --- Research & Business: unequal white streams, divided by a gray rule --- */
+/* --- Two career tracks: unequal white streams, divided by a gray rule ----- */
 
 [data-layout="atelier-dossier"] .sb-practice__body {
   display: grid;
@@ -391,7 +429,7 @@
 }
 
 @media (min-width: 900px) {
-  /* 63 : 37 — research stays wider than execution without owning a colour. */
+  /* 63 : 37 — academic/research stays wider without merging the two tracks. */
   [data-layout="atelier-dossier"] .sb-practice__body {
     grid-template-columns: minmax(0, 63fr) minmax(0, 37fr);
     column-gap: clamp(2rem, 4vw, 3.5rem);
@@ -425,7 +463,7 @@
   background: var(--green-strong);
 }
 
-/* Execution remains on white and is separated only by a neutral vertical
+/* Startup/operations remains on white and is separated only by a neutral vertical
    hairline. Labels in both streams share the same top baseline. */
 [data-layout="atelier-dossier"] .sb-practice__stream--exec {
   padding-left: clamp(2rem, 4vw, 3.5rem);
@@ -438,7 +476,7 @@
   border-top: 1px solid var(--line-soft);
 }
 
-/* Research titles read larger than the execution (aux) titles — an intended
+/* Research titles read larger than the operations (aux) titles — an intended
    difference in weight, not a uniform card grid. */
 [data-layout="atelier-dossier"] .sb-practice__item-title {
   font-size: clamp(1.25rem, 2vw, 1.55rem);

@@ -1,18 +1,15 @@
 ---
 /**
  * SeoBaulHero — the opening spread of a person profile, built as two unequal
- * pages rather than one stacked column. Left (58): the name, the role, the key
- * sentence, the standfirst. Right (42): a tall flat GRAY field that runs off
- * the right edge of the screen, divided from the name by a 6px terracotta
- * spine, holding the two figures the source states plainly (투자유치 5억 원
- * 이상, 스타트업 약 3년) at its foot.
+ * pages rather than one stacked column. Left: the name, role, key sentence,
+ * and standfirst. Right: a persistent 4:5 portrait frame beside the
+ * organizational/operational figures on the white canvas.
  *
- * The field is a page surface, not a card: no radius, no shadow, no border on
- * three sides. Used ONLY by seo-baul (layout === "atelier-dossier"); every
- * other customer keeps the shared ProfileHero, so no existing page moves.
- *
- * Every figure is a fact already in seo-baul.ts, restated in the source's own
- * Korean. Nothing is authored or exaggerated here.
+ * The full spread is 55:45, then the right side divides into roughly 65%
+ * portrait and 35% figures. When the fixed public image is absent, the same
+ * frame presents a restrained editorial monogram instead of broken media.
+ * Used ONLY by seo-baul (layout === "atelier-dossier"); every other customer
+ * keeps the shared ProfileHero.
  */
 import type { CustomerProfile } from "../../types/profile";
 import { hasEnglish } from "../../utils/i18n";
@@ -44,19 +41,66 @@ const bilingual = hasEnglish(customer);
       <p class="sb-hero__intro"><LText value={person.summary} /></p>
     </div>
 
-    <aside class="sb-hero__panel sb-field sb-field--right">
+    <aside class="sb-hero__support">
+      <figure class="sb-hero__portrait" data-sb-hero-photo>
+        <div class="sb-hero__portrait-placeholder" aria-hidden="true">
+          <span class="sb-hero__portrait-monogram">SB</span>
+          <span class="sb-hero__portrait-label">PROFILE PHOTO</span>
+        </div>
+        <img
+          src={person.photo.src}
+          alt={person.photo.alt}
+          width="480"
+          height="600"
+          loading="eager"
+          fetchpriority="high"
+          hidden
+        />
+      </figure>
+
       <dl class="sb-hero__figures">
         <div class="sb-hero__figure sb-hero__figure--lead">
-          <dt class="sb-hero__figure-key"><Bi ko="투자유치" en="Investment raised" /></dt>
+          <dt class="sb-hero__figure-key">
+            <Bi ko="조직 투자유치 성과" en="Organization funding outcome" />
+          </dt>
           <dd class="sb-hero__figure-value">
             <Bi ko="5억 원 이상" en="500M+ KRW" />
           </dd>
         </div>
         <div class="sb-hero__figure">
-          <dt class="sb-hero__figure-key"><Bi ko="스타트업 운영" en="Startup operation" /></dt>
+          <dt class="sb-hero__figure-key">
+            <Bi ko="소셜벤처 운영 참여" en="Social-venture operations" />
+          </dt>
           <dd class="sb-hero__figure-value"><Bi ko="약 3년" en="~3 years" /></dd>
         </div>
       </dl>
     </aside>
   </div>
 </header>
+
+<script>
+  // Keep the image itself hidden until decoded source data is available. The
+  // persistent frame therefore never exposes broken-image UI or alt text.
+  document.querySelectorAll<HTMLElement>("[data-sb-hero-photo]").forEach((photo) => {
+    const image = photo.querySelector<HTMLImageElement>("img");
+    if (!image) return;
+
+    const reveal = () => {
+      if (image.naturalWidth === 0) return;
+      image.hidden = false;
+      photo.classList.add("sb-hero__portrait--photo-loaded");
+    };
+
+    if (image.complete) reveal();
+    else image.addEventListener("load", reveal, { once: true });
+
+    image.addEventListener(
+      "error",
+      () => {
+        image.hidden = true;
+        photo.classList.remove("sb-hero__portrait--photo-loaded");
+      },
+      { once: true },
+    );
+  });
+</script>

@@ -8,35 +8,35 @@ export const profile: CustomerProfile = {
   locales: ["ko", "en"],
 
   seo: {
-    title: "서바울 | 건축·설비 리서치와 AI를 사업으로 잇는 프로젝트 리더",
+    title: "서바울 | 건축·설비 및 AI 연구 · 소셜벤처 운영 경험",
     description:
-      "건축공학 기반 데이터센터·공조 설비 연구와 멀티모달 AI 연구를, 약 3년간의 스타트업 운영과 5억 원 이상의 투자유치로 연결해온 서바울님의 온라인 프로필입니다.",
+      "건축공학 기반 데이터센터·공조 설비 및 멀티모달 AI 연구와, 약 3년간 소셜벤처 운영에 참여한 경험을 두 축으로 소개하는 서바울님의 온라인 프로필입니다.",
     ogImage: "/og/placeholder-og.svg",
   },
 
   person: {
     name: "서바울",
     // englishName is intentionally omitted — the source document provides no
-    // verified English name. The hero monogram falls back to "서".
+    // verified English name.
     roleLine: {
-      ko: "건축·설비 리서치 × AI × 사업 실행",
-      en: "Facilities Research × AI × Execution",
+      ko: "건축·설비 리서치와 AI 연구 / 소셜벤처 운영 경험",
+      en: "Architecture & Building-Systems Research / AI Research / Social-Venture Operations Experience",
     },
     tagline: {
-      ko: "건축·데이터센터 설비의 문제를, AI와 사업 실행으로 연결합니다.",
-      en: "Turning the problems of architecture and data-center facilities into AI research and real business execution.",
+      ko: "건축공학을 기반으로 설비와 AI를 연구하고, 별도의 현장에서 소셜벤처 운영과 사업화를 경험했습니다.",
+      en: "Grounded in architectural engineering, I study building systems and AI while separately gaining experience in social-venture operations and commercialization.",
     },
     summary: {
-      ko: "건축공학을 기반으로 데이터센터와 공조 설비를 연구하고, 재실자의 열적 쾌적성을 판단하는 멀티모달 AI 연구로 이어온 연구자입니다. 동시에 소셜벤처 ‘사라나 지구’를 약 3년간 대표로 운영하며 5억 원 이상의 투자유치를 이끌었고, 글로벌 프로젝트와 컨설팅으로 연구를 사업 실행까지 연결해온 프로젝트 리더입니다.",
-      en: "A researcher who works from architectural engineering into data-center and HVAC facilities, and further into multimodal-AI research that reads occupants’ thermal comfort. In parallel, a project leader who ran the social venture ‘Sarana Jigu’ as CEO for about three years, raised over 500 million KRW, and carried research through to execution via global projects and consulting.",
+      ko: "건축공학 전공을 바탕으로 데이터센터와 공조 설비를 연구하고, 재실자의 열적 쾌적성을 판단하는 멀티모달 AI 연구를 수행했습니다. 한편 소셜벤처 ‘사라나 지구’의 운영에 약 3년간 참여하며 사업기획, 팀 운영과 사회혁신 프로젝트 경험을 쌓았습니다.",
+      en: "With a foundation in architectural engineering, I researched data centers and HVAC systems and conducted multimodal-AI research on assessing occupants’ thermal comfort. Separately, I took part in operating the social venture ‘Sarana Jigu’ for about three years, gaining experience in business planning, team operations, and social-innovation projects.",
     },
     identitySupport: {
-      ko: "데이터센터 설비 논문과 대학 공식 자료집으로 정리된 연구, 장관상·사회혁신 최우수상으로 검증된 사업화, 캄보디아 창업팀 컨설팅과 유럽 산업 탐방까지 — 문제를 연구로 규명하고 사업으로 실행하는 프로젝트 리더입니다.",
-      en: "Research captured in a data-center facilities paper and a university proceedings volume; commercialization proven by a Minister’s Grand Prize and a social-innovation top award; reach extended through consulting for Cambodian startup teams and a European industry tour — a project leader who defines problems by research and delivers them as business.",
+      ko: "전공과 연구 축에서는 데이터센터 설비 논문과 대학 공식 자료집을 남겼습니다. 별도의 스타트업과 운영 축에서는 소셜벤처 운영과 사회혁신 프로젝트에 참여했고, 캄보디아 창업팀 컨설팅과 유럽 산업 탐방을 경험했습니다.",
+      en: "The academic and research track includes a data-center facilities paper and a university proceedings volume. In a separate startup and operations track, the experience includes social-venture operations, social-innovation projects, consulting for Cambodian startup teams, and a European industry tour.",
     },
     photo: {
-      // No verified photo was provided. The file is intentionally absent so the
-      // hero renders the monogram placeholder ("서"), never a stand-in face.
+      // The SeoBaulHero renders this verified path only when the file exists.
+      // Until then, no portrait placeholder or stand-in face is exposed.
       src: "/images/customers/seo-baul/profile.webp",
       alt: "서바울 프로필 사진",
     },
@@ -59,18 +59,16 @@ export const profile: CustomerProfile = {
     "Global Projects",
   ],
 
-  // Trimmed from a 13-item generic list to the eight that carry the four core
-  // axes (facilities research / AI / venture / global). No new skills were
-  // added — the removed entries were duplicative or generic role words
-  // (Thermal Comfort, AI Convergence, Business Planning, Global Collaboration,
-  // Project Leadership).
+  // The skills preserve the two distinct tracks: academic research and
+  // startup operations. Funding is recorded below as an organizational result,
+  // not as a personal responsibility.
   skills: [
     "Architectural Engineering",
     "Data Center Facilities",
     "HVAC / 공조 설비",
     "Multimodal AI",
     "Research & Papers",
-    "Fundraising / IR",
+    "Business Planning",
     "Startup Operations",
     "Consulting",
   ],
@@ -101,59 +99,28 @@ export const profile: CustomerProfile = {
     {
       eyebrow: "Venture",
       title: {
-        ko: "스타트업 운영 & 사업화",
+        ko: "소셜벤처 운영 경험",
         en: "Startup Operations & Commercialization",
       },
       description: {
-        ko: "소셜벤처 ‘사라나 지구’를 약 3년간 운영하며 5억 원 이상의 투자유치와 사회혁신 수상을 이끌었습니다.",
-        en: "Ran the social venture ‘Sarana Jigu’ for about three years, driving 500M+ KRW in investment and social-innovation awards.",
+        ko: "소셜벤처 ‘사라나 지구’의 운영에 약 3년간 참여하며 사업기획, 팀 운영과 사회혁신 프로젝트를 경험했습니다. 해당 조직에는 5억 원 이상의 투자유치 성과가 있었습니다.",
+        en: "Took part in operating the social venture ‘Sarana Jigu’ for about three years, with experience in business planning, team operations, and social-innovation projects. The organization recorded over KRW 500 million in funding.",
       },
     },
     {
       eyebrow: "Global",
       title: {
-        ko: "글로벌 프로젝트 & 리더십",
-        en: "Global Projects & Leadership",
+        ko: "글로벌 프로젝트 & 협업",
+        en: "Global Projects & Collaboration",
       },
       description: {
-        ko: "캄보디아 창업팀 컨설팅과 유럽 산업 탐방을 수행하고, 다수의 프로젝트를 리더로 이끌었습니다.",
-        en: "Consulted for Cambodian startup teams, joined a European industry tour, and led numerous projects as the lead.",
+        ko: "캄보디아 창업팀 컨설팅과 유럽 산업 탐방에 참여하며 다양한 팀과 프로젝트를 수행했습니다.",
+        en: "Consulted for Cambodian startup teams, joined a European industry tour, and worked with diverse teams across multiple projects.",
       },
     },
   ],
 
   experiences: [
-    {
-      company: { ko: "사라나 지구 (Sarana Jigu)", en: "Sarana Jigu" },
-      role: { ko: "대표 · 창업팀 리더", en: "CEO · Founding Team Lead" },
-      period: "약 3년",
-      description: {
-        ko: "사회 문제를 사업으로 풀어내는 소셜벤처를 대표로서 약 3년간 운영하며 사업기획, 팀 리딩, 투자유치를 직접 수행했습니다.",
-        en: "Ran a social venture solving social problems as CEO for about three years — leading business planning, the team, and fundraising firsthand.",
-      },
-      bullets: [
-        {
-          ko: "투자유치 5억 원 이상 달성",
-          en: "Raised over 500 million KRW in investment",
-        },
-        {
-          ko: "2023 소셜벤처 경연대회 대상 (고용노동부 장관상)",
-          en: "2023 Social Venture Competition — Grand Prize (Minister of Employment and Labor)",
-        },
-        {
-          ko: "KT&G 사회혁신 아이디어 공모전 최우수상",
-          en: "KT&G Social Innovation Idea Competition — Top Excellence Award",
-        },
-        {
-          ko: "창업유망팀 300 예선 통과",
-          en: "Passed the preliminaries of Promising Startup Team 300",
-        },
-        {
-          ko: "한양대학교 창업지원단 ‘몬테’ 창업팀 리더",
-          en: "Team lead of the ‘Monte’ startup team, Hanyang University Startup Support Group",
-        },
-      ],
-    },
     {
       company: {
         ko: "한양대학교 건축공학",
@@ -188,6 +155,37 @@ export const profile: CustomerProfile = {
         {
           ko: "AI융합 마이크로전공 수강 · AI 솔루션 해커톤 장려상",
           en: "Completed the AI Convergence micro-major · Encouragement Award, AI Solution Hackathon",
+        },
+      ],
+    },
+    {
+      company: { ko: "사라나 지구 (Sarana Jigu)", en: "Sarana Jigu" },
+      role: { ko: "운영 · 사업기획", en: "Operations · Business Planning" },
+      period: "약 3년",
+      description: {
+        ko: "소셜벤처 ‘사라나 지구’의 운영에 약 3년간 참여하며 사업기획, 팀 운영과 사회혁신 프로젝트를 수행했습니다.",
+        en: "Took part in operating the social venture ‘Sarana Jigu’ for about three years, contributing to business planning, team operations, and social-innovation projects.",
+      },
+      bullets: [
+        {
+          ko: "조직 차원의 투자유치 성과 5억 원 이상",
+          en: "The organization recorded over KRW 500 million in funding",
+        },
+        {
+          ko: "2023 소셜벤처 경연대회 대상 (고용노동부 장관상)",
+          en: "2023 Social Venture Competition — Grand Prize (Minister of Employment and Labor)",
+        },
+        {
+          ko: "KT&G 사회혁신 아이디어 공모전 최우수상",
+          en: "KT&G Social Innovation Idea Competition — Top Excellence Award",
+        },
+        {
+          ko: "창업유망팀 300 예선 통과",
+          en: "Passed the preliminaries of Promising Startup Team 300",
+        },
+        {
+          ko: "한양대학교 창업지원단 ‘몬테’ 창업팀 리더",
+          en: "Team lead of the ‘Monte’ startup team, Hanyang University Startup Support Group",
         },
       ],
     },
@@ -232,19 +230,19 @@ export const profile: CustomerProfile = {
         ko: "소셜벤처 ‘사라나 지구’",
         en: "Social Venture ‘Sarana Jigu’",
       },
-      role: { ko: "대표", en: "CEO" },
+      role: { ko: "운영 · 사업기획", en: "Operations · Business Planning" },
       period: "약 3년",
       problem: {
         ko: "사회적 가치를 실제 사업으로 전환하고, 초기 투자와 운영 체계를 확보해야 하는 상황이었습니다.",
         en: "Social value had to become a working business, with early investment and an operating system still to secure.",
       },
       approach: {
-        ko: "대표로서 사업기획·팀 리딩·투자유치를 직접 실행하고, 사회혁신 공모전으로 사업 모델을 검증했습니다.",
-        en: "As CEO, ran business planning, team leadership, and fundraising firsthand, validating the model through social-innovation competitions.",
+        ko: "운영 과정에서 사업기획과 팀 협업에 참여하고, 사회혁신 공모전 등을 통해 사업 모델을 검증했습니다.",
+        en: "Contributed to business planning and team collaboration during operations, using social-innovation competitions to validate the business model.",
       },
       result: {
-        ko: "투자유치 5억 원 이상, 2023 소셜벤처 경연대회 대상(장관상)과 KT&G 사회혁신 최우수상, 창업유망팀 300 예선 통과.",
-        en: "Over 500M KRW raised, the 2023 Social Venture Grand Prize (Minister’s Award), a KT&G social-innovation top award, and passage through the Promising Startup Team 300 preliminaries.",
+        ko: "조직에는 5억 원 이상의 투자유치 성과가 있었으며, 2023 소셜벤처 경연대회 대상(고용노동부 장관상)과 KT&G 사회혁신 아이디어 공모전 최우수상을 수상했습니다.",
+        en: "The organization recorded over KRW 500 million in funding and received the 2023 Social Venture Competition Grand Prize (Minister of Employment and Labor Award) and the KT&G Social Innovation Idea Competition Top Excellence Award.",
       },
     },
     {
@@ -263,14 +261,13 @@ export const profile: CustomerProfile = {
         en: "Consulted for Cambodian startup teams over six months and joined a 10-day European industry tour (smart farm, EU, ASML) and a greenwashing-themed Global Frontier program.",
       },
       result: {
-        ko: "경기청년 사다리(UCI) Best Student로 선정되어 수료식 대표 연설을 했고, 화성시 글로벌 탐방단과 한양대 대표 글로벌 프론티어에 선발됐습니다.",
-        en: "Selected as Best Student of the Gyeonggi Youth Ladder (UCI) with the representative graduation speech, and chosen for the Hwaseong City global tour and Hanyang’s representative Global Frontier.",
+        ko: "경기청년 사다리(UCI) Best Student로 선정되어 수료식 연설을 맡았고, 화성시 글로벌 탐방단과 한양대학교 글로벌 프론티어에 선발됐습니다.",
+        en: "Selected as Best Student of the Gyeonggi Youth Ladder (UCI), gave a graduation speech, and was chosen for the Hwaseong City global tour and Hanyang University’s Global Frontier.",
       },
     },
   ],
 
-  // Order-only change: the awards lead so the strip doesn't repeat the hero's
-  // 투자유치/스타트업 figures immediately below it. No value or label edited.
+  // Awards lead so the strip does not repeat the hero's operational figures.
   proofs: [
     {
       value: "대상",
@@ -294,8 +291,11 @@ export const profile: CustomerProfile = {
         en: "Habitat Youth Solutions APAC",
       },
     },
-    { value: "₩500M+", label: { ko: "투자유치", en: "Investment Raised" } },
-    { value: "≈3Y", label: { ko: "스타트업 운영", en: "Startup Operation" } },
+    {
+      value: "₩500M+",
+      label: { ko: "조직 투자유치 성과", en: "Organization Funding Outcome" },
+    },
+    { value: "≈3Y", label: { ko: "운영 참여", en: "Operations Involvement" } },
   ],
 
   privacy: {

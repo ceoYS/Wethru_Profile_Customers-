@@ -1,11 +1,9 @@
 ---
 /**
- * SeoBaulPractice — the career as two unequal streams instead of a 2×2 card
- * grid. The wider research stream (data-center / HVAC + multimodal AI) and the
- * narrower execution stream (the venture and global work) both stay on the
- * white canvas. Green marks only the research label; a gray divider separates
- * execution. Titles and descriptions are the customer's strengths, verbatim.
- * seo-baul only.
+ * SeoBaulPractice — two explicitly separate career tracks instead of a 2×2
+ * card grid. The wider academic/research track and narrower startup/operations
+ * track share a white canvas but no implied causal narrative. Green marks only
+ * the research heading; a gray divider separates the operations track.
  */
 import type { ProfileStrength } from "../../types/profile";
 import Bi from "../shared/Bi.astro";
@@ -16,40 +14,46 @@ interface Props {
 }
 
 const { strengths } = Astro.props;
-// First two strengths are the research stream; the rest are execution.
-const research = strengths.slice(0, 2);
-const execution = strengths.slice(2);
+// Data order is deliberate: the first two records belong to academic/research;
+// the remaining records belong to startup/operations and related field work.
+const majorAndResearch = strengths.slice(0, 2);
+const startupAndOperations = strengths.slice(2);
 ---
 
 {strengths.length > 0 && (
   <section class="profile-section sb-practice" aria-labelledby="practice-title">
     <div class="section-head">
       <h2 class="section-head__title" id="practice-title">
-        <Bi ko="연구와 사업" en="Research & Business" />
+        <Bi ko="연구와 운영" en="Research & Operations" />
       </h2>
     </div>
 
     <div class="sb-practice__body">
-      {research.length > 0 && (
+      {majorAndResearch.length > 0 && (
         <div class="sb-practice__stream sb-practice__stream--research">
-          <p class="sb-practice__stream-label sb-practice__stream-label--research">
-            <Bi ko="연구" en="Research" />
-          </p>
-          {research.map((s) => (
+          <h3 class="sb-practice__stream-label sb-practice__stream-label--research">
+            <Bi
+              ko="건축·설비 연구"
+              en="Architecture & Building-Systems Research"
+            />
+          </h3>
+          {majorAndResearch.map((s) => (
             <article class="sb-practice__item">
-              <h3 class="sb-practice__item-title"><LText value={s.title} /></h3>
+              <h4 class="sb-practice__item-title"><LText value={s.title} /></h4>
               <p class="sb-practice__item-desc"><LText value={s.description} /></p>
             </article>
           ))}
         </div>
       )}
 
-      {execution.length > 0 && (
+      {startupAndOperations.length > 0 && (
         <div class="sb-practice__stream sb-practice__stream--exec">
-          <p class="sb-practice__stream-label"><Bi ko="사업·실행" en="Execution" /></p>
-          {execution.map((s) => (
+          <h3 class="sb-practice__stream-label">
+            <Bi ko="소셜벤처 운영" en="Social-Venture Operations" />
+          </h3>
+          {startupAndOperations.map((s) => (
             <article class="sb-practice__item sb-practice__item--aux">
-              <h3 class="sb-practice__item-title"><LText value={s.title} /></h3>
+              <h4 class="sb-practice__item-title"><LText value={s.title} /></h4>
               <p class="sb-practice__item-desc"><LText value={s.description} /></p>
             </article>
           ))}

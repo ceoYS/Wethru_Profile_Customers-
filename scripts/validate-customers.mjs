@@ -215,7 +215,7 @@ for (const entry of entries) {
       if (!(await fileExists(photoPath))) {
         warn(
           file,
-          `photo file missing: public${profile.person.photo.src} — page falls back to monogram`,
+          `photo file missing: public${profile.person.photo.src} — page uses its configured missing-photo fallback`,
         );
       }
     }
