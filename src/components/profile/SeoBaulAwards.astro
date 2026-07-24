@@ -1,0 +1,52 @@
+---
+/**
+ * SeoBaulAwards — an asymmetric recognition register, not a card grid.
+ * The lead credit (the 2023 Social-Venture Grand Prize / Minister's award) is
+ * established by oversized terracotta type on the white canvas; the remaining
+ * credits sit beside it as a hairline-separated list. seo-baul only.
+ *
+ * Values and labels are the customer's proofs, verbatim. The two figures the
+ * hero already carries (₩500M+, ≈3Y) are excluded here so nothing is echoed.
+ */
+import type { ProfileProof } from "../../types/profile";
+import Bi from "../shared/Bi.astro";
+import LText from "../shared/LText.astro";
+
+interface Props {
+  proofs: ProfileProof[];
+}
+
+const { proofs } = Astro.props;
+// Awards only — drop the two figures the hero already carries (₩500M+, ≈3Y).
+const awards = proofs.filter((p) => p.value !== "₩500M+" && p.value !== "≈3Y");
+const [lead, ...rest] = awards;
+---
+
+{lead && (
+  <section class="profile-section sb-awards" aria-labelledby="awards-title">
+    <div class="section-head">
+      <h2 class="section-head__title" id="awards-title">
+        <Bi ko="성과와 수상" en="Recognition" />
+      </h2>
+    </div>
+
+    <div class="sb-awards__body">
+      <div class="sb-awards__lead">
+        <span class="sb-awards__lead-rule" aria-hidden="true"></span>
+        <p class="sb-awards__lead-value">{lead.value}</p>
+        <p class="sb-awards__lead-label"><LText value={lead.label} /></p>
+      </div>
+
+      {rest.length > 0 && (
+        <ul class="sb-awards__list">
+          {rest.map((award) => (
+            <li class="sb-awards__row">
+              <span class="sb-awards__row-value">{award.value}</span>
+              <span class="sb-awards__row-label"><LText value={award.label} /></span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  </section>
+)}

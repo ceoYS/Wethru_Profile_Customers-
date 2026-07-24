@@ -1,0 +1,279 @@
+---
+/**
+ * SeoBaulProjects — an equal-weight editorial archive for atelier-dossier.
+ *
+ * Each article is keyboard-focusable because focus, like pointer hover, chooses
+ * the temporary visual centre. aria-labelledby gives that extra tab stop the
+ * project's title as its accessible name; no button/link role is added because
+ * focusing the article does not perform an action.
+ */
+import type { ProfileProject } from "../../types/profile";
+import Bi from "../shared/Bi.astro";
+import LText from "../shared/LText.astro";
+
+interface Props {
+  projects: ProfileProject[];
+  sectionNumber?: string;
+}
+
+const { projects, sectionNumber = "03" } = Astro.props;
+---
+
+{projects.length > 0 && (
+  <section class="profile-section sb-projects" aria-labelledby="projects-title">
+    <div class="section-head">
+      <span class="section-head__number" aria-hidden="true">{sectionNumber}</span>
+      <h2 class="section-head__title" id="projects-title">
+        <Bi ko="프로젝트" en="Projects" />
+      </h2>
+      <span class="section-head__rule" aria-hidden="true"></span>
+    </div>
+
+    <div class="sb-project-list">
+      {projects.map((project, index) => (
+        <article
+          class="sb-project-item"
+          tabindex="0"
+          aria-labelledby={`sb-project-title-${index + 1}`}
+        >
+          <div class="sb-project-item__inner">
+            <header class="sb-project-item__meta">
+              <span class="sb-project-item__number" aria-hidden="true">
+                {String(index + 1).padStart(2, "0")}
+              </span>
+              <div class="sb-project-item__identity">
+                <h3
+                  class="sb-project-item__title"
+                  id={`sb-project-title-${index + 1}`}
+                >
+                  <LText value={project.title} />
+                </h3>
+                <p class="sb-project-item__role"><LText value={project.role} /></p>
+              </div>
+              <span class="sb-project-item__period">{project.period}</span>
+            </header>
+
+            <dl class="sb-project-item__steps">
+              <div class="sb-project-step">
+                <dt><Bi ko="문제" en="Problem" /></dt>
+                <dd><LText value={project.problem} /></dd>
+              </div>
+              <div class="sb-project-step">
+                <dt><Bi ko="접근" en="Approach" /></dt>
+                <dd><LText value={project.approach} /></dd>
+              </div>
+              <div class="sb-project-step sb-project-step--result">
+                <dt><Bi ko="결과" en="Result" /></dt>
+                <dd><LText value={project.result} /></dd>
+              </div>
+            </dl>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+)}
+
+<style>
+  .sb-project-list {
+    border-top: 1px solid var(--line-soft);
+  }
+
+  .sb-project-item {
+    --project-number: var(--muted);
+    --project-title: var(--gray-dark);
+    --project-copy: var(--muted);
+    --project-result: var(--text);
+    --project-shift: 0;
+
+    position: relative;
+    border-left: 5px solid transparent;
+    border-bottom: 1px solid var(--line-soft);
+    padding: clamp(1.75rem, 3vw, 2.25rem) clamp(1.1rem, 2.6vw, 2rem);
+    background-color: var(--bg);
+    opacity: 1;
+    transition:
+      background-color 180ms ease,
+      border-color 180ms ease,
+      opacity 180ms ease;
+  }
+
+  /* A 5px border slot is always reserved. The neutral line itself is 1px, so
+     activating the border never changes the article's width or text measure. */
+  .sb-project-item::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 -5px;
+    width: 1px;
+    background-color: var(--line);
+    transition: background-color 180ms ease;
+  }
+
+  .sb-project-item__inner {
+    min-width: 0;
+    transform: translateX(var(--project-shift));
+    transition: transform 180ms ease;
+  }
+
+  .sb-project-item__meta {
+    display: grid;
+    grid-template-columns: 2.5rem minmax(0, 1fr) auto;
+    column-gap: clamp(0.85rem, 2vw, 1.25rem);
+    align-items: start;
+  }
+
+  .sb-project-item__number {
+    padding-top: 0.2rem;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    line-height: 1.4;
+    color: var(--project-number);
+    transition: color 180ms ease;
+  }
+
+  .sb-project-item__identity {
+    min-width: 0;
+  }
+
+  .sb-project-item__title {
+    font-size: clamp(1.2rem, 2vw, 1.4rem);
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--project-title);
+    transition: color 180ms ease;
+  }
+
+  .sb-project-item__role {
+    margin-top: 0.25rem;
+    font-size: 0.92rem;
+    line-height: 1.5;
+    color: var(--project-copy);
+    transition: color 180ms ease;
+  }
+
+  .sb-project-item__period {
+    padding-top: 0.2rem;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    color: var(--project-copy);
+    white-space: nowrap;
+    transition: color 180ms ease;
+  }
+
+  .sb-project-item__steps {
+    display: grid;
+    gap: 0.75rem;
+    margin-top: 1.25rem;
+    margin-left: calc(2.5rem + clamp(0.85rem, 2vw, 1.25rem));
+    max-width: 72ch;
+  }
+
+  .sb-project-step {
+    display: grid;
+    grid-template-columns: 3.25rem minmax(0, 1fr);
+    gap: 1rem;
+    align-items: start;
+  }
+
+  .sb-project-step dt {
+    padding-top: 0.08rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    line-height: 1.65;
+    color: var(--project-copy);
+    transition: color 180ms ease;
+  }
+
+  .sb-project-step dd {
+    min-width: 0;
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--project-copy);
+    overflow-wrap: anywhere;
+    transition: color 180ms ease;
+  }
+
+  .sb-project-step--result dd {
+    color: var(--project-result);
+  }
+
+  .sb-project-item:focus-visible {
+    --project-number: var(--accent-strong);
+    --project-title: var(--text);
+    --project-copy: var(--text);
+    --project-result: var(--accent-strong);
+    --project-shift: 0.4rem;
+
+    border-left-color: var(--accent);
+    background-color: var(--accent-tint);
+    outline: 2px solid var(--accent-strong);
+    outline-offset: 3px;
+  }
+
+  .sb-project-item:focus-visible::before {
+    background-color: var(--accent);
+  }
+
+  @media (hover: hover) and (pointer: fine) and (min-width: 561px) {
+    .sb-project-item:hover {
+      --project-number: var(--accent-strong);
+      --project-title: var(--text);
+      --project-copy: var(--text);
+      --project-result: var(--accent-strong);
+      --project-shift: 0.4rem;
+
+      border-left-color: var(--accent);
+      background-color: var(--accent-tint);
+    }
+
+    .sb-project-item:hover::before {
+      background-color: var(--accent);
+    }
+
+    /* Progressive enhancement: active emphasis works without :has(); only the
+       optional sibling de-emphasis depends on it. */
+    .sb-project-list:has(.sb-project-item:is(:hover, :focus-visible))
+      .sb-project-item:not(:is(:hover, :focus-visible)) {
+      opacity: 0.78;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .sb-project-item {
+      padding-inline: 0.95rem;
+    }
+
+    .sb-project-item__meta {
+      grid-template-columns: 2rem minmax(0, 1fr) auto;
+      column-gap: 0.75rem;
+    }
+
+    .sb-project-item__steps {
+      margin-left: 0;
+    }
+
+    .sb-project-step {
+      grid-template-columns: 2.75rem minmax(0, 1fr);
+      gap: 0.75rem;
+    }
+
+    .sb-project-item:focus-visible {
+      --project-shift: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sb-project-item,
+    .sb-project-item::before,
+    .sb-project-item__inner,
+    .sb-project-item__number,
+    .sb-project-item__title,
+    .sb-project-item__role,
+    .sb-project-item__period,
+    .sb-project-step dt,
+    .sb-project-step dd {
+      transition-duration: 0.01ms;
+    }
+  }
+</style>

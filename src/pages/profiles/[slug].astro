@@ -1,6 +1,10 @@
 ---
 import ProfilePage from "../../layouts/ProfilePage.astro";
 import ProfileHero from "../../components/profile/ProfileHero.astro";
+import SeoBaulHero from "../../components/profile/SeoBaulHero.astro";
+import SeoBaulAwards from "../../components/profile/SeoBaulAwards.astro";
+import SeoBaulPractice from "../../components/profile/SeoBaulPractice.astro";
+import SeoBaulProjects from "../../components/profile/SeoBaulProjects.astro";
 import ProofStrip from "../../components/profile/ProofStrip.astro";
 import IdentityStatement from "../../components/profile/IdentityStatement.astro";
 import StrengthGrid from "../../components/profile/StrengthGrid.astro";
@@ -24,26 +28,54 @@ interface Props {
 }
 
 const { customer } = Astro.props;
+
+// atelier-dossier is a seo-baul-only composition: a bespoke person-profile body
+// (name-led hero, importance-weighted awards, wide-research / narrow-execution
+// split) replaces the shared template sections (ProofStrip's four-up grid,
+// StrengthGrid's 2×2). Every other customer keeps the exact original path in the
+// else branch below, so bae-jian and yesol render unchanged.
+const isDossier = customer.layout === "atelier-dossier";
 ---
 
 <ProfilePage customer={customer}>
-  <ProfileHero customer={customer} />
-  <ProofStrip proofs={customer.proofs} />
-  <IdentityStatement
-    statement={customer.person.tagline}
-    support={customer.person.identitySupport ?? customer.person.summary}
-  />
-  <StrengthGrid strengths={customer.strengths} sectionNumber="01" />
-  <SkillsStrip skills={customer.skills ?? []} />
-  <ExperienceTimeline
-    experiences={customer.experiences}
-    additionalExperiences={customer.additionalExperiences}
-    sectionNumber="02"
-  />
-  <ProjectHighlights projects={customer.projects} sectionNumber="03" />
-  <ContactCTA
-    contact={customer.contact}
-    name={customer.person.name}
-    sectionNumber="04"
-  />
+  {isDossier ? (
+    <>
+      <SeoBaulHero customer={customer} />
+      <SeoBaulAwards proofs={customer.proofs} />
+      <SeoBaulPractice strengths={customer.strengths} />
+      <ExperienceTimeline
+        experiences={customer.experiences}
+        additionalExperiences={customer.additionalExperiences}
+        sectionNumber="02"
+      />
+      <SeoBaulProjects projects={customer.projects} sectionNumber="03" />
+      <ContactCTA
+        contact={customer.contact}
+        name={customer.person.name}
+        sectionNumber="04"
+      />
+    </>
+  ) : (
+    <>
+      <ProfileHero customer={customer} />
+      <ProofStrip proofs={customer.proofs} />
+      <IdentityStatement
+        statement={customer.person.tagline}
+        support={customer.person.identitySupport ?? customer.person.summary}
+      />
+      <StrengthGrid strengths={customer.strengths} sectionNumber="01" />
+      <SkillsStrip skills={customer.skills ?? []} />
+      <ExperienceTimeline
+        experiences={customer.experiences}
+        additionalExperiences={customer.additionalExperiences}
+        sectionNumber="02"
+      />
+      <ProjectHighlights projects={customer.projects} sectionNumber="03" />
+      <ContactCTA
+        contact={customer.contact}
+        name={customer.person.name}
+        sectionNumber="04"
+      />
+    </>
+  )}
 </ProfilePage>

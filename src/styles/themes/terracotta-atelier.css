@@ -1,0 +1,768 @@
+/* ==========================================================================
+   Theme: terracotta-atelier · Layout partner: atelier-dossier (seo-baul only)
+
+   The page uses one opening field and one closing band, with a white editorial
+   canvas between them. Colour inside that canvas acts as emphasis, not as a
+   section boundary. The four scenes, in scroll order:
+
+     Hero      → a tall GRAY field on the right, running off the right edge,
+                 split from the name by a 6px terracotta spine.
+     Awards    → oversized TERRACOTTA lead type beside a white recognition
+                 register; no coloured section surface.
+     Practice  → two unequal WHITE streams; GREEN marks the research label and
+                 a gray rule separates execution.
+     Contact   → a full-width TERRACOTTA closing band, running off both edges.
+
+   Experience and Projects stay white on purpose — the page needs two quiet
+   stretches between the coloured scenes.
+
+   Every [data-theme="terracotta-atelier"] / [data-layout="atelier-dossier"]
+   rule is scoped to seo-baul; bae-jian and yesol carry neither attribute, so
+   their render is untouched.
+   ========================================================================== */
+
+[data-theme="terracotta-atelier"] {
+  color-scheme: light;
+
+  /* Canvas — white first, never beige/ochre. */
+  --bg: #ffffff;
+  --bg-soft: #f7f7f5;
+  --surface: #efefeb; /* = --gray-light, the neutral secondary surface */
+  --surface-strong: #d7d6d1; /* = --gray-middle */
+  --text: #20211e;
+  --muted: #66645f;
+
+  /* Brand gray (60) — the hero field, hairlines, quiet labels. */
+  --gray: #8d8a83;
+  --gray-light: #efefeb;
+  --gray-middle: #d7d6d1;
+  --gray-dark: #5f5d58;
+  --line: rgba(141, 138, 131, 0.6);
+  --line-soft: rgba(141, 138, 131, 0.32);
+
+  /* Brand terracotta — awards typography, closing band, hero spine, and the
+     currently hovered/focused project. --accent-strong is the AA-on-white ink. */
+  --accent: #a85a3a;
+  --accent-strong: #7f3f29;
+  --accent-tint: #faf4f1;
+
+  /* Brand green — a restrained research accent plus timeline markers. */
+  --green: #4f5b43;
+  --green-strong: #3e4935;
+
+  /* Light ink for type sitting on the terracotta fields (≥4.6:1 on #A85A3A). */
+  --cream-on-accent: #fbf8f2;
+  --paper: #f7f7f5;
+  --navy: #38342d;
+
+  /* Pretendard throughout. Mono is routed to Pretendard for this layout (see
+     below) so the page never reads as a technical dashboard. */
+  --font-display: "Pretendard", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  --font-body: "Pretendard", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  --font-mono: "SF Mono", "JetBrains Mono", "Cascadia Code", ui-monospace, Menlo,
+    Consolas, monospace;
+
+  /* Square geometry — no radius, no shadow, no glow anywhere on the page. */
+  --radius-card: 0;
+  --radius-pill: 0;
+  --radius-photo: 0;
+  --shadow-card: none;
+  --photo-glow: none;
+  --photo-glow-hover: none;
+
+  --eyebrow-tracking: 0.02em;
+  --section-number-color: var(--muted);
+}
+
+/* Solid paper. overflow-x is clipped (not hidden — no scroll box is created)
+   so the hero and contact fields can reach the page edge without a horizontal
+   scrollbar. */
+[data-theme="terracotta-atelier"] .profile-shell {
+  background: var(--bg);
+  overflow-x: clip;
+}
+
+/* ==========================================================================
+   ATELIER-DOSSIER LAYOUT  ·  seo-baul only
+   Everything below is scoped to [data-layout="atelier-dossier"], which only
+   seo-baul uses, so bae-jian and yesol (editorial-split) are never affected.
+   ========================================================================== */
+
+[data-layout="atelier-dossier"] {
+  /* Mono → Pretendard everywhere (mono is used in zero places on this page). */
+  --font-mono: "Pretendard", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+
+  /* The page gutter. Edge-running surfaces preserve this type alignment. */
+  --page-gutter: clamp(1.25rem, 5vw, 4.5rem);
+}
+
+/* A wide magazine page — the spread uses the screen instead of a narrow
+   column. Footer matches so its rule aligns with the content edges. */
+[data-layout="atelier-dossier"] .profile-main,
+[data-layout="atelier-dossier"] .wethru-footer {
+  width: min(100%, 76rem);
+  padding-inline: var(--page-gutter);
+}
+
+/* --- Hero field primitive ------------------------------------------------
+   The remaining .sb-field use is the hero's right-running gray plane. Its
+   ::before continues that background past the page edge on wide viewports. */
+
+[data-layout="atelier-dossier"] .sb-field {
+  position: relative;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+[data-layout="atelier-dossier"] .sb-field::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100vw;
+  background: inherit;
+}
+
+[data-layout="atelier-dossier"] .sb-field--right::before {
+  left: 100%;
+}
+
+/* No uppercase mono eyebrows on this page — non-uppercase, ≥13px, Pretendard
+   (mono is routed to Pretendard above). Covers the timeline's "추가 경험". */
+[data-layout="atelier-dossier"] .eyebrow {
+  text-transform: none;
+  letter-spacing: 0.01em;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+/* --- Hero: two unequal pages — name spread | gray figures field ---------- */
+
+[data-layout="atelier-dossier"] .sb-hero {
+  padding-block: clamp(2rem, 4.5vw, 3.25rem) clamp(2.75rem, 6vw, 4.25rem);
+}
+
+/* KO/EN — quiet, top-right, document furniture (no effects toggle here). */
+[data-layout="atelier-dossier"] .sb-hero__controls {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: clamp(1.25rem, 3vw, 2rem);
+}
+
+[data-layout="atelier-dossier"] .sb-hero__spread {
+  display: grid;
+  gap: clamp(2rem, 4vw, 3rem);
+}
+
+@media (min-width: 900px) {
+  /* 58 : 42 — the asymmetry is the point; never a half-and-half split. */
+  [data-layout="atelier-dossier"] .sb-hero__spread {
+    grid-template-columns: minmax(0, 58fr) minmax(0, 42fr);
+    column-gap: clamp(2.5rem, 5vw, 4.5rem);
+    align-items: stretch;
+  }
+}
+
+[data-layout="atelier-dossier"] .sb-hero__lead {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* The name is the centre of the page — large and clearly dominant. */
+[data-layout="atelier-dossier"] .sb-hero__name {
+  font-size: clamp(3.4rem, 7.5vw, 6rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+
+[data-layout="atelier-dossier"] .sb-hero__role {
+  margin-top: 1rem;
+  font-size: 1.0625rem;
+  color: var(--muted);
+}
+
+/* The key sentence — the second-largest type on the page. */
+[data-layout="atelier-dossier"] .sb-hero__statement {
+  margin-top: clamp(1.5rem, 3vw, 2.25rem);
+  font-size: clamp(1.75rem, 2.6vw, 2.35rem);
+  font-weight: 600;
+  line-height: 1.32;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  max-width: 26rem;
+  text-wrap: balance;
+}
+
+/* Standfirst — 18px body. Names the data-center/HVAC + multimodal-AI work in
+   prose, so those are never boxed as metrics. */
+[data-layout="atelier-dossier"] .sb-hero__intro {
+  margin-top: 1.25rem;
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  color: var(--muted);
+  max-width: 36rem;
+}
+
+/* The GRAY field — the page's largest painted plane. It runs off the right
+   edge of the screen, is divided from the name by a 6px terracotta spine, and
+   holds the two figures at its foot so the empty upper field carries weight. */
+[data-layout="atelier-dossier"] .sb-hero__panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: clamp(19rem, 34vw, 27rem);
+  padding: clamp(1.75rem, 3.5vw, 2.75rem);
+  padding-right: var(--page-gutter);
+  margin-right: calc(-1 * var(--page-gutter));
+  background: var(--gray-light);
+  border-left: 6px solid var(--accent);
+}
+
+@media (max-width: 899px) {
+  /* Stacked: the field runs off both edges instead. */
+  [data-layout="atelier-dossier"] .sb-hero__panel {
+    margin-left: calc(-1 * var(--page-gutter));
+    padding-left: var(--page-gutter);
+    border-left: 0;
+    border-top: 6px solid var(--accent);
+    min-height: 0;
+  }
+
+  [data-layout="atelier-dossier"] .sb-hero__panel::before {
+    display: none;
+  }
+}
+
+[data-layout="atelier-dossier"] .sb-hero__figures {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.25rem, 2.5vw, 1.75rem);
+}
+
+[data-layout="atelier-dossier"] .sb-hero__figure {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+[data-layout="atelier-dossier"] .sb-hero__figure + .sb-hero__figure {
+  padding-top: clamp(1.25rem, 2.5vw, 1.75rem);
+  border-top: 1px solid var(--gray-middle);
+}
+
+[data-layout="atelier-dossier"] .sb-hero__figure-value {
+  font-size: clamp(1.9rem, 3.4vw, 2.4rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+
+[data-layout="atelier-dossier"] .sb-hero__figure--lead .sb-hero__figure-value {
+  font-size: clamp(2.35rem, 4.4vw, 3.1rem);
+  color: var(--accent-strong);
+}
+
+[data-layout="atelier-dossier"] .sb-hero__figure-key {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--gray-dark);
+}
+
+/* --- Section headers: quiet, no per-section badge ------------------------- */
+
+[data-layout="atelier-dossier"] .section-head {
+  display: block;
+  margin-bottom: clamp(1.5rem, 3.5vw, 2.25rem);
+}
+
+[data-layout="atelier-dossier"] .section-head__number,
+[data-layout="atelier-dossier"] .section-head__rule {
+  display: none;
+}
+
+[data-layout="atelier-dossier"] .section-head__title {
+  font-size: clamp(1.25rem, 2.6vw, 1.6rem);
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* --- Awards: oversized terracotta type + a white recognition register ---- */
+
+[data-layout="atelier-dossier"] .sb-awards__body {
+  display: grid;
+  gap: clamp(1.75rem, 4vw, 2.5rem);
+}
+
+@media (min-width: 820px) {
+  /* 5 : 7 — asymmetry establishes the lead without a coloured surface. */
+  [data-layout="atelier-dossier"] .sb-awards__body {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    column-gap: clamp(2.5rem, 5vw, 4.5rem);
+    align-items: start;
+  }
+}
+
+/* The lead is intentionally unboxed. Scale, position, and one short rule make
+   the grand prize dominant while the white canvas stays uninterrupted. */
+[data-layout="atelier-dossier"] .sb-awards__lead {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+}
+
+[data-layout="atelier-dossier"] .sb-awards__lead-rule {
+  width: 3.25rem;
+  height: 3px;
+  margin-bottom: clamp(1.1rem, 2.2vw, 1.5rem);
+  background: var(--accent);
+}
+
+[data-layout="atelier-dossier"] .sb-awards__lead-value {
+  margin-left: -0.06em;
+  font-size: clamp(4.25rem, 9vw, 7.25rem);
+  font-weight: 700;
+  line-height: 0.88;
+  letter-spacing: -0.055em;
+  color: var(--accent-strong);
+}
+
+[data-layout="atelier-dossier"] .sb-awards__lead-label {
+  margin-top: 0.75rem;
+  font-size: clamp(1.05rem, 1.6vw, 1.2rem);
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--text);
+  max-width: 22rem;
+}
+
+/* The remaining credits share the lead's top edge. Hairlines make a register,
+   while content-driven rows avoid the rhythm of equal cards. */
+[data-layout="atelier-dossier"] .sb-awards__list {
+  display: grid;
+  align-content: start;
+  gap: 0;
+  border-top: 1px solid var(--line-soft);
+}
+
+[data-layout="atelier-dossier"] .sb-awards__row {
+  display: grid;
+  grid-template-columns: minmax(5.75rem, 0.7fr) minmax(0, 1.3fr);
+  align-items: baseline;
+  gap: 1.25rem;
+  padding: clamp(1.1rem, 2.2vw, 1.5rem) 0;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+[data-layout="atelier-dossier"] .sb-awards__row:last-child {
+  border-bottom: 0;
+}
+
+[data-layout="atelier-dossier"] .sb-awards__row-value {
+  min-width: 6rem;
+  font-size: clamp(1.25rem, 2vw, 1.5rem);
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--text);
+}
+
+[data-layout="atelier-dossier"] .sb-awards__row-label {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+/* --- Research & Business: unequal white streams, divided by a gray rule --- */
+
+[data-layout="atelier-dossier"] .sb-practice__body {
+  display: grid;
+  gap: clamp(2rem, 5vw, 3rem);
+}
+
+@media (min-width: 900px) {
+  /* 63 : 37 — research stays wider than execution without owning a colour. */
+  [data-layout="atelier-dossier"] .sb-practice__body {
+    grid-template-columns: minmax(0, 63fr) minmax(0, 37fr);
+    column-gap: clamp(2rem, 4vw, 3.5rem);
+    align-items: start;
+  }
+}
+
+[data-layout="atelier-dossier"] .sb-practice__stream-label {
+  display: block;
+  margin-bottom: clamp(1.25rem, 2.5vw, 1.75rem);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--muted);
+}
+
+[data-layout="atelier-dossier"] .sb-practice__stream-label--research {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  color: var(--green-strong);
+}
+
+/* Green appears only as research notation: the label and this short rule. */
+[data-layout="atelier-dossier"]
+  .sb-practice__stream-label--research::before {
+  content: "";
+  width: 1.75rem;
+  height: 2px;
+  flex: 0 0 auto;
+  background: var(--green-strong);
+}
+
+/* Execution remains on white and is separated only by a neutral vertical
+   hairline. Labels in both streams share the same top baseline. */
+[data-layout="atelier-dossier"] .sb-practice__stream--exec {
+  padding-left: clamp(2rem, 4vw, 3.5rem);
+  border-left: 1px solid var(--line-soft);
+}
+
+[data-layout="atelier-dossier"] .sb-practice__item + .sb-practice__item {
+  margin-top: clamp(1.5rem, 3vw, 2rem);
+  padding-top: clamp(1.5rem, 3vw, 2rem);
+  border-top: 1px solid var(--line-soft);
+}
+
+/* Research titles read larger than the execution (aux) titles — an intended
+   difference in weight, not a uniform card grid. */
+[data-layout="atelier-dossier"] .sb-practice__item-title {
+  font-size: clamp(1.25rem, 2vw, 1.55rem);
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--text);
+}
+
+[data-layout="atelier-dossier"] .sb-practice__item--aux .sb-practice__item-title {
+  font-size: 1.1rem;
+}
+
+[data-layout="atelier-dossier"] .sb-practice__item-desc {
+  margin-top: 0.6rem;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--muted);
+  max-width: 46ch;
+}
+
+@media (max-width: 899px) {
+  /* Stacked streams: the vertical divider becomes a top hairline. */
+  [data-layout="atelier-dossier"] .sb-practice__stream--exec {
+    padding-top: clamp(2rem, 5vw, 2.75rem);
+    padding-left: 0;
+    border-top: 1px solid var(--line-soft);
+    border-left: 0;
+  }
+}
+
+/* --- Experience → white, wide, hairline timeline ------------------------- */
+
+[data-layout="atelier-dossier"] .timeline::before {
+  background: var(--line);
+}
+
+/* Small green dots. */
+[data-layout="atelier-dossier"] .timeline-entry::before {
+  border: 0;
+  width: 0.5rem;
+  height: 0.5rem;
+  top: 0.5rem;
+  left: -1.66rem;
+  background: var(--green);
+}
+
+[data-layout="atelier-dossier"] .timeline-entry__period {
+  font-size: 0.85rem;
+  letter-spacing: 0.01em;
+  color: var(--muted);
+}
+
+[data-layout="atelier-dossier"] .timeline-entry__company {
+  font-size: clamp(1.35rem, 2.4vw, 1.75rem);
+  font-weight: 700;
+  color: var(--text);
+}
+
+[data-layout="atelier-dossier"] .timeline-entry__role {
+  font-style: normal;
+  color: var(--muted);
+}
+
+/* Wider measures — the résumé column stops hugging the left edge. */
+[data-layout="atelier-dossier"] .timeline-entry__description {
+  font-size: 1rem;
+  max-width: 70ch;
+}
+
+[data-layout="atelier-dossier"] .timeline-entry__bullets {
+  max-width: 70ch;
+}
+
+[data-layout="atelier-dossier"] .timeline-entry__bullets li {
+  font-size: 0.95rem;
+}
+
+[data-layout="atelier-dossier"] .timeline-entry__bullets li::before {
+  content: "–";
+  color: var(--muted);
+}
+
+@media (min-width: 1000px) {
+  /* Two streams inside one entry: the account on the left, the record of what
+     it produced on the right. Fills the space the single column left empty. */
+  [data-layout="atelier-dossier"] .timeline-entry {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    column-gap: clamp(2.5rem, 5vw, 4rem);
+    align-items: start;
+  }
+
+  [data-layout="atelier-dossier"] .timeline-entry__period,
+  [data-layout="atelier-dossier"] .timeline-entry__company,
+  [data-layout="atelier-dossier"] .timeline-entry__role,
+  [data-layout="atelier-dossier"] .timeline-entry__description {
+    grid-column: 1;
+    max-width: none;
+  }
+
+  [data-layout="atelier-dossier"] .timeline-entry__bullets {
+    grid-column: 2;
+    grid-row: 1 / span 4;
+    margin-top: 0.35rem;
+    max-width: none;
+  }
+}
+
+/* Additional-experience block → plain rows under a hairline. */
+[data-layout="atelier-dossier"] .timeline-extra {
+  padding: 1.35rem 0 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+}
+
+[data-layout="atelier-dossier"] .timeline-extra__eyebrow {
+  color: var(--muted);
+  font-weight: 600;
+}
+
+/* The extra rows run the full content width so their periods land on the same
+   right edge as the timeline's achievement column. */
+[data-layout="atelier-dossier"] .timeline-extra__list {
+  max-width: none;
+}
+
+[data-layout="atelier-dossier"] .timeline-extra__row {
+  border-bottom: 0;
+  padding-bottom: 0;
+  font-size: 0.95rem;
+}
+
+[data-layout="atelier-dossier"] .timeline-extra__company {
+  color: var(--text);
+}
+
+[data-layout="atelier-dossier"] .timeline-extra__role {
+  color: var(--muted);
+}
+
+/* Period kept ≥13px and de-mono'd (mono is routed to Pretendard above). */
+[data-layout="atelier-dossier"] .timeline-extra__period {
+  margin-left: auto;
+  font-size: 0.85rem;
+  letter-spacing: 0.01em;
+  color: var(--muted);
+}
+
+/* --- Contact → the closing terracotta band ------------------------------- */
+
+/* The last scene: one solid terracotta plane running off both page edges,
+   holding the section title, the invitation, and the action. Square ends —
+   it finishes the page rather than sitting on it. */
+[data-layout="atelier-dossier"] .profile-section[aria-labelledby="contact-title"] {
+  position: relative;
+  margin-top: clamp(3rem, 7vw, 5rem);
+  margin-inline: calc(-1 * var(--page-gutter));
+  padding-block: clamp(3.5rem, 8vw, 6rem);
+  padding-inline: var(--page-gutter);
+  border-top: 0;
+  background: var(--accent);
+}
+
+[data-layout="atelier-dossier"]
+  .profile-section[aria-labelledby="contact-title"]::before,
+[data-layout="atelier-dossier"]
+  .profile-section[aria-labelledby="contact-title"]::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100vw;
+  background: var(--accent);
+}
+
+[data-layout="atelier-dossier"]
+  .profile-section[aria-labelledby="contact-title"]::before {
+  right: 100%;
+}
+
+[data-layout="atelier-dossier"]
+  .profile-section[aria-labelledby="contact-title"]::after {
+  left: 100%;
+}
+
+[data-layout="atelier-dossier"] #contact-title {
+  color: var(--cream-on-accent);
+}
+
+/* In English the band's own title reads "Contact" too, so the eyebrow above it
+   would repeat the word. Hide it visually there — the h2 stays in the
+   accessibility tree and keeps naming the section. */
+html[data-lang="en"][data-layout="atelier-dossier"]
+  .profile-section[aria-labelledby="contact-title"]
+  .section-head {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+[data-layout="atelier-dossier"] .contact-cta {
+  align-items: flex-start;
+  text-align: left;
+  background: transparent;
+  border-radius: 0;
+  padding: 0;
+  gap: 1.25rem;
+}
+
+[data-layout="atelier-dossier"] .contact-cta__title {
+  color: var(--cream-on-accent);
+  font-size: clamp(2.25rem, 5.5vw, 4rem);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+}
+
+/* The band is composed, not stacked in a corner: the invitation holds the
+   left, the action sits on the right at the same foot line. */
+@media (min-width: 820px) {
+  [data-layout="atelier-dossier"] .contact-cta {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: clamp(2.5rem, 6vw, 5rem);
+    row-gap: 1.25rem;
+    align-items: end;
+  }
+
+  [data-layout="atelier-dossier"] .contact-cta__title,
+  [data-layout="atelier-dossier"] .contact-cta__note,
+  [data-layout="atelier-dossier"] .contact-cta__email,
+  [data-layout="atelier-dossier"] .contact-cta__links {
+    grid-column: 1;
+  }
+
+  [data-layout="atelier-dossier"] .contact-cta__actions {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    align-self: end;
+    margin-top: 0;
+  }
+}
+
+[data-layout="atelier-dossier"] .contact-cta__note {
+  color: var(--cream-on-accent);
+  font-size: 1.0625rem;
+  text-align: left;
+  max-width: 44ch;
+}
+
+[data-layout="atelier-dossier"] .contact-cta__actions {
+  justify-content: flex-start;
+  margin-top: 0.5rem;
+}
+
+[data-layout="atelier-dossier"] .contact-cta__email {
+  color: var(--cream-on-accent);
+  font-size: 0.95rem;
+  letter-spacing: 0.01em;
+}
+
+[data-layout="atelier-dossier"] .contact-cta__links a {
+  color: var(--cream-on-accent);
+  border-bottom-color: rgba(251, 248, 242, 0.5);
+}
+
+/* The closing actions — light buttons on the terracotta plane. */
+[data-layout="atelier-dossier"] .contact-cta .btn,
+[data-layout="atelier-dossier"] .contact-cta .btn--ghost,
+[data-layout="atelier-dossier"] .contact-cta .btn--primary {
+  background: var(--cream-on-accent);
+  border: 1px solid var(--cream-on-accent);
+  border-radius: 0;
+  color: var(--accent-strong);
+  font-weight: 600;
+  padding: 1rem 2rem;
+  font-size: 0.98rem;
+}
+
+[data-layout="atelier-dossier"] .contact-cta .btn:hover,
+[data-layout="atelier-dossier"] .contact-cta .btn--ghost:hover,
+[data-layout="atelier-dossier"] .contact-cta .btn--primary:hover,
+[data-layout="atelier-dossier"] .contact-cta .btn--ghost[data-copied="true"] {
+  background: #ffffff;
+  border-color: #ffffff;
+  color: var(--accent-strong);
+}
+
+[data-layout="atelier-dossier"] .contact-cta .btn:focus-visible {
+  outline: 2px solid var(--cream-on-accent);
+  outline-offset: 3px;
+}
+
+/* The footer sits directly under the band — no hairline seam. */
+[data-layout="atelier-dossier"] .wethru-footer {
+  border-top: 0;
+  padding-top: 2rem;
+}
+
+/* --- Kill every leftover lift / glow on this page ------------------------ */
+
+@media (hover: hover) and (pointer: fine) {
+  /* The shared ghost/primary hover adds a soft accent glow — remove it here so
+     the page keeps no glow at all. */
+  html[data-effects="on"] [data-layout="atelier-dossier"] .btn--ghost:hover,
+  html[data-effects="on"] [data-layout="atelier-dossier"] .btn--primary:hover {
+    box-shadow: none;
+    transform: none;
+  }
+}
+
+/* ==========================================================================
+   Mobile.
+   ========================================================================== */
+
+@media (max-width: 560px) {
+  [data-layout="atelier-dossier"] .contact-cta__actions .btn {
+    width: 100%;
+  }
+}

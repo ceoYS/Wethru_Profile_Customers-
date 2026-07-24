@@ -14,13 +14,15 @@ export type ProfileTheme =
   | "navy-black-white"
   | "warm-editorial"
   | "graphite-minimal"
-  | "cobalt-air";
+  | "cobalt-air"
+  | "terracotta-atelier";
 
 export type ProfileLayout =
   | "editorial-split"
   | "dossier"
   | "magazine"
-  | "minimal-card";
+  | "minimal-card"
+  | "atelier-dossier";
 
 export type ProfileStatus = "draft" | "published";
 
@@ -160,6 +162,7 @@ export const PROFILE_THEMES: readonly ProfileTheme[] = [
   "warm-editorial",
   "graphite-minimal",
   "cobalt-air",
+  "terracotta-atelier",
 ] as const;
 
 export const PROFILE_LAYOUTS: readonly ProfileLayout[] = [
@@ -167,4 +170,5 @@ export const PROFILE_LAYOUTS: readonly ProfileLayout[] = [
   "dossier",
   "magazine",
   "minimal-card",
+  "atelier-dossier",
 ] as const;

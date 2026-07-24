@@ -1,0 +1,62 @@
+---
+/**
+ * SeoBaulHero — the opening spread of a person profile, built as two unequal
+ * pages rather than one stacked column. Left (58): the name, the role, the key
+ * sentence, the standfirst. Right (42): a tall flat GRAY field that runs off
+ * the right edge of the screen, divided from the name by a 6px terracotta
+ * spine, holding the two figures the source states plainly (투자유치 5억 원
+ * 이상, 스타트업 약 3년) at its foot.
+ *
+ * The field is a page surface, not a card: no radius, no shadow, no border on
+ * three sides. Used ONLY by seo-baul (layout === "atelier-dossier"); every
+ * other customer keeps the shared ProfileHero, so no existing page moves.
+ *
+ * Every figure is a fact already in seo-baul.ts, restated in the source's own
+ * Korean. Nothing is authored or exaggerated here.
+ */
+import type { CustomerProfile } from "../../types/profile";
+import { hasEnglish } from "../../utils/i18n";
+import Bi from "../shared/Bi.astro";
+import LanguageToggle from "../shared/LanguageToggle.astro";
+import LText from "../shared/LText.astro";
+
+interface Props {
+  customer: CustomerProfile;
+}
+
+const { customer } = Astro.props;
+const { person } = customer;
+const bilingual = hasEnglish(customer);
+---
+
+<header class="sb-hero" aria-label={`${person.name} 프로필 소개`}>
+  {bilingual && (
+    <div class="sb-hero__controls">
+      <LanguageToggle />
+    </div>
+  )}
+
+  <div class="sb-hero__spread">
+    <div class="sb-hero__lead">
+      <h1 class="sb-hero__name">{person.name}</h1>
+      <p class="sb-hero__role"><LText value={person.roleLine} /></p>
+      <p class="sb-hero__statement"><LText value={person.tagline} /></p>
+      <p class="sb-hero__intro"><LText value={person.summary} /></p>
+    </div>
+
+    <aside class="sb-hero__panel sb-field sb-field--right">
+      <dl class="sb-hero__figures">
+        <div class="sb-hero__figure sb-hero__figure--lead">
+          <dt class="sb-hero__figure-key"><Bi ko="투자유치" en="Investment raised" /></dt>
+          <dd class="sb-hero__figure-value">
+            <Bi ko="5억 원 이상" en="500M+ KRW" />
+          </dd>
+        </div>
+        <div class="sb-hero__figure">
+          <dt class="sb-hero__figure-key"><Bi ko="스타트업 운영" en="Startup operation" /></dt>
+          <dd class="sb-hero__figure-value"><Bi ko="약 3년" en="~3 years" /></dd>
+        </div>
+      </dl>
+    </aside>
+  </div>
+</header>
