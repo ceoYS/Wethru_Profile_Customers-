@@ -1235,6 +1235,15 @@ html[data-effects="off"] .effects-toggle__off {
   grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
 }
 
+/* auto-fill puts three 17rem cards across the 60rem shell, so a fourth customer
+   drops to a row of its own. Pin two columns once there is room, and the set
+   reads as a balanced grid at any even count. Below this it stacks. */
+@media (min-width: 46rem) {
+  .dashboard__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 .customer-card {
   display: flex;
   flex-direction: column;
@@ -1294,6 +1303,23 @@ html[data-effects="off"] .effects-toggle__off {
   letter-spacing: 0.1em;
   color: var(--section-number-color);
   text-transform: uppercase;
+}
+
+/* Profiles hosted in another repo. A dashed edge is the whole distinction —
+   same card otherwise, because they are the same product. */
+.customer-card--external {
+  border-style: dashed;
+}
+
+.customer-card__external {
+  color: var(--accent);
+}
+
+.dashboard__external-note {
+  margin-top: 1.1rem;
+  font-size: 0.82rem;
+  line-height: 1.7;
+  color: var(--muted);
 }
 
 .dashboard__drafts {

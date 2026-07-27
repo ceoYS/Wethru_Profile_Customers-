@@ -1,5 +1,6 @@
 ---
 import { publishedCustomers, draftCustomers } from "../data/customer-index";
+import { externalProfiles } from "../data/external-profiles";
 import { localize } from "../utils/i18n";
 import "../styles/global.css";
 import "../styles/profile-base.css";
@@ -55,7 +56,47 @@ import "../styles/themes/terracotta-atelier.css";
               </p>
             </a>
           ))}
+
+          {/* Profiles delivered as their own repo + their own deploy. They have
+              no module in src/data/customers/, so the glob above cannot reach
+              them — without this they silently disappear from the dashboard.
+              Same card, dashed edge, and a link that leaves this origin. */}
+          {externalProfiles.map((profile) => (
+            <a
+              class="customer-card customer-card--external"
+              href={profile.url}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <div class="customer-card__meta">
+                <span class="eyebrow">{profile.roleLine}</span>
+                <span class="customer-card__status customer-card__status--published">
+                  published
+                </span>
+              </div>
+              <h2 class="customer-card__name">
+                {profile.name} · {profile.englishName}
+              </h2>
+              <p class="customer-card__tagline">{profile.tagline}</p>
+              <p class="customer-card__tags">
+                <span>{profile.theme}</span>
+                <span>{profile.layout}</span>
+                <span class="customer-card__external">
+                  외부 저장소 ↗<span class="visually-hidden">, 새 탭에서 열림</span>
+                </span>
+              </p>
+            </a>
+          ))}
         </div>
+
+        {externalProfiles.length > 0 && (
+          <p class="dashboard__external-note">
+            ↗ 표시된 카드는 이 저장소가 아니라 고객 전용 저장소에서 따로 배포된
+            프로필입니다. <code>npm run validate:customers</code> 검사 대상이
+            아니며, 내용 수정은 각 원본 저장소에서 진행합니다 (이준구:{" "}
+            <code>references/lee-jungu-profile</code>).
+          </p>
+        )}
 
         <p class="dashboard__drafts">
           내부 페이지 ·{" "}

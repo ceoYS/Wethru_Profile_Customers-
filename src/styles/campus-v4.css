@@ -66,6 +66,19 @@
   background: var(--bg);
 }
 
+/* Every nav link and CTA on this page is an in-page anchor, so the scroll
+   container needs to reserve the sticky top bar — otherwise each jump parks the
+   section heading underneath it. Scoped to this route: campus-v4.css is
+   imported by /campus-v4/ only. Also fixes sequential focus scrolling. */
+html {
+  scroll-padding-top: 5.5rem;
+}
+
+/* Review mode stacks the 배포 금지 ribbon above the nav. */
+html:has(.v4-review-ribbon) {
+  scroll-padding-top: 8.25rem;
+}
+
 .v4-wrap {
   width: min(1120px, calc(100% - 2.5rem));
   margin-inline: auto;
@@ -127,13 +140,22 @@
 }
 
 /* ==========================================================================
-   Review ribbon — review mode only. Red, full-width, above everything.
+   Sticky top bar — holds the review ribbon (review mode) and the nav. Making
+   the WRAPPER sticky is what lets the ribbon change height (e.g. wrapping to two
+   lines at 390px) without the nav needing a hard-coded top offset.
    ========================================================================== */
 
-.v4-review-ribbon {
+.v4-topbar {
   position: sticky;
   top: 0;
   z-index: 60;
+}
+
+/* ==========================================================================
+   Review ribbon — review mode only. Red, full-width, above the nav.
+   ========================================================================== */
+
+.v4-review-ribbon {
   background: #c0271b;
   color: #fff;
   text-align: center;
@@ -147,17 +169,11 @@
    Navigation
    ========================================================================== */
 
+/* Stickiness lives on .v4-topbar, not here. */
 .v4-nav {
-  position: sticky;
-  top: 0;
-  z-index: 50;
   background: rgba(255, 255, 255, 0.82);
   backdrop-filter: saturate(140%) blur(14px);
   border-bottom: 1px solid var(--line-soft);
-}
-
-.v4-review-ribbon + .v4-nav {
-  top: 2.1rem; /* sit below the ribbon in review mode */
 }
 
 .v4-nav__in {
@@ -263,6 +279,29 @@
   height: 0.45rem;
   border-radius: 50%;
   background: #4caf6a;
+}
+
+/* Audience line + launch-price window sit on one row and wrap together on a
+   narrow screen instead of the deadline dangling under a half-empty eyebrow. */
+.v4-hero__flags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.85rem;
+}
+
+/* Deliberately quiet: an outlined pill, not a red urgency badge. The date does
+   the work — there is no prior list price to discount against. */
+.v4-deadline {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  padding: 0.22rem 0.6rem;
+  border: 1px solid var(--ink);
+  border-radius: var(--radius-pill);
+  color: var(--ink);
+  white-space: nowrap;
 }
 
 .v4-title {
@@ -594,8 +633,49 @@
   border-bottom-color: var(--accent);
 }
 
-/* Browser frame around the REAL screenshot. */
-.v4-shot {
+/* --------------------------------------------------------------------------
+   Live preview — a browser frame holding the real page in an iframe.
+
+   The iframe is rendered at a wide virtual viewport and shrunk with a scale
+   transform, so the case card shows the DESKTOP first screen rather than the
+   narrow mobile layout a 350px-wide iframe would produce.
+
+   The two knobs below are all that changes per breakpoint:
+     --v4-preview-scale   how far the page is shrunk
+     --v4-preview-height  how tall the visible strip is (a hard cap — an iframe
+                          has no intrinsic height, so without this the card
+                          would grow without limit)
+
+   Width is derived, never guessed: at width calc(100% / scale) the frame is
+   exactly as wide as its column once scaled, so the preview always fills the
+   frame edge-to-edge with no crop and no gutter. Dividing the column width by
+   the scale is also what sets the virtual viewport — ~950–1250px on desktop.
+   -------------------------------------------------------------------------- */
+.v4-live-preview {
+  /* Mobile: shrink less, and stay taller. The virtual viewport lands near
+     700x800 — the page renders its own narrow layout, stays legible at
+     thumbnail size, and the frame is portrait enough to hold a whole hero. */
+  --v4-preview-scale: 0.5;
+  --v4-preview-height: 400px;
+}
+
+/* Single column, but a wide one — shrink harder to keep a desktop viewport. */
+@media (min-width: 600px) {
+  .v4-live-preview {
+    --v4-preview-scale: 0.62;
+    --v4-preview-height: 400px;
+  }
+}
+
+/* Two-column case layout: the media column is ~440–570px wide. */
+@media (min-width: 900px) {
+  .v4-live-preview {
+    --v4-preview-scale: 0.46;
+    --v4-preview-height: 340px;
+  }
+}
+
+.v4-live-preview__browser {
   border-radius: var(--radius-shot);
   overflow: hidden;
   border: 1px solid var(--line);
@@ -603,7 +683,7 @@
   box-shadow: var(--shadow-shot);
 }
 
-.v4-shot__bar {
+.v4-live-preview__chrome {
   height: 2.1rem;
   display: flex;
   align-items: center;
@@ -613,14 +693,14 @@
   border-bottom: 1px solid var(--line);
 }
 
-.v4-shot__dot {
+.v4-live-preview__dot {
   width: 0.6rem;
   height: 0.6rem;
   border-radius: 50%;
   background: #cfccc4;
 }
 
-.v4-shot__url {
+.v4-live-preview__url {
   margin-left: 0.5rem;
   height: 1.2rem;
   flex: 1;
@@ -638,33 +718,22 @@
   white-space: nowrap;
 }
 
-.v4-shot__img {
-  width: 100%;
-  height: auto;
+.v4-live-preview__viewport {
+  position: relative;
+  height: var(--v4-preview-height);
+  overflow: hidden;
+  background: #fff;
+}
+
+.v4-live-preview__frame {
   display: block;
-}
-
-/* Placeholder when a screenshot file is not present (review build only). */
-.v4-shot__missing {
-  aspect-ratio: 16 / 10;
-  display: flex;
-  flex-direction: column;
-  gap: 0.65rem;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
-  text-align: center;
-  font-size: 0.92rem;
-  line-height: 1.55;
-  color: var(--text);
-  background: var(--surface-tint);
-}
-
-.v4-shot__hint {
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.02em;
-  color: var(--muted);
+  border: 0;
+  width: calc(100% / var(--v4-preview-scale));
+  height: calc(var(--v4-preview-height) / var(--v4-preview-scale));
+  transform: scale(var(--v4-preview-scale));
+  transform-origin: top left;
+  /* Decoration, not a destination: no clicks, no scroll, no focus. */
+  pointer-events: none;
 }
 
 /* ==========================================================================
@@ -1102,6 +1171,14 @@
 
 .v4-faq__q::-webkit-details-marker {
   display: none;
+}
+
+/* The <summary> fills the card, and .v4-faq__item clips with overflow:hidden,
+   so the default outset focus ring would be cut off. Draw it inside instead —
+   the FAQ has to stay operable and visible with the keyboard alone. */
+.v4-faq__q:focus-visible {
+  outline-offset: -3px;
+  border-radius: var(--radius-card);
 }
 
 .v4-faq__q::after {

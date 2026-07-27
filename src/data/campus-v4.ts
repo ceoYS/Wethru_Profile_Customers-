@@ -12,8 +12,14 @@
  * (feat/campus-v3-hybrid) all stay frozen.
  *
  * Two public products only (unchanged policy, see docs/CAMPUS_OPERATIONS.md):
- *   A. 얼리버드 커리어 프로필 — 49,000원 (첫 10명 초기 출시가)
+ *   A. 얼리버드 커리어 프로필 — 99,000원 (7월 31일까지 · 첫 10명 런칭가)
  *   B. Interview Portfolio     — 199,000원
+ *
+ * The launch price is a real, dated window — not a discount theatre. There is no
+ * prior list price for this product, so nothing here may render a struck-through
+ * "정가", a "-50%", or a "기존가 198,000원". State the price, the end date, and
+ * why it changes afterwards. When 7/31 passes, edit these numbers by hand; do
+ * not build anything that rolls the same promotion forward on its own.
  *
  * Safety model carried over verbatim from V2/V3:
  * - applyFormUrl stays null → the apply CTA renders disabled and every page on
@@ -21,8 +27,10 @@
  * - Real case studies are consent-gated via `approvedForCampus` (default false).
  *   Zero approvals → the "실제 제작 사례" section and its nav link do not render
  *   in a production build (every Vercel deploy is a production build). Unapproved
- *   candidates — and their screenshots — surface ONLY in review mode
- *   (CAMPUS_REVIEW=1), behind a red "배포 금지" ribbon, never with contact data.
+ *   candidates — and the live previews of their pages — surface ONLY in review
+ *   mode (CAMPUS_REVIEW=1), behind a red "배포 금지" ribbon, never with contact
+ *   data. The preview embeds each ALREADY-PUBLIC page by URL; no screenshot file
+ *   is stored, so there is nothing here that could be committed by accident.
  * - The Interview Portfolio 구성 예시 (ipPreview) is the ONLY illustrative block.
  *   It is small, secondary (inside the products area, never the hero), and always
  *   labelled "구성 예시 · 실제 구매 사례 아님". It invents no person, school, or metric.
@@ -46,7 +54,7 @@ export interface CampusV4Product {
   summary: string;
   /** Emphasis badge for the featured (Interview Portfolio) card. */
   featuredBadge?: string;
-  /** Up to 5 headline scope items shown by default. */
+  /** Up to 6 headline scope items shown by default. */
   coreIncludes: string[];
   /** Remaining scope, folded into a "세부 범위 보기" accordion. */
   moreIncludes: string[];
@@ -78,9 +86,12 @@ export interface CampusV4Faq {
 export interface CampusV4Case {
   name: string;
   englishName?: string;
-  /** Local profile slug → links to /profiles/{slug}/. */
+  /**
+   * Local profile slug → /profiles/{slug}/. Single source for both the "완성된
+   * 프로필 보기" link and the live-preview iframe — never repeat the URL.
+   */
   slug?: string;
-  /** Verified external public profile URL. */
+  /** Verified external public profile URL. Same dual role as `slug`. */
   externalUrl?: string;
   /** Discipline line, from the person's own public profile. */
   role: string;
@@ -92,12 +103,6 @@ export interface CampusV4Case {
   direction: string;
   /** 달라진 점 — how the finished 1-page reads differently. */
   result: string;
-  /**
-   * Screenshot filename in src/assets/campus-v4/. A real capture of the already
-   * public page, hero/first-screen only (no contact section). Inlined as a
-   * base64 data URI ONLY in review mode — never emitted to a production build.
-   */
-  shot?: string;
   /**
    * Consent to feature this person on the Campus SALES page. Default false.
    * Separate from the customer profile already being public.
@@ -119,6 +124,11 @@ export interface CampusV4Offer {
   applyFormUrl: string | null;
   hero: {
     eyebrow: string;
+    /**
+     * Launch-price window, rendered as its own badge beside the eyebrow.
+     * A literal end date — never a live countdown, and never auto-extended.
+     */
+    deadline: string;
     /** Plain title with a deliberate line break (\n). */
     title: string;
     /** The phrase inside the title to mark with the cobalt accent. */
@@ -161,11 +171,12 @@ export const campusV4Offer: CampusV4Offer = {
 
   hero: {
     eyebrow: "4학년·졸업예정자 첫 10명 초기 고객 모집",
+    deadline: "7.31 마감 · 첫 10명",
     title: "좋은 경험도 흩어져 있으면\n약하게 읽힙니다.",
     highlight: "흩어져 있으면",
     subtitle:
       "인턴, 공모전, 팀 프로젝트, 노션과 깃허브까지. 따로 흩어진 자료를 읽기 좋은 순서로 정리해 하나의 커리어 웹페이지로 만듭니다. 꾸미는 것보다 무엇을 먼저 보여줄지부터 함께 정합니다.",
-    primaryCtaLabel: "49,000원 초기 고객 신청",
+    primaryCtaLabel: "99,000원 런칭가 신청",
     secondaryCtaLabel: "두 상품 살펴보기",
     proof: ["모바일·PC 반응형", "링크 하나로 공유", "자료 검토·순서 구성 포함"],
     before: "노션·PDF·드라이브 링크가 따로 흩어져 있던 상태",
@@ -208,23 +219,23 @@ export const campusV4Offer: CampusV4Offer = {
     {
       id: "earlybird",
       name: "얼리버드 커리어 프로필",
-      price: "49,000원",
-      priceBadge: "첫 10명 초기 출시가",
+      price: "99,000원",
+      priceBadge: "7월 31일까지 · 첫 10명 런칭가",
       priceNote:
-        "초기 제작 시간과 피드백을 반영해 이후 가격이 조정될 수 있습니다.",
+        "8월부터 제작시간과 초기 고객 피드백을 반영해 가격이 조정됩니다.",
       tagline: "나를 빠르게 이해시키는 맞춤형 1페이지",
       summary:
         "제출한 자료를 직접 읽고, 어떤 경험을 먼저 보여줄지 순서를 잡습니다. 첫 화면 소개 문장부터 경험·프로젝트가 읽히는 흐름까지 사람마다 다르게 구성한, 나에게 맞춘 1페이지입니다.",
       coreIncludes: [
         "제출 자료 검토와 핵심 경험 선별",
-        "핵심 경험 선별과 읽히는 순서 정리",
         "첫 화면 소개 문장 작성",
-        "모바일·PC 개인 웹페이지 URL",
+        "경험과 프로젝트 순서 설계",
+        "사람마다 다른 1페이지 웹사이트",
+        "모바일·PC 개인 URL",
         "고객 피드백 일괄 반영 1회",
       ],
       moreIncludes: [
         "필요한 범위의 문장 재작성",
-        "사람마다 다른 첫 화면과 정보구조",
         "이력서·노션·깃허브·PDF 등 외부 링크 연결",
         "주요 경험 최대 4개 · 프로젝트 요약 최대 3개",
         "자료 확인 또는 인터뷰 최대 30분",
@@ -339,7 +350,6 @@ export const campusV4Offer: CampusV4Offer = {
         "브랜드와 고객이 만나는 현장 경험을 앞세우고, 역할과 성과를 읽히는 순서로 첫 화면부터 다시 배치했습니다.",
       result:
         "첫 화면에서 ‘현장을 아는 리테일·CX 사람’이라는 인상이 먼저 잡히는 1페이지.",
-      shot: "case-lee-jungu.webp",
       approvedForCampus: false,
     },
     {
@@ -354,7 +364,6 @@ export const campusV4Offer: CampusV4Offer = {
         "데이터와 운영 구조 설계를 중심에 두고 대표 경험을 앞세운 뒤, 나머지는 뒤로 정리했습니다.",
       result:
         "‘구조를 설계하는 마케터’가 먼저 보이는 첫 화면과 정보구조.",
-      shot: "case-bae-jian.webp",
       approvedForCampus: false,
     },
     {
@@ -370,7 +379,6 @@ export const campusV4Offer: CampusV4Offer = {
         "커머스 MD로서 상품을 성장으로 연결한 흐름이 먼저 읽히도록 경험의 순서를 다시 잡았습니다.",
       result:
         "‘매출 성장을 만드는 커머스 MD’라는 인상이 첫 화면에서 먼저 오는 페이지.",
-      shot: "case-yesol.webp",
       approvedForCampus: false,
     },
   ],
@@ -381,8 +389,8 @@ export const campusV4Offer: CampusV4Offer = {
       a: "네. 두 상품 모두 모바일과 PC에서 열리는 개인 웹페이지 URL을 드립니다. 이력서나 메시지에 링크 하나로 붙일 수 있습니다.",
     },
     {
-      q: "49,000원과 199,000원의 차이가 무엇인가요?",
-      a: "얼리버드 커리어 프로필(49,000원)은 흩어진 경험을 읽히는 순서로 정리한 맞춤형 1페이지입니다. Interview Portfolio(199,000원)는 여기에 더해 대표 프로젝트를 문제 → 역할 → 판단 → 행동 → 결과 구조의 상세 사례로 만들고 근거 자료까지 연결해, 면접에서 프로젝트를 설명하고 증명할 수 있게 합니다.",
+      q: "99,000원과 199,000원의 차이가 무엇인가요?",
+      a: "얼리버드 커리어 프로필(99,000원)은 흩어진 경험을 읽히는 순서로 정리한 맞춤형 1페이지입니다. Interview Portfolio(199,000원)는 여기에 더해 대표 프로젝트를 문제 → 역할 → 판단 → 행동 → 결과 구조의 상세 사례로 만들고 근거 자료까지 연결해, 면접에서 프로젝트를 설명하고 증명할 수 있게 합니다.",
     },
     {
       q: "그냥 노션을 쓰면 되지 않나요?",

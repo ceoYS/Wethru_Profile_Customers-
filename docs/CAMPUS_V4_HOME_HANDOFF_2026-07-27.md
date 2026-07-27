@@ -15,7 +15,7 @@ Claude Desktop가 만든 검정·흰색 Editorial Campus 디자인을 시각적 
 
 - 실제 사례 중심 구성
 - 이준구 → 배지안 → 조예솔
-- 얼리버드 커리어 프로필 49,000원
+- 얼리버드 커리어 프로필 99,000원 (7월 31일까지 · 첫 10명 런칭가)
 - Interview Portfolio 199,000원
 - 학생을 심사하는 문구 제거
 - 후기 강요 금지
@@ -49,7 +49,9 @@ GitHub 저장소가 Public이므로 실제 사례 스크린샷은
 
 1. 현재 V4 소스 전체 검토
 2. `docs/CAMPUS_V4_EDITORIAL_FINALIST.md` 작성
-3. 집 PC에서 실제 사례 화면 재캡처
+3. ~~집 PC에서 실제 사례 화면 재캡처~~ — 불필요. 미리보기를 로컬 WebP에서
+   live preview iframe으로 바꿔, 이미 공개된 페이지를 URL로 직접 embed한다
+   (`docs/CAMPUS_V4_EDITORIAL_FINALIST.md` §5.3 · §7.2)
 4. `CAMPUS_REVIEW=1` 로컬 review build
 5. 이준구 → 배지안 → 조예솔 순서 확인
 6. 모바일 390×844 육안 검수

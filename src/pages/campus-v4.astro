@@ -34,39 +34,36 @@ const {
 const visibleCases = REVIEW_MODE ? campusV4Offer.cases : approvedV4Cases;
 const showCases = visibleCases.length > 0;
 
-// Real screenshots are inlined (?inline → no emitted file) and only ever read
-// into `caseShots` under REVIEW_MODE, so a production/Preview build carries no
-// case-screenshot bytes at all. Files live in src/assets/campus-v4/.
-const shotModules = import.meta.glob("../assets/campus-v4/*.webp", {
-  query: "?inline",
-  import: "default",
-  eager: true,
-}) as Record<string, string>;
-const caseShots: Record<string, string> = {};
-if (REVIEW_MODE) {
-  for (const [path, uri] of Object.entries(shotModules)) {
-    const base = path.split("/").pop();
-    if (base) caseShots[base] = uri;
-  }
-}
-
 const applyReady = applyFormUrl !== null;
 // No verified apply URL yet, or an internal review build → keep out of the index.
 const noindex = !applyReady || REVIEW_MODE;
 
+// One source for a case's URL. The visible "완성된 프로필 보기" link, the live
+// preview iframe, and the fake address bar all derive from this — the URL is
+// never written twice.
 type Case = (typeof campusV4Offer.cases)[number];
 const caseHref = (c: Case): string | undefined =>
   c.slug ? `/profiles/${c.slug}/` : (c.externalUrl ?? undefined);
-const shotUrl = (c: Case): string =>
+// Address-bar text: the public production URL, not the localhost one the review
+// build actually embeds.
+const frameUrl = (c: Case): string =>
   c.slug
     ? `profile.wethru.com/profiles/${c.slug}`
     : (c.externalUrl ?? "").replace(/^https?:\/\//, "").replace(/\/$/, "");
 
 const site = Astro.site ?? new URL("https://profile.wethru.com");
 const canonicalUrl = new URL("/campus-v4/", site);
-const seoTitle = "WeThru Campus — 실제로 만든 커리어 프로필로 증명합니다";
-const seoDescription =
-  "흩어진 경험을 읽히는 순서로 정리한 맞춤형 커리어 웹페이지. 사람마다 다르게 만든 실제 제작 사례로 보여드립니다. 얼리버드 커리어 프로필(49,000원)과 Interview Portfolio(199,000원) 두 가지로 시작합니다.";
+
+// SEO / share copy follows the consent gate. With zero approvals the cases
+// section does not render, so the shared-link title and description must not
+// promise 제작 사례 the visitor cannot see (noindex still leaves og:* live in
+// messenger previews). Same rule as the page copy: never over-claim.
+const seoTitle = showCases
+  ? "WeThru Campus — 실제로 만든 커리어 프로필로 증명합니다"
+  : "WeThru Campus — 흩어진 경험을 읽히는 순서로 정리합니다";
+const seoDescription = showCases
+  ? "흩어진 경험을 읽히는 순서로 정리한 맞춤형 커리어 웹페이지. 사람마다 다르게 만든 실제 제작 사례로 보여드립니다. 얼리버드 커리어 프로필(99,000원)과 Interview Portfolio(199,000원) 두 가지로 시작합니다."
+  : "인턴·공모전·팀 프로젝트처럼 흩어진 자료를 읽기 좋은 순서로 정리해 하나의 커리어 웹페이지로 만듭니다. 얼리버드 커리어 프로필(99,000원)과 Interview Portfolio(199,000원) 두 가지로 시작합니다.";
 ---
 
 <html lang="ko">
@@ -90,41 +87,50 @@ const seoDescription =
   </head>
   <body>
     <div class="profile-shell">
-      {
-        REVIEW_MODE && (
-          <p class="v4-review-ribbon">
-            내부 검수용 · 동의 미확인 사례 포함 · 배포 금지
-          </p>
-        )
-      }
-
       <a class="skip-link" href="#main">본문으로 건너뛰기</a>
 
-      <!-- 1. Navigation -->
-      <nav class="v4-nav" aria-label="Campus">
-        <div class="v4-nav__in">
-          <a class="v4-nav__brand" href="#top">
-            <span class="v4-nav__mark" aria-hidden="true">W</span>
-            WeThru Campus
-          </a>
-          <div class="v4-nav__links">
-            <a class="v4-nav__link" href="#products">상품</a>
-            {showCases && <a class="v4-nav__link" href="#cases">제작 사례</a>}
-            <a class="v4-nav__link" href="#process">진행 방식</a>
-            <a class="v4-nav__link" href="#faq">자주 묻는 질문</a>
-            <a class="btn btn--ink" href="#apply">49,000원 신청</a>
+      {/* 1. Ribbon + navigation. Both live in one sticky container so the nav
+          never needs a hard-coded offset for a banner whose height changes when
+          the text wraps on a narrow screen. */}
+      <div class="v4-topbar">
+        {
+          REVIEW_MODE && (
+            <p class="v4-review-ribbon">
+              내부 검수용 · 동의 미확인 사례 포함 · 배포 금지
+            </p>
+          )
+        }
+
+        <nav class="v4-nav" aria-label="Campus">
+          <div class="v4-nav__in">
+            <a class="v4-nav__brand" href="#top">
+              <span class="v4-nav__mark" aria-hidden="true">W</span>
+              WeThru Campus
+            </a>
+            <div class="v4-nav__links">
+              <a class="v4-nav__link" href="#products">상품</a>
+              {showCases && <a class="v4-nav__link" href="#cases">제작 사례</a>}
+              <a class="v4-nav__link" href="#process">진행 방식</a>
+              <a class="v4-nav__link" href="#faq">자주 묻는 질문</a>
+              <a class="btn btn--ink" href="#apply">99,000원 신청</a>
+            </div>
           </div>
-        </div>
-      </nav>
+        </nav>
+      </div>
 
       <main id="main" class="campus-v4">
-        <!-- 2. Hero -->
+        {/* 2. Hero */}
         <section id="top" class="v4-hero">
           <div class="v4-hero__in">
             <div class="v4-hero__copy">
-              <span class="v4-eyebrow">
-                <i class="v4-eyebrow__dot" aria-hidden="true"></i>{hero.eyebrow}
-              </span>
+              <div class="v4-hero__flags">
+                <span class="v4-eyebrow">
+                  <i class="v4-eyebrow__dot" aria-hidden="true"></i>{hero.eyebrow}
+                </span>
+                {/* The dated launch-price window. Stated, never counted down —
+                    a live timer would keep reopening a deadline that is real. */}
+                <span class="v4-deadline">{hero.deadline}</span>
+              </div>
               <h1
                 class="v4-hero__title"
                 set:html={hero.title.replace(
@@ -145,12 +151,14 @@ const seoDescription =
               </ul>
             </div>
 
-            <div class="v4-showcase" aria-hidden="true">
+            {/* Real editorial copy, not decoration — it stays in the
+                accessibility tree; only the arrow glyph is hidden. */}
+            <div class="v4-showcase" role="group" aria-label="정리 전과 후">
               <div class="v4-showcard v4-showcard--before">
                 <span class="v4-showcard__num">01 / BEFORE</span>
                 <span class="v4-showcard__line">{hero.before}</span>
               </div>
-              <span class="v4-showcard__arrow">↓</span>
+              <span class="v4-showcard__arrow" aria-hidden="true">↓</span>
               <div class="v4-showcard v4-showcard--after">
                 <span class="v4-showcard__num">02 / AFTER</span>
                 <span class="v4-showcard__line">{hero.after}</span>
@@ -159,7 +167,7 @@ const seoDescription =
           </div>
         </section>
 
-        <!-- 3. 문제 3개 -->
+        {/* 3. 문제 3개 */}
         <section class="v4-section v4-section--tint" aria-label="흩어진 자료의 문제">
           <div class="v4-wrap">
             <div class="v4-section__head">
@@ -180,7 +188,7 @@ const seoDescription =
           </div>
         </section>
 
-        <!-- 4. 실제 제작 사례 (consent-gated; hidden entirely when 0 approvals) -->
+        {/* 4. 실제 제작 사례 (consent-gated; hidden entirely when 0 approvals) */}
         {
           showCases && (
             <section id="cases" class="v4-section">
@@ -194,40 +202,39 @@ const seoDescription =
                   {visibleCases.map((c) => {
                     const href = caseHref(c);
                     const external = Boolean(c.externalUrl && !c.slug);
-                    const shot = c.shot ? caseShots[c.shot] : undefined;
                     return (
                       <article class="v4-case">
                         <div class="v4-case__media">
-                          <div class="v4-shot">
-                            <div class="v4-shot__bar" aria-hidden="true">
-                              <span class="v4-shot__dot" />
-                              <span class="v4-shot__dot" />
-                              <span class="v4-shot__dot" />
-                              <span class="v4-shot__url">{shotUrl(c)}</span>
+                          {/* The preview is the live page itself, embedded by
+                              URL — no screenshot file, so nothing here can leak
+                              into a commit. It is decoration only: inert to the
+                              pointer, out of the tab order, hidden from screen
+                              readers. The real route out is the text link in
+                              the body, never an invisible overlay on the frame.
+                              Sandbox withholds allow-top-navigation, so an
+                              embedded page cannot redirect this one. */}
+                          <div class="v4-live-preview">
+                            <div class="v4-live-preview__browser">
+                              <div class="v4-live-preview__chrome" aria-hidden="true">
+                                <span class="v4-live-preview__dot" />
+                                <span class="v4-live-preview__dot" />
+                                <span class="v4-live-preview__dot" />
+                                <span class="v4-live-preview__url">{frameUrl(c)}</span>
+                              </div>
+                              <div class="v4-live-preview__viewport">
+                                <iframe
+                                  class="v4-live-preview__frame"
+                                  src={href}
+                                  title={`${c.name} 커리어 프로필 미리보기`}
+                                  loading="lazy"
+                                  tabindex="-1"
+                                  aria-hidden="true"
+                                  scrolling="no"
+                                  sandbox="allow-scripts allow-same-origin"
+                                  referrerpolicy="no-referrer"
+                                />
+                              </div>
                             </div>
-                            {shot ? (
-                              <img
-                                class="v4-shot__img"
-                                src={shot}
-                                alt={`${c.name} 커리어 프로필 실제 화면 (첫 화면)`}
-                                loading="lazy"
-                                decoding="async"
-                              />
-                            ) : external ? (
-                              <div class="v4-shot__missing">
-                                외부에 공개된 페이지입니다. 오른쪽 “완성된 프로필
-                                보기 ↗” 링크에서 실제 화면을 확인할 수 있습니다.
-                                <span class="v4-shot__hint">
-                                  스크린샷을 넣으려면 src/assets/campus-v4/
-                                  {c.shot} 파일을 추가하세요.
-                                </span>
-                              </div>
-                            ) : (
-                              <div class="v4-shot__missing">
-                                스크린샷 파일 없음 — src/assets/campus-v4/
-                                {c.shot}
-                              </div>
-                            )}
                           </div>
                         </div>
 
@@ -273,7 +280,7 @@ const seoDescription =
           )
         }
 
-        <!-- 5. 두 상품 비교  +  6. Interview Portfolio 구성 미리보기 -->
+        {/* 5. 두 상품 비교  +  6. Interview Portfolio 구성 미리보기 */}
         <section id="products" class="v4-section v4-section--tint">
           <div class="v4-wrap">
             <div class="v4-section__head">
@@ -361,7 +368,7 @@ const seoDescription =
               }
             </div>
 
-            <!-- 6. Interview Portfolio 구성 미리보기 (secondary, always labelled) -->
+            {/* 6. Interview Portfolio 구성 미리보기 (secondary, always labelled) */}
             <div class="v4-ip-preview" aria-label="Interview Portfolio 구성 예시">
               <span class="v4-ip-preview__note">{ipPreview.note}</span>
               <h3 class="v4-ip-preview__title">{ipPreview.title}</h3>
@@ -388,7 +395,7 @@ const seoDescription =
           </div>
         </section>
 
-        <!-- 7. 진행 방식 -->
+        {/* 7. 진행 방식 */}
         <section id="process" class="v4-section" aria-label="진행 방식">
           <div class="v4-wrap">
             <div class="v4-section__head">
@@ -408,7 +415,7 @@ const seoDescription =
           </div>
         </section>
 
-        <!-- 8. 포함하지 않는 범위 -->
+        {/* 8. 포함하지 않는 범위 */}
         <section class="v4-section v4-section--tint" aria-label="포함하지 않는 범위">
           <div class="v4-wrap">
             <div class="v4-section__head">
@@ -424,7 +431,7 @@ const seoDescription =
           </div>
         </section>
 
-        <!-- 9. FAQ accordion -->
+        {/* 9. FAQ accordion */}
         <section id="faq" class="v4-section" aria-label="자주 묻는 질문">
           <div class="v4-wrap">
             <div class="v4-section__head">
@@ -443,7 +450,7 @@ const seoDescription =
           </div>
         </section>
 
-        <!-- 10. 최종 CTA -->
+        {/* 10. 최종 CTA */}
         <section id="apply" class="v4-section v4-section--ink v4-on-ink">
           <div class="v4-apply__in">
             <h2 class="v4-apply__title">
@@ -477,7 +484,7 @@ const seoDescription =
         </section>
       </main>
 
-      <!-- 11. Footer -->
+      {/* 11. Footer */}
       <WeThruFooter />
     </div>
   </body>
