@@ -1,0 +1,45 @@
+---
+/**
+ * V3 DEMO — fictional project-detail screen (Interview Portfolio 예시).
+ * STAR spine (문제→역할→판단→행동→결과) + evidence row + a project URL bar,
+ * showing WHERE PDF/gallery/video attach. All content invented
+ * (campusV3DemoPersona.project): no real customer, company, or metric. Always
+ * shown under a "DEMO · 실제 고객 사례 아님" label by the caller.
+ */
+import { campusV3DemoPersona as p } from "../../data/campus-v3";
+const pr = p.project;
+---
+
+<div class="v3-browser" aria-hidden="true">
+  <div class="v3-browser__bar">
+    <i></i><i></i><i></i>
+    <span class="v3-browser__url">{pr.demoUrl}</span>
+  </div>
+  <div class="v3-screen v3-screen--project">
+    <div class="v3-screen__head">
+      <div>
+        <div class="v3-screen__kicker">PROJECT · 프로젝트 상세</div>
+        <div class="v3-screen__name">{pr.title}</div>
+      </div>
+    </div>
+    <p class="v3-screen__oneline">{pr.subtitle}</p>
+
+    <div class="v3-screen__section-label">역할</div>
+    <p class="v3-screen__oneline">{pr.role}</p>
+
+    <div class="v3-screen__section-label">문제 → 역할 → 판단 → 행동 → 결과</div>
+    <div class="v3-star">
+      {pr.steps.map((s) => (
+        <div class="v3-star__row">
+          <span class="v3-star__k">{s.key}</span>
+          <span class="v3-star__v">{s.body}</span>
+        </div>
+      ))}
+    </div>
+
+    <div class="v3-screen__section-label">근거 자료 (첨부 위치)</div>
+    <div class="v3-evidence">
+      {pr.evidence.map((e) => <span>{e}</span>)}
+    </div>
+  </div>
+</div>

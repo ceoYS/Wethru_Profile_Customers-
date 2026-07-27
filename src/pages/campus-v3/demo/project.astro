@@ -1,0 +1,67 @@
+---
+import WeThruFooter from "../../../components/profile/WeThruFooter.astro";
+import DemoProjectScreen from "../../../components/campus-v3/DemoProjectScreen.astro";
+import "../../../styles/global.css";
+import "../../../styles/profile-base.css";
+import "../../../styles/themes/cobalt-air.css";
+import "../../../styles/campus-v3.css";
+
+// Internal demo screen. Always noindex — fictional sample on the not-yet-launched
+// /campus-v3/ route, never a real customer project.
+const site = Astro.site ?? new URL("https://profile.wethru.com");
+const canonicalUrl = new URL("/campus-v3/demo/project/", site);
+const seoTitle = "DEMO · Interview Portfolio 프로젝트 상세 구성 예시 — WeThru Campus";
+
+const elements = [
+  "프로필 메인과 별도의 프로젝트 상세 페이지",
+  "프로젝트별 고유 URL",
+  "문제·상황 → 역할 → 판단 → 행동 → 결과·근거 구조",
+  "PDF·이미지 갤러리·영상 등 근거 자료 연결 위치",
+  "면접 중 빠르게 넘겨볼 수 있는 탐색 구조",
+];
+---
+
+<html lang="ko" data-theme="cobalt-air" data-effects="on">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{seoTitle}</title>
+    <meta name="description" content="가상 예시 프로젝트로 만든 Interview Portfolio 상세 페이지 구성 예시입니다. 실제 고객 사례가 아닙니다." />
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="generator" content={Astro.generator} />
+  </head>
+  <body>
+    <div class="profile-shell">
+      <a class="skip-link" href="#main">본문으로 건너뛰기</a>
+      <main id="main" class="campus-v3 v3-demo-page">
+        <a class="v3-back" href="/campus-v3/#preview">결과물 미리보기로 돌아가기</a>
+
+        <p class="v3-demo-page__banner">
+          <strong>DEMO · 실제 고객 사례 아님</strong> — 아래 화면은 가상의 예시
+          프로젝트로 만든 구성 예시입니다. 실제 고객의 정보·화면·후기가 아니며,
+          학교·회사·수치는 담고 있지 않습니다.
+        </p>
+
+        <div class="v3-demo-page__grid">
+          <div class="v3-demo-page__copy">
+            <h1>Interview Portfolio · 프로젝트 상세 구성 예시</h1>
+            <p>“나는 실제로 이렇게 일했습니다”를 증명하는 프로젝트 상세 페이지가 어떻게 구성되는지, 가상 예시로 보여드립니다. 199,000원 Interview Portfolio의 핵심 결과물입니다.</p>
+            <ul class="v3-list" style="margin-top:1.25rem">
+              <li class="v3-list__label">이 구성에 담기는 것</li>
+              {elements.map((e) => <li class="v3-list__item">{e}</li>)}
+            </ul>
+            <p class="v3-demo-page__note">
+              오른쪽 화면은 실제 서비스가 아니라, 프로젝트 하나가 문제부터 결과·근거까지
+              어떤 순서로 정리되는지 보여주기 위한 예시입니다.
+            </p>
+          </div>
+
+          <DemoProjectScreen />
+        </div>
+      </main>
+      <WeThruFooter />
+    </div>
+  </body>
+</html>

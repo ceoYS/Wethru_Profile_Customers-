@@ -1,0 +1,45 @@
+---
+/**
+ * V3 DEMO — fictional 1-page career-profile screen (얼리버드 예시).
+ * Renders inside a browser frame. All content is invented (campusV3DemoPersona):
+ * no real customer, school, company, review, or metric. Always shown under a
+ * "DEMO · 실제 고객 사례 아님" label by the caller.
+ */
+import { campusV3DemoPersona as p } from "../../data/campus-v3";
+---
+
+<div class="v3-browser" aria-hidden="true">
+  <div class="v3-browser__bar">
+    <i></i><i></i><i></i>
+    <span class="v3-browser__url">{p.project.demoUrl.split("/")[0]}</span>
+  </div>
+  <div class="v3-screen v3-screen--profile">
+    <div class="v3-screen__head">
+      <div>
+        <div class="v3-screen__kicker">{p.role}</div>
+        <div class="v3-screen__name">{p.headline}</div>
+      </div>
+      <div class="v3-screen__avatar">{p.avatar}</div>
+    </div>
+
+    <p class="v3-screen__oneline">{p.oneLine}</p>
+
+    <div class="v3-screen__chips">
+      {p.chips.map((c) => <span class="v3-chip">{c}</span>)}
+    </div>
+
+    <div class="v3-screen__section-label">핵심 경험</div>
+    <ul class="v3-screen__list">
+      {p.experiences.map((e) => <li>{e}</li>)}
+    </ul>
+
+    <div class="v3-screen__summary">
+      <b>{p.projectSummary.title}</b>
+      <span>{p.projectSummary.line}</span>
+    </div>
+
+    <div class="v3-screen__linkbar">
+      {p.links.map((l) => <span>{l}</span>)}
+    </div>
+  </div>
+</div>
