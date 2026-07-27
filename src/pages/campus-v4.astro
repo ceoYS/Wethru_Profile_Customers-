@@ -1,0 +1,484 @@
+---
+import WeThruFooter from "../components/profile/WeThruFooter.astro";
+import { campusV4Offer, approvedV4Cases } from "../data/campus-v4";
+import "../styles/global.css";
+import "../styles/profile-base.css";
+import "../styles/campus-v4.css";
+
+// Internal case-review mode. Off by default, so a normal `npm run build`
+// (every Vercel deploy) produces the PRODUCTION page. Turn it on only for local
+// review:  CAMPUS_REVIEW=1 npm run build   (or CAMPUS_REVIEW=1 npm run dev).
+// Read the build-time env without depending on @types/node globals.
+const nodeEnv = (
+  globalThis as { process?: { env?: Record<string, string | undefined> } }
+).process?.env;
+const REVIEW_MODE = nodeEnv?.CAMPUS_REVIEW === "1";
+
+const {
+  hero,
+  problems,
+  realCases,
+  difference,
+  products,
+  ipPreview,
+  process,
+  boundaries,
+  reviewNote,
+  faqs,
+  applyFormUrl,
+} = campusV4Offer;
+
+// Cases: a production build shows only consented ones (currently none). Review
+// mode additionally surfaces the unapproved candidates behind a red "배포 금지"
+// ribbon. Gating is server-side, so unapproved names never enter production HTML.
+const visibleCases = REVIEW_MODE ? campusV4Offer.cases : approvedV4Cases;
+const showCases = visibleCases.length > 0;
+
+// Real screenshots are inlined (?inline → no emitted file) and only ever read
+// into `caseShots` under REVIEW_MODE, so a production/Preview build carries no
+// case-screenshot bytes at all. Files live in src/assets/campus-v4/.
+const shotModules = import.meta.glob("../assets/campus-v4/*.webp", {
+  query: "?inline",
+  import: "default",
+  eager: true,
+}) as Record<string, string>;
+const caseShots: Record<string, string> = {};
+if (REVIEW_MODE) {
+  for (const [path, uri] of Object.entries(shotModules)) {
+    const base = path.split("/").pop();
+    if (base) caseShots[base] = uri;
+  }
+}
+
+const applyReady = applyFormUrl !== null;
+// No verified apply URL yet, or an internal review build → keep out of the index.
+const noindex = !applyReady || REVIEW_MODE;
+
+type Case = (typeof campusV4Offer.cases)[number];
+const caseHref = (c: Case): string | undefined =>
+  c.slug ? `/profiles/${c.slug}/` : (c.externalUrl ?? undefined);
+const shotUrl = (c: Case): string =>
+  c.slug
+    ? `profile.wethru.com/profiles/${c.slug}`
+    : (c.externalUrl ?? "").replace(/^https?:\/\//, "").replace(/\/$/, "");
+
+const site = Astro.site ?? new URL("https://profile.wethru.com");
+const canonicalUrl = new URL("/campus-v4/", site);
+const seoTitle = "WeThru Campus — 실제로 만든 커리어 프로필로 증명합니다";
+const seoDescription =
+  "흩어진 경험을 읽히는 순서로 정리한 맞춤형 커리어 웹페이지. 사람마다 다르게 만든 실제 제작 사례로 보여드립니다. 얼리버드 커리어 프로필(49,000원)과 Interview Portfolio(199,000원) 두 가지로 시작합니다.";
+---
+
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{seoTitle}</title>
+    <meta name="description" content={seoDescription} />
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={seoTitle} />
+    <meta property="og:description" content={seoDescription} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:site_name" content="WeThru Campus" />
+    <meta property="og:locale" content="ko_KR" />
+
+    <meta name="generator" content={Astro.generator} />
+  </head>
+  <body>
+    <div class="profile-shell">
+      {
+        REVIEW_MODE && (
+          <p class="v4-review-ribbon">
+            내부 검수용 · 동의 미확인 사례 포함 · 배포 금지
+          </p>
+        )
+      }
+
+      <a class="skip-link" href="#main">본문으로 건너뛰기</a>
+
+      <!-- 1. Navigation -->
+      <nav class="v4-nav" aria-label="Campus">
+        <div class="v4-nav__in">
+          <a class="v4-nav__brand" href="#top">
+            <span class="v4-nav__mark" aria-hidden="true">W</span>
+            WeThru Campus
+          </a>
+          <div class="v4-nav__links">
+            <a class="v4-nav__link" href="#products">상품</a>
+            {showCases && <a class="v4-nav__link" href="#cases">제작 사례</a>}
+            <a class="v4-nav__link" href="#process">진행 방식</a>
+            <a class="v4-nav__link" href="#faq">자주 묻는 질문</a>
+            <a class="btn btn--ink" href="#apply">49,000원 신청</a>
+          </div>
+        </div>
+      </nav>
+
+      <main id="main" class="campus-v4">
+        <!-- 2. Hero -->
+        <section id="top" class="v4-hero">
+          <div class="v4-hero__in">
+            <div class="v4-hero__copy">
+              <span class="v4-eyebrow">
+                <i class="v4-eyebrow__dot" aria-hidden="true"></i>{hero.eyebrow}
+              </span>
+              <h1
+                class="v4-hero__title"
+                set:html={hero.title.replace(
+                  hero.highlight,
+                  `<span class="hl">${hero.highlight}</span>`,
+                )}
+              >
+              </h1>
+              <p class="v4-hero__subtitle">{hero.subtitle}</p>
+              <div class="v4-hero__actions">
+                <a class="btn btn--ink" href="#apply">{hero.primaryCtaLabel}</a>
+                <a class="btn btn--ghost" href="#products">
+                  {hero.secondaryCtaLabel}
+                </a>
+              </div>
+              <ul class="v4-hero__proof">
+                {hero.proof.map((p) => <li>{p}</li>)}
+              </ul>
+            </div>
+
+            <div class="v4-showcase" aria-hidden="true">
+              <div class="v4-showcard v4-showcard--before">
+                <span class="v4-showcard__num">01 / BEFORE</span>
+                <span class="v4-showcard__line">{hero.before}</span>
+              </div>
+              <span class="v4-showcard__arrow">↓</span>
+              <div class="v4-showcard v4-showcard--after">
+                <span class="v4-showcard__num">02 / AFTER</span>
+                <span class="v4-showcard__line">{hero.after}</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 3. 문제 3개 -->
+        <section class="v4-section v4-section--tint" aria-label="흩어진 자료의 문제">
+          <div class="v4-wrap">
+            <div class="v4-section__head">
+              <h2 class="v4-title">{problems.title}</h2>
+              <p class="v4-lead">{problems.lead}</p>
+            </div>
+            <div class="v4-grid3">
+              {
+                problems.cards.map((c) => (
+                  <article class="v4-problem">
+                    <span class="v4-problem__num">{c.index}</span>
+                    <h3 class="v4-problem__title">{c.title}</h3>
+                    <p class="v4-problem__body">{c.body}</p>
+                  </article>
+                ))
+              }
+            </div>
+          </div>
+        </section>
+
+        <!-- 4. 실제 제작 사례 (consent-gated; hidden entirely when 0 approvals) -->
+        {
+          showCases && (
+            <section id="cases" class="v4-section">
+              <div class="v4-wrap">
+                <div class="v4-section__head">
+                  <h2 class="v4-title">{realCases.title}</h2>
+                  <p class="v4-lead">{realCases.lead}</p>
+                </div>
+
+                <div class="v4-cases">
+                  {visibleCases.map((c) => {
+                    const href = caseHref(c);
+                    const external = Boolean(c.externalUrl && !c.slug);
+                    const shot = c.shot ? caseShots[c.shot] : undefined;
+                    return (
+                      <article class="v4-case">
+                        <div class="v4-case__media">
+                          <div class="v4-shot">
+                            <div class="v4-shot__bar" aria-hidden="true">
+                              <span class="v4-shot__dot" />
+                              <span class="v4-shot__dot" />
+                              <span class="v4-shot__dot" />
+                              <span class="v4-shot__url">{shotUrl(c)}</span>
+                            </div>
+                            {shot ? (
+                              <img
+                                class="v4-shot__img"
+                                src={shot}
+                                alt={`${c.name} 커리어 프로필 실제 화면 (첫 화면)`}
+                                loading="lazy"
+                                decoding="async"
+                              />
+                            ) : external ? (
+                              <div class="v4-shot__missing">
+                                외부에 공개된 페이지입니다. 오른쪽 “완성된 프로필
+                                보기 ↗” 링크에서 실제 화면을 확인할 수 있습니다.
+                                <span class="v4-shot__hint">
+                                  스크린샷을 넣으려면 src/assets/campus-v4/
+                                  {c.shot} 파일을 추가하세요.
+                                </span>
+                              </div>
+                            ) : (
+                              <div class="v4-shot__missing">
+                                스크린샷 파일 없음 — src/assets/campus-v4/
+                                {c.shot}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+
+                        <div class="v4-case__body">
+                          <span class="v4-case__role">{c.role}</span>
+                          <h3 class="v4-case__name">
+                            {c.name}
+                            {c.englishName && <span>{c.englishName}</span>}
+                          </h3>
+                          <p class="v4-case__blurb">{c.blurb}</p>
+                          <dl class="v4-case__spine">
+                            <div class="v4-case__row">
+                              <dt class="v4-case__key">기존 자료</dt>
+                              <dd class="v4-case__val">{c.problem}</dd>
+                            </div>
+                            <div class="v4-case__row">
+                              <dt class="v4-case__key">설계 방향</dt>
+                              <dd class="v4-case__val">{c.direction}</dd>
+                            </div>
+                            <div class="v4-case__row v4-case__row--result">
+                              <dt class="v4-case__key">달라진 점</dt>
+                              <dd class="v4-case__val">{c.result}</dd>
+                            </div>
+                          </dl>
+                          {href && (
+                            <a
+                              class="v4-case__link"
+                              href={href}
+                              {...(external
+                                ? { target: "_blank", rel: "noopener noreferrer" }
+                                : {})}
+                            >
+                              완성된 프로필 보기 {external ? "↗" : "→"}
+                            </a>
+                          )}
+                        </div>
+                      </article>
+                    );
+                  })}
+                </div>
+              </div>
+            </section>
+          )
+        }
+
+        <!-- 5. 두 상품 비교  +  6. Interview Portfolio 구성 미리보기 -->
+        <section id="products" class="v4-section v4-section--tint">
+          <div class="v4-wrap">
+            <div class="v4-section__head">
+              <h2 class="v4-title">필요한 만큼 골라서 시작하세요</h2>
+              <p class="v4-lead">
+                두 상품 모두 자료를 직접 읽고 문장을 다듬어 만듭니다. 차이는 품질이
+                아니라 실제 작업 범위입니다. 얼리버드는 「{difference.earlybird}」,
+                Interview Portfolio는 「{difference.interviewPortfolio}」.
+              </p>
+            </div>
+
+            <div class="v4-products">
+              {
+                products.map((product) => (
+                  <article
+                    class:list={["v4-product", product.featured && "v4-product--ip"]}
+                  >
+                    <div class="v4-product__head">
+                      <div class="v4-product__badges">
+                        {product.priceBadge && (
+                          <span class="v4-product__badge">{product.priceBadge}</span>
+                        )}
+                      </div>
+                      <h3 class="v4-product__name">{product.name}</h3>
+                      {product.koreanLabel && (
+                        <p class="v4-product__ko">{product.koreanLabel}</p>
+                      )}
+                      <span class="v4-product__price">{product.price}</span>
+                      {product.priceNote && (
+                        <p class="v4-product__price-note">{product.priceNote}</p>
+                      )}
+                    </div>
+
+                    <div class="v4-product__body">
+                      {product.featuredBadge && (
+                        <span class="v4-product__ip-badge">
+                          {product.featuredBadge}
+                        </span>
+                      )}
+                      <p class="v4-product__tagline">{product.tagline}</p>
+                      <p class="v4-product__summary">{product.summary}</p>
+
+                      <ul class="v4-list">
+                        <li class="v4-list__label">포함 (핵심)</li>
+                        {product.coreIncludes.map((item) => (
+                          <li class="v4-list__item">{item}</li>
+                        ))}
+                      </ul>
+
+                      <details class="v4-more">
+                        <summary>세부 범위 보기</summary>
+                        <div class="v4-more__inner">
+                          <ul class="v4-list">
+                            {product.moreIncludes.map((item) => (
+                              <li class="v4-list__item">{item}</li>
+                            ))}
+                          </ul>
+                          {product.excludes && (
+                            <ul class="v4-list v4-list--muted">
+                              <li class="v4-list__label">포함하지 않음</li>
+                              {product.excludes.map((item) => (
+                                <li class="v4-list__item">{item}</li>
+                              ))}
+                            </ul>
+                          )}
+                          {product.conditional && (
+                            <ul class="v4-list v4-list--muted">
+                              <li class="v4-list__label">기술 검토 후 함께 논의</li>
+                              {product.conditional.map((item) => (
+                                <li class="v4-list__item">{item}</li>
+                              ))}
+                            </ul>
+                          )}
+                        </div>
+                      </details>
+
+                      <div class="v4-product__cta">
+                        <a class="btn btn--ink" href="#apply">
+                          {product.price} 신청
+                        </a>
+                      </div>
+                    </div>
+                  </article>
+                ))
+              }
+            </div>
+
+            <!-- 6. Interview Portfolio 구성 미리보기 (secondary, always labelled) -->
+            <div class="v4-ip-preview" aria-label="Interview Portfolio 구성 예시">
+              <span class="v4-ip-preview__note">{ipPreview.note}</span>
+              <h3 class="v4-ip-preview__title">{ipPreview.title}</h3>
+              <p class="v4-ip-preview__lead">{ipPreview.lead}</p>
+              <div class="v4-ip-spine">
+                {
+                  ipPreview.steps.map((s) => (
+                    <div class="v4-ip-step">
+                      <span class="v4-ip-step__key">{s.key}</span>
+                      <p class="v4-ip-step__body">{s.body}</p>
+                    </div>
+                  ))
+                }
+              </div>
+              <div class="v4-ip-evidence">
+                <span class="v4-ip-evidence__label">근거 자료 위치</span>
+                {
+                  ipPreview.evidence.map((e) => (
+                    <span class="v4-ip-evidence__chip">{e}</span>
+                  ))
+                }
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 7. 진행 방식 -->
+        <section id="process" class="v4-section" aria-label="진행 방식">
+          <div class="v4-wrap">
+            <div class="v4-section__head">
+              <h2 class="v4-title">자료만 보내면 이 순서로 완성됩니다</h2>
+            </div>
+            <div class="v4-process">
+              {
+                process.map((s) => (
+                  <article class="v4-step">
+                    <span class="v4-step__num">{s.step}</span>
+                    <h3 class="v4-step__title">{s.title}</h3>
+                    <p class="v4-step__body">{s.body}</p>
+                  </article>
+                ))
+              }
+            </div>
+          </div>
+        </section>
+
+        <!-- 8. 포함하지 않는 범위 -->
+        <section class="v4-section v4-section--tint" aria-label="포함하지 않는 범위">
+          <div class="v4-wrap">
+            <div class="v4-section__head">
+              <h2 class="v4-title">미리 분명히 해두는 범위</h2>
+              <p class="v4-lead">
+                과장하지 않기 위해, 이 상품이 하지 않는 것을 먼저 적어둡니다.
+              </p>
+            </div>
+            <ul class="v4-boundaries">
+              {boundaries.map((b) => <li>{b}</li>)}
+            </ul>
+            <p class="v4-note">{reviewNote}</p>
+          </div>
+        </section>
+
+        <!-- 9. FAQ accordion -->
+        <section id="faq" class="v4-section" aria-label="자주 묻는 질문">
+          <div class="v4-wrap">
+            <div class="v4-section__head">
+              <h2 class="v4-title">자주 묻는 질문</h2>
+            </div>
+            <div class="v4-faq">
+              {
+                faqs.map((faq) => (
+                  <details class="v4-faq__item">
+                    <summary class="v4-faq__q">{faq.q}</summary>
+                    <div class="v4-faq__a">{faq.a}</div>
+                  </details>
+                ))
+              }
+            </div>
+          </div>
+        </section>
+
+        <!-- 10. 최종 CTA -->
+        <section id="apply" class="v4-section v4-section--ink v4-on-ink">
+          <div class="v4-apply__in">
+            <h2 class="v4-apply__title">
+              지금 가진 자료로 어떤 커리어 페이지를 만들 수 있는지 함께 정리해 드려요
+            </h2>
+            {
+              applyReady ? (
+                <>
+                  <p class="v4-apply__note">
+                    신청했다고 바로 결제되지 않습니다. 지원 직무와 현재 자료를
+                    확인한 뒤, 가능한 구성과 적합한 상품 범위를 안내드립니다.
+                  </p>
+                  <a class="btn btn--ink" href={applyFormUrl!} rel="noopener">
+                    구성 상담 신청
+                  </a>
+                </>
+              ) : (
+                <>
+                  <p class="v4-apply__note">
+                    온라인 신청 접수는 준비 중입니다. 신청 폼이 연결되면 이곳에서
+                    바로 신청할 수 있게 됩니다.
+                  </p>
+                  <span class="btn is-disabled" aria-disabled="true">
+                    온라인 신청 준비 중
+                  </span>
+                  <p class="v4-apply__status">Preview · 신청 접수 준비 중</p>
+                </>
+              )
+            }
+          </div>
+        </section>
+      </main>
+
+      <!-- 11. Footer -->
+      <WeThruFooter />
+    </div>
+  </body>
+</html>
