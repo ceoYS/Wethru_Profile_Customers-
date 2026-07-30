@@ -1,0 +1,573 @@
+---
+/**
+ * WeThru Campus — V4 VARIANT B landing page (/campus-v4-b/).
+ *
+ * A/B test companion to the untouched Control A page (/campus-v4/). A and B
+ * differ ONLY in product positioning, message structure, and how concretely
+ * Interview Portfolio is described. Prices, the promised scope, and the apply
+ * condition are imported from the A data (see src/data/campus-v4-b.ts), so they
+ * cannot drift; a build-time guard asserts price parity.
+ *
+ * Everything from A's safety model is kept:
+ * - applyFormUrl comes from A and is still null → the apply CTA renders disabled
+ *   and this route carries noindex,nofollow. No URL is invented here.
+ * - Cases are consent-gated (approvedForCampus) and render as static,
+ *   face-masked, PII-free captures — never an iframe of a customer's real page,
+ *   never a real name, employer, project name, or original URL. Card links point
+ *   at Variant B's own anonymized mirrors (/campus-v4-b/cases/case-0X/).
+ * - The Interview Portfolio anatomy block is the only illustrative block and is
+ *   permanently labelled "구성 예시 · 실제 구매 사례 아님".
+ * - No 합격 보장, no "인사담당자가 반드시 본다", no 합격률 수치.
+ *
+ * Experiment identification is markup only: data-experiment/data-variant on
+ * <body> and utm_content=campus-b appended to the apply URL (query parameters
+ * preserved) once a verified intake URL exists. No analytics service is wired
+ * up, so nothing here logs, counts, or fabricates a metric.
+ */
+import WeThruFooter from "../components/profile/WeThruFooter.astro";
+import {
+  CAMPUS_EXPERIMENT,
+  CAMPUS_VARIANT,
+  approvedCampusV4BCases,
+  campusV4BCases,
+  campusV4BOffer,
+  getCampusV4BPreview,
+  withVariantUtm,
+} from "../data/campus-v4-b";
+import "../styles/global.css";
+import "../styles/profile-base.css";
+import "../styles/campus-v4-b.css";
+
+// Same two local-only build flags as A, read without @types/node globals. Both
+// OFF by default, so a normal `npm run build` renders the production variant.
+const nodeEnv = (
+  globalThis as { process?: { env?: Record<string, string | undefined> } }
+).process?.env;
+const REVIEW_MODE = nodeEnv?.CAMPUS_REVIEW === "1";
+const PUBLIC_PREVIEW_MODE = nodeEnv?.CAMPUS_PUBLIC_PREVIEW === "1";
+
+const {
+  hero,
+  problems,
+  realCases,
+  difference,
+  products,
+  ipAnatomy,
+  process,
+  boundaries,
+  reviewNoteLines,
+  faqs,
+  applyFormUrl,
+} = campusV4BOffer;
+
+const applyReady = applyFormUrl !== null;
+// Tag the intake link for this variant while preserving its own query string.
+const applyHref = applyFormUrl === null ? null : withVariantUtm(applyFormUrl);
+// No verified apply URL yet, or a local check build → keep out of the index.
+const noindex = !applyReady || REVIEW_MODE || PUBLIC_PREVIEW_MODE;
+
+// CAMPUS_REVIEW=1 emits no B mirrors (review embeds A's live originals), so the
+// case cards would link nowhere — hide the section instead of shipping 404s.
+const visibleCases = REVIEW_MODE
+  ? []
+  : PUBLIC_PREVIEW_MODE
+    ? campusV4BCases
+    : approvedCampusV4BCases;
+
+const cards = visibleCases.map((c) => {
+  // Resolve the sanitized capture now so a shown case with no asset fails the
+  // build (fail-closed) — never a placeholder, never the customer's real screen.
+  const shot = getCampusV4BPreview(c.previewKey);
+  return {
+    ...c,
+    shot,
+    barUrl: `profile.wethru.com${c.publicCasePath.replace(/\/$/, "")}`,
+  };
+});
+const showCases = cards.length > 0;
+
+const site = Astro.site ?? new URL("https://profile.wethru.com");
+const canonicalUrl = new URL("/campus-v4-b/", site);
+
+const seoTitle =
+  "WeThru Campus — 이력서만 제출하는 지원자에서, 한 번 더 준비한 지원자로";
+const seoDescription =
+  "지원자의 프로젝트, 성과, 강점을 직무에 맞게 구조화한 지원자 전용 온라인 커리어 프로필. 얼리버드 커리어 프로필(99,000원)과 Interview Portfolio(199,000원) 두 가지로 시작합니다.";
+---
+
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{seoTitle}</title>
+    <meta name="description" content={seoDescription} />
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={seoTitle} />
+    <meta property="og:description" content={seoDescription} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:site_name" content="WeThru Campus" />
+    <meta property="og:locale" content="ko_KR" />
+
+    <meta name="generator" content={Astro.generator} />
+  </head>
+  <body data-experiment={CAMPUS_EXPERIMENT} data-variant={CAMPUS_VARIANT}>
+    <div class="profile-shell v4b-shell">
+      <a class="skip-link" href="#main">본문으로 건너뛰기</a>
+
+      {/* 1. Ribbon + navigation in one sticky container, so a wrapping ribbon
+          never needs a hard-coded nav offset. */}
+      <div class="v4b-topbar">
+        {
+          REVIEW_MODE && (
+            <p class="v4b-ribbon">내부 검수용 · Variant B 사례 미출력 · 배포 금지</p>
+          )
+        }
+        {
+          !REVIEW_MODE && PUBLIC_PREVIEW_MODE && (
+            <p class="v4b-ribbon">공개 이미지 검수용 · 실제 Production 아님</p>
+          )
+        }
+
+        <nav class="v4b-nav" aria-label="Campus">
+          <div class="v4b-nav__in">
+            <a class="v4b-nav__brand" href="#top">
+              <span class="v4b-nav__mark" aria-hidden="true">W</span>
+              WeThru Campus
+            </a>
+            <div class="v4b-nav__links">
+              <a class="v4b-nav__link" href="#products">상품</a>
+              {showCases && <a class="v4b-nav__link" href="#cases">제작 사례</a>}
+              <a class="v4b-nav__link" href="#process">진행 방식</a>
+              <a class="v4b-nav__link" href="#faq">자주 묻는 질문</a>
+              <a class="v4b-btn v4b-btn--ink" href="#apply">99,000원 신청</a>
+            </div>
+          </div>
+        </nav>
+      </div>
+
+      <main id="main" class="campus-v4-b">
+        {/* 2. Hero — the B positioning */}
+        <section id="top" class="v4b-hero">
+          <div class="v4b-hero__in">
+            <div class="v4b-hero__copy">
+              <div class="v4b-hero__flags">
+                <span class="v4b-eyebrow">
+                  <i class="v4b-eyebrow__dot" aria-hidden="true"></i>{
+                    hero.eyebrow
+                  }
+                </span>
+                {/* The dated launch-price window. Stated, never counted down. */}
+                <span class="v4b-deadline">{hero.deadline}</span>
+              </div>
+              <h1
+                class="v4b-hero__title"
+                set:html={hero.title.replace(
+                  hero.highlight,
+                  `<span class="v4b-hl">${hero.highlight}</span>`,
+                )}
+              >
+              </h1>
+              <p class="v4b-hero__subtitle">{hero.subtitle}</p>
+              <p class="v4b-hero__diff">{hero.differentiator}</p>
+              <div class="v4b-hero__actions">
+                <a class="v4b-btn v4b-btn--ink" href="#apply">
+                  {hero.primaryCtaLabel}
+                </a>
+                <a class="v4b-btn v4b-btn--ghost" href="#products">
+                  {hero.secondaryCtaLabel}
+                </a>
+              </div>
+              <ul class="v4b-hero__proof">
+                {hero.proof.map((p) => <li>{p}</li>)}
+              </ul>
+            </div>
+
+            {/* Editorial BEFORE → AFTER statement (text, not a fake screen).
+                Real copy, so it stays in the accessibility tree; only the arrow
+                glyph is hidden. */}
+            <div class="v4b-showcase" role="group" aria-label="제출 자료의 변화">
+              <div class="v4b-showcard v4b-showcard--before">
+                <span class="v4b-showcard__num">01 / BEFORE</span>
+                <span class="v4b-showcard__line">{hero.before}</span>
+              </div>
+              <span class="v4b-showcard__arrow" aria-hidden="true">↓</span>
+              <div class="v4b-showcard v4b-showcard--after">
+                <span class="v4b-showcard__num">02 / AFTER</span>
+                <span class="v4b-showcard__line">{hero.after}</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* 3. 문제 3개 */}
+        <section
+          class="v4b-section v4b-section--tint"
+          aria-label="이력서만 제출할 때 생기는 문제"
+        >
+          <div class="v4b-wrap">
+            <div class="v4b-section__head">
+              <h2 class="v4b-title">{problems.title}</h2>
+              <p class="v4b-lead">{problems.lead}</p>
+            </div>
+            <div class="v4b-grid3">
+              {
+                problems.cards.map((c) => (
+                  <article class="v4b-problem">
+                    <span class="v4b-problem__num">{c.index}</span>
+                    <h3 class="v4b-problem__title">{c.title}</h3>
+                    <p class="v4b-problem__body">{c.body}</p>
+                  </article>
+                ))
+              }
+            </div>
+          </div>
+        </section>
+
+        {/* 4. 차별화 문구 — stated once, as copy, not as a claim about outcomes */}
+        <section class="v4b-quote" aria-label="달라지는 인상">
+          <div class="v4b-quote__in">
+            <p class="v4b-quote__line">{hero.differentiator}</p>
+            <p class="v4b-quote__body">
+              같은 경험이라도 지원 직무 기준으로 정리해 보여주면, 읽는 사람이
+              이해하는 속도가 달라집니다. 준비한 만큼은 자료에 그대로 남습니다.
+            </p>
+          </div>
+        </section>
+
+        {/* 5. 실제 제작 사례 (consent-gated; hidden entirely when 0 approvals) */}
+        {
+          showCases && (
+            <section id="cases" class="v4b-section">
+              <div class="v4b-wrap">
+                <div class="v4b-section__head">
+                  <h2 class="v4b-title">{realCases.title}</h2>
+                  {/* One block per sentence — the break before "사람마다" is in
+                      the markup, not a lucky wrap at one specific width. */}
+                  <p class="v4b-lead">
+                    {realCases.leadLines.map((line) => (
+                      <span class="v4b-lead__line">{line}</span>
+                    ))}
+                  </p>
+                </div>
+
+                <div class="v4b-cases">
+                  {cards.map((card) => (
+                    <article class="v4b-case">
+                      <div class="v4b-case__media">
+                        {/* Static, face-masked, PII-free capture of the finished
+                            first screen inside a browser frame. The image is
+                            inert — the only route out is the text link below. */}
+                        <div class="v4b-shot__browser">
+                          <div class="v4b-shot__chrome" aria-hidden="true">
+                            <span class="v4b-shot__dot" />
+                            <span class="v4b-shot__dot" />
+                            <span class="v4b-shot__dot" />
+                            <span class="v4b-shot__url">{card.barUrl}</span>
+                          </div>
+                          <div class="v4b-shot__viewport">
+                            <img
+                              class="v4b-shot__img"
+                              src={card.shot.src}
+                              width={card.shot.width}
+                              height={card.shot.height}
+                              alt={card.previewAlt}
+                              loading="lazy"
+                              decoding="async"
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="v4b-case__body">
+                        <span
+                          class:list={[
+                            "v4b-case__role",
+                            card.roleScript === "ko"
+                              ? "v4b-case__role--ko"
+                              : "v4b-case__role--latin",
+                          ]}
+                        >
+                          {card.role}
+                        </span>
+                        <h3 class="v4b-case__name">
+                          {card.title}
+                          <span class="v4b-case__tag">{card.short}</span>
+                        </h3>
+                        <p class="v4b-case__blurb">{card.blurb}</p>
+                        <dl class="v4b-case__spine">
+                          <div class="v4b-case__row">
+                            <dt class="v4b-case__key">기존 자료</dt>
+                            <dd class="v4b-case__val">{card.problem}</dd>
+                          </div>
+                          <div class="v4b-case__row">
+                            <dt class="v4b-case__key">설계 방향</dt>
+                            <dd class="v4b-case__val">{card.direction}</dd>
+                          </div>
+                          <div class="v4b-case__row v4b-case__row--result">
+                            <dt class="v4b-case__key">달라진 점</dt>
+                            <dd class="v4b-case__val">{card.result}</dd>
+                          </div>
+                        </dl>
+                        <a class="v4b-case__link" href={card.publicCasePath}>
+                          완성된 프로필 보기 →
+                        </a>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              </div>
+            </section>
+          )
+        }
+
+        {/* 6. 두 상품 — same prices and scope as Control A */}
+        <section id="products" class="v4b-section v4b-section--tint">
+          <div class="v4b-wrap">
+            <div class="v4b-section__head">
+              <h2 class="v4b-title">필요한 만큼 골라서 시작하세요</h2>
+              <p class="v4b-lead">
+                두 상품 모두 경험과 프로젝트를 담습니다. 차이는 품질이 아니라 어느
+                단계를 준비하는지입니다. 얼리버드는 「{difference.earlybird}」,
+                Interview Portfolio는 「{difference.interviewPortfolio}」입니다.
+              </p>
+            </div>
+
+            <div class="v4b-products">
+              {
+                products.map((product) => (
+                  <article
+                    class:list={[
+                      "v4b-product",
+                      product.featured && "v4b-product--ip",
+                    ]}
+                  >
+                    <div class="v4b-product__head">
+                      <div class="v4b-product__badges">
+                        {product.priceBadge && (
+                          <span class="v4b-product__badge">
+                            {product.priceBadge}
+                          </span>
+                        )}
+                      </div>
+                      <h3 class="v4b-product__name">{product.name}</h3>
+                      {product.koreanLabel && (
+                        <p class="v4b-product__ko">{product.koreanLabel}</p>
+                      )}
+                      <span class="v4b-product__price">{product.price}</span>
+                      {product.priceNote && (
+                        <p class="v4b-product__price-note">
+                          {product.priceNote}
+                        </p>
+                      )}
+                    </div>
+
+                    <div class="v4b-product__body">
+                      {product.featuredBadge && (
+                        <span class="v4b-product__ip-badge">
+                          {product.featuredBadge}
+                        </span>
+                      )}
+                      <p class="v4b-product__tagline">{product.tagline}</p>
+                      <p class="v4b-product__summary">{product.summary}</p>
+
+                      <ul class="v4b-list">
+                        <li class="v4b-list__label">포함 (핵심)</li>
+                        {product.coreIncludes.map((item) => (
+                          <li class="v4b-list__item">{item}</li>
+                        ))}
+                      </ul>
+
+                      <details class="v4b-more">
+                        <summary>세부 범위 보기</summary>
+                        <div class="v4b-more__inner">
+                          <ul class="v4b-list">
+                            {product.moreIncludes.map((item) => (
+                              <li class="v4b-list__item">{item}</li>
+                            ))}
+                          </ul>
+                          {product.excludes && (
+                            <ul class="v4b-list v4b-list--muted">
+                              <li class="v4b-list__label">포함하지 않음</li>
+                              {product.excludes.map((item) => (
+                                <li class="v4b-list__item">{item}</li>
+                              ))}
+                            </ul>
+                          )}
+                          {product.conditional && (
+                            <ul class="v4b-list v4b-list--muted">
+                              <li class="v4b-list__label">
+                                기술 검토 후 함께 논의
+                              </li>
+                              {product.conditional.map((item) => (
+                                <li class="v4b-list__item">{item}</li>
+                              ))}
+                            </ul>
+                          )}
+                        </div>
+                      </details>
+
+                      <div class="v4b-product__cta">
+                        <a class="v4b-btn v4b-btn--ink" href="#apply">
+                          {product.price} 신청
+                        </a>
+                      </div>
+                    </div>
+                  </article>
+                ))
+              }
+            </div>
+
+            {/* 7. Interview Portfolio 구성 — B's concreteness, always labelled */}
+            <div class="v4b-ip" aria-label="Interview Portfolio 구성 예시">
+              <span class="v4b-ip__note">{ipAnatomy.note}</span>
+              <h3 class="v4b-ip__title">{ipAnatomy.title}</h3>
+              <p class="v4b-ip__lead">{ipAnatomy.lead}</p>
+
+              <div class="v4b-ip__grid">
+                <div class="v4b-ip-page">
+                  <p class="v4b-ip-page__title">{ipAnatomy.pageTitle}</p>
+                  {ipAnatomy.rows.map((row) => (
+                    <div class="v4b-ip-row">
+                      <span class="v4b-ip-row__key">{row.key}</span>
+                      <span class="v4b-ip-row__body">{row.body}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <div class="v4b-ip-side">
+                  <div class="v4b-ip-side__block">
+                    <span class="v4b-ip-side__label">
+                      {ipAnatomy.evidenceLabel}
+                    </span>
+                    <div class="v4b-ip-chips">
+                      {ipAnatomy.evidence.map((e) => (
+                        <span class="v4b-ip-chip">{e}</span>
+                      ))}
+                    </div>
+                  </div>
+                  <div class="v4b-ip-side__block">
+                    <span class="v4b-ip-side__label">
+                      {ipAnatomy.usageLabel}
+                    </span>
+                    <div class="v4b-ip-chips">
+                      {ipAnatomy.usage.map((u) => (
+                        <span class="v4b-ip-chip">{u}</span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* 8. 진행 방식 */}
+        <section id="process" class="v4b-section" aria-label="진행 방식">
+          <div class="v4b-wrap">
+            <div class="v4b-section__head">
+              <h2 class="v4b-title">자료만 보내면 이 순서로 완성됩니다</h2>
+            </div>
+            <div class="v4b-process">
+              {
+                process.map((s) => (
+                  <article class="v4b-step">
+                    <span class="v4b-step__num">{s.step}</span>
+                    <h3 class="v4b-step__title">{s.title}</h3>
+                    <p class="v4b-step__body">{s.body}</p>
+                  </article>
+                ))
+              }
+            </div>
+          </div>
+        </section>
+
+        {/* 9. 포함하지 않는 범위 */}
+        <section
+          class="v4b-section v4b-section--tint"
+          aria-label="포함하지 않는 범위"
+        >
+          <div class="v4b-wrap">
+            <div class="v4b-section__head">
+              <h2 class="v4b-title">미리 분명히 해두는 범위</h2>
+              <p class="v4b-lead">
+                과장하지 않기 위해, 이 상품이 하지 않는 것을 먼저 적어둡니다.
+              </p>
+            </div>
+            <ul class="v4b-boundaries">
+              {boundaries.map((b) => <li>{b}</li>)}
+            </ul>
+            <p class="v4b-note">
+              {
+                reviewNoteLines.map((line) => (
+                  <span class="v4b-note__line">{line}</span>
+                ))
+              }
+            </p>
+          </div>
+        </section>
+
+        {/* 10. FAQ accordion */}
+        <section id="faq" class="v4b-section" aria-label="자주 묻는 질문">
+          <div class="v4b-wrap">
+            <div class="v4b-section__head">
+              <h2 class="v4b-title">자주 묻는 질문</h2>
+            </div>
+            <div class="v4b-faq">
+              {
+                faqs.map((faq) => (
+                  <details class="v4b-faq__item">
+                    <summary class="v4b-faq__q">{faq.q}</summary>
+                    <div class="v4b-faq__a">{faq.a}</div>
+                  </details>
+                ))
+              }
+            </div>
+          </div>
+        </section>
+
+        {/* 11. 최종 CTA */}
+        <section id="apply" class="v4b-section v4b-section--ink v4b-on-ink">
+          <div class="v4b-apply__in">
+            <h2 class="v4b-apply__title">
+              지금 가진 자료로 어떤 커리어 프로필을 만들 수 있는지 함께 정리해
+              드려요
+            </h2>
+            {
+              applyReady ? (
+                <>
+                  <p class="v4b-apply__note">
+                    신청했다고 바로 결제되지 않습니다. 지원 직무와 현재 자료를
+                    확인한 뒤, 가능한 구성과 적합한 상품 범위를 안내드립니다.
+                  </p>
+                  <a class="v4b-btn v4b-btn--ink" href={applyHref!} rel="noopener">
+                    구성 상담 신청
+                  </a>
+                </>
+              ) : (
+                <>
+                  <p class="v4b-apply__note">
+                    온라인 신청 접수는 준비 중입니다. 신청 폼이 연결되면 이곳에서
+                    바로 신청할 수 있게 됩니다.
+                  </p>
+                  <span class="v4b-btn v4b-btn--disabled" aria-disabled="true">
+                    온라인 신청 준비 중
+                  </span>
+                  <p class="v4b-apply__status">
+                    <span class="v4b-mono">PREVIEW</span> · 신청 접수 준비 중
+                  </p>
+                </>
+              )
+            }
+          </div>
+        </section>
+      </main>
+
+      {/* 12. Footer */}
+      <WeThruFooter />
+    </div>
+  </body>
+</html>

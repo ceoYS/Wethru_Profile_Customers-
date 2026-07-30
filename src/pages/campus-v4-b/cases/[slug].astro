@@ -1,0 +1,89 @@
+---
+/**
+ * Campus V4 — VARIANT B sanitized, ANONYMIZED MIRROR route.
+ *
+ * Same contract as the Control A mirror route (/campus-v4/cases/[slug]): NOT a
+ * customer's real page, no real name/employer/school/brand/project/date/region/
+ * contact/original URL, noindex — built only from anonymized case data.
+ *
+ * It exists separately so the A/B test has one variant per URL namespace and so
+ * Variant B's retitled case-02 (전략 컨설턴트 / STRATEGY CONSULTANT) never touches
+ * the Control A mirrors, which must stay byte-identical to main. case-01 (clone)
+ * and case-03 (profile) reuse the SAME anonymized objects as A — imported
+ * read-only, never mutated — so only case-02 differs between the two variants.
+ *
+ * FAIL-CLOSED, unchanged from A: a mirror is emitted only for a consented anon
+ * case (approvedForCampus). CAMPUS_PUBLIC_PREVIEW=1 emits all three for QA;
+ * CAMPUS_REVIEW=1 emits none (review embeds the real originals on the A page).
+ */
+import AnonProfilePage from "../../../layouts/campus-v4/AnonProfilePage.astro";
+import ProfileHero from "../../../components/profile/ProfileHero.astro";
+import AnonProofStrip from "../../../components/campus-v4/AnonProofStrip.astro";
+import IdentityStatement from "../../../components/profile/IdentityStatement.astro";
+import StrengthGrid from "../../../components/profile/StrengthGrid.astro";
+import SkillsStrip from "../../../components/profile/SkillsStrip.astro";
+import ExperienceTimeline from "../../../components/profile/ExperienceTimeline.astro";
+import ProjectHighlights from "../../../components/profile/ProjectHighlights.astro";
+import AnonContactCTA from "../../../components/campus-v4/AnonContactCTA.astro";
+import CaseOneMirror from "../../../components/campus-v4/CaseOneMirror.astro";
+import {
+  campusV4BCases,
+  approvedCampusV4BCases,
+  getCampusV4BAnonProfile,
+} from "../../../data/campus-v4-b";
+import type { CampusAnonProfile } from "../../../data/campus-v4-anon/types";
+
+export function getStaticPaths() {
+  // getStaticPaths runs in its own build scope — read the flags here, same safe
+  // read as the A route (no @types/node globals).
+  const env = (
+    globalThis as { process?: { env?: Record<string, string | undefined> } }
+  ).process?.env;
+  const PUBLIC_PREVIEW_MODE = env?.CAMPUS_PUBLIC_PREVIEW === "1";
+  const REVIEW_MODE = env?.CAMPUS_REVIEW === "1";
+
+  const candidates = REVIEW_MODE
+    ? []
+    : PUBLIC_PREVIEW_MODE
+      ? campusV4BCases
+      : approvedCampusV4BCases;
+
+  return candidates.map((c) => ({
+    params: { slug: c.id },
+    props: {
+      // "clone" → CaseOneMirror renders it; "profile" → resolve the anon object.
+      customer: c.renderer === "profile" ? getCampusV4BAnonProfile(c.id) : null,
+    },
+  }));
+}
+
+interface Props {
+  customer: CampusAnonProfile | null;
+}
+
+const { customer } = Astro.props;
+---
+
+{
+  customer ? (
+    <AnonProfilePage customer={customer}>
+      <ProfileHero customer={customer} />
+      <AnonProofStrip proofs={customer.proofs} />
+      <IdentityStatement
+        statement={customer.person.tagline}
+        support={customer.person.identitySupport ?? customer.person.summary}
+      />
+      <StrengthGrid strengths={customer.strengths} sectionNumber="01" />
+      <SkillsStrip skills={customer.skills ?? []} />
+      <ExperienceTimeline
+        experiences={customer.experiences}
+        additionalExperiences={customer.additionalExperiences}
+        sectionNumber="02"
+      />
+      <ProjectHighlights projects={customer.projects} sectionNumber="03" />
+      <AnonContactCTA sectionNumber="04" />
+    </AnonProfilePage>
+  ) : (
+    <CaseOneMirror />
+  )
+}
