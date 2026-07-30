@@ -26,11 +26,15 @@
  *   this route carries noindex,nofollow. Do NOT invent a URL.
  * - Real case studies are consent-gated via `approvedForCampus` (default false).
  *   Zero approvals → the "실제 제작 사례" section and its nav link do not render
- *   in a production build (every Vercel deploy is a production build). Unapproved
- *   candidates — and the live previews of their pages — surface ONLY in review
- *   mode (CAMPUS_REVIEW=1), behind a red "배포 금지" ribbon, never with contact
- *   data. The preview embeds each ALREADY-PUBLIC page by URL; no screenshot file
- *   is stored, so there is nothing here that could be committed by accident.
+ *   in a production build (every Vercel deploy is a production build).
+ * - The public page never sends a visitor to the customer's ORIGINAL profile
+ *   (which shows their real face and contact). Each case has a sanitized Campus
+ *   MIRROR page — /campus-v4/cases/{...}/ — that clones the original design but
+ *   masks the face, drops all PII, and carries noindex,nofollow. Production and
+ *   the public-image QA link the card, the "완성된 프로필 보기" text, and the fake
+ *   address bar to `publicCasePath` only; `originalSlug`/`originalUrl` are
+ *   REVIEW-ONLY (CAMPUS_REVIEW=1 live iframe + link, behind the red "배포 금지"
+ *   ribbon) and must never appear in a public/production build's HTML.
  * - The Interview Portfolio 구성 예시 (ipPreview) is the ONLY illustrative block.
  *   It is small, secondary (inside the products area, never the hero), and always
  *   labelled "구성 예시 · 실제 구매 사례 아님". It invents no person, school, or metric.
@@ -87,12 +91,22 @@ export interface CampusV4Case {
   name: string;
   englishName?: string;
   /**
-   * Local profile slug → /profiles/{slug}/. Single source for both the "완성된
-   * 프로필 보기" link and the live-preview iframe — never repeat the URL.
+   * The person's ORIGINAL public profile as a local slug → /profiles/{slug}/.
+   * REVIEW-ONLY: this page shows the real face and contact, so it is used solely
+   * by CAMPUS_REVIEW=1 (live iframe + text link). It must never be emitted in a
+   * public/production build — public surfaces use `publicCasePath`.
    */
-  slug?: string;
-  /** Verified external public profile URL. Same dual role as `slug`. */
-  externalUrl?: string;
+  originalSlug?: string;
+  /** The person's ORIGINAL external profile URL. Same review-only rule as `originalSlug`. */
+  originalUrl?: string;
+  /**
+   * The sanitized Campus MIRROR page for this case, e.g.
+   * "/campus-v4/cases/lee-jungu/". Face-masked, PII-free, noindex — the ONLY case
+   * URL allowed in public-preview and production HTML. The card link, the "완성된
+   * 프로필 보기" text link, and the fake browser address bar all resolve to this.
+   * Required for every case; the mirror route always exists.
+   */
+  publicCasePath: string;
   /** Discipline line, from the person's own public profile. */
   role: string;
   /** One factual line, derived only from the public profile. No PII. */
@@ -108,6 +122,15 @@ export interface CampusV4Case {
    * Separate from the customer profile already being public.
    */
   approvedForCampus: boolean;
+  /**
+   * Stable key → the sanitized, face-masked public preview asset for this case,
+   * resolved through the explicit import map in campus-v4-public-previews.ts
+   * (src/assets/campus-v4-public/case-{previewKey}-safe.webp). This is NOT a
+   * path or a URL: production and the public-image QA mode look it up and FAIL
+   * THE BUILD if an approved/shown case has no matching asset — no silent
+   * placeholder. Review mode embeds the live page by iframe and never reads it.
+   */
+  previewKey?: string;
 }
 
 /** The small, illustrative Interview Portfolio 구성 예시 (never a real case). */
@@ -340,7 +363,9 @@ export const campusV4Offer: CampusV4Offer = {
     {
       name: "이준구",
       englishName: "Lee Jungu",
-      externalUrl: "https://lee-jungu-profile.vercel.app/",
+      previewKey: "lee-jungu",
+      originalUrl: "https://lee-jungu-profile.vercel.app/",
+      publicCasePath: "/campus-v4/cases/lee-jungu/",
       role: "Retail Operations · Customer Experience · Brand Communication",
       blurb:
         "사람과 브랜드가 만나는 현장에서 전략을 경험과 성과로 연결하는 리테일·CX 프로필.",
@@ -355,7 +380,9 @@ export const campusV4Offer: CampusV4Offer = {
     {
       name: "배지안",
       englishName: "BAE JIAN",
-      slug: "bae-jian",
+      previewKey: "bae-jian",
+      originalSlug: "bae-jian",
+      publicCasePath: "/campus-v4/cases/bae-jian/",
       role: "Data-Driven Marketing Strategist",
       blurb: "데이터와 자동화로 마케팅 운영 구조를 설계하는 전략가 프로필.",
       problem:
@@ -369,7 +396,9 @@ export const campusV4Offer: CampusV4Offer = {
     {
       name: "조예솔",
       englishName: "JO YESOL",
-      slug: "yesol",
+      previewKey: "yesol",
+      originalSlug: "yesol",
+      publicCasePath: "/campus-v4/cases/yesol/",
       role: "커머스 MD · 그로스 마케터",
       blurb:
         "데이터로 상품과 프로모션을 설계해 브랜드 매출 성장을 이끄는 커머스 MD 프로필.",

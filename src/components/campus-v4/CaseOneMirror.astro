@@ -1,0 +1,97 @@
+---
+/**
+ * Campus V4 — self-contained ANONYMIZED mirror for case-01 (retail · CX).
+ *
+ * Rendered ONLY by src/pages/campus-v4/cases/[slug].astro for the case-01 case
+ * (a "clone" renderer — no local profile to clone through ProfilePage). Keeping
+ * this in its own component quarantines its Pretendard/Cormorant/campus-case CSS
+ * to the case-01 render path: Astro only bundles a component's styles onto pages
+ * that actually render it, so the other mirrors never ship these fonts, and a
+ * production build (0 approved cases) ships none of it.
+ *
+ * The design/structure reproduces a real finished retail·CX profile, but the
+ * content is fully de-identified: no real name, school, department, employer,
+ * brand, competition, project name, region, date, or contact. The face is the
+ * mosaicked safe portrait; there is no link/canonical/og pointing at any original
+ * page; noindex,nofollow. The real external page is never touched or referenced.
+ */
+import "pretendard/dist/web/static/pretendard.css";
+import caseOneStyles from "../../styles/campus-case-01.css?inline";
+import portrait from "../../assets/campus-v4-public/case-01-portrait-v2-safe.webp";
+import rawBody from "../../data/campus-case-01-body.html?raw";
+import revealScript from "../../data/campus-case-01-reveal.js?raw";
+
+// Swap the placeholder for the fingerprinted, optimised portrait URL.
+const body = rawBody.replace("__PORTRAIT_SRC__", portrait.src);
+---
+
+<html lang="ko" class="no-js" data-astro-cid-37fxchfa>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>리테일·고객경험 직무 지원자 | WeThru Campus 사례</title>
+    <meta
+      name="description"
+      content="사람과 브랜드, 현장을 연결해 전략을 경험과 성과로 전환하는 리테일·고객경험 직무 지원자의 익명 커리어 사례입니다."
+    />
+    {/* Mirror is private: never indexed, no canonical to any original. */}
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="theme-color" content="#f4f1ea" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="/fonts/campus-case/cormorant-latin.woff2"
+      crossorigin
+    />
+    {/* Keep the external-profile clone CSS on case-01 only. Importing it as a
+        route-level stylesheet makes its global :root/body tokens leak into
+        case-02 and case-03 because all three slugs share one Astro route. */}
+    <style is:inline set:html={caseOneStyles} />
+    <style is:inline>
+      /* APPLICANT is substantially wider than the original two-part name.
+         Zero-minimum tracks preserve the original 1.15/.85 grid and 440px
+         portrait; only the longer anonymized display line is capped. */
+      @media (min-width: 901px) {
+        .hero__inner[data-astro-cid-bbe6dxrz] {
+          grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+        }
+
+        .hero__name-line[data-astro-cid-bbe6dxrz]:first-child {
+          display: block;
+          max-inline-size: 100%;
+          white-space: nowrap;
+          overflow-wrap: normal;
+          word-break: normal;
+          font-size: clamp(4.75rem, 6.8vw, 6.25rem);
+          letter-spacing: -0.035em;
+        }
+      }
+    </style>
+    {/* Social meta without any URL/image that points at an external original. */}
+    <meta property="og:type" content="profile" />
+    <meta
+      property="og:title"
+      content="리테일·고객경험 직무 지원자 | WeThru Campus 사례"
+    />
+    <meta
+      property="og:description"
+      content="사람과 브랜드, 현장을 연결해 전략을 경험과 성과로 전환하는 리테일·고객경험 직무 지원자의 익명 커리어 사례입니다."
+    />
+    <meta property="og:site_name" content="WeThru Profile" />
+    <meta property="og:locale" content="ko_KR" />
+    <script is:inline>
+      document.documentElement.classList.remove("no-js");
+      document.documentElement.classList.add("js");
+    </script>
+  </head>
+  <body data-astro-cid-37fxchfa>
+    <Fragment set:html={body} />
+    {/* Original interaction bundle (reveal/counter/sticky-nav/mobile-toggle). */}
+    <script is:inline set:html={revealScript} />
+  </body>
+</html>

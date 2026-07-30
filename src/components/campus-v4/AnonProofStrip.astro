@@ -1,0 +1,33 @@
+---
+import type { ProfileProof } from "../../types/profile";
+import LText from "../shared/LText.astro";
+
+interface Props {
+  proofs: ProfileProof[];
+}
+
+const { proofs } = Astro.props;
+---
+
+{
+  proofs.length > 0 && (
+    <section class="profile-section--tight" aria-label="주요 성과">
+      <dl class="proof-strip">
+        {proofs.map((proof) => (
+          <div class="proof-strip__item" title={proof.description}>
+            <dt class="proof-strip__label"><LText value={proof.label} /></dt>
+            <dd class="proof-strip__value"><LText value={proof.value} /></dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+  )
+}
+
+<style>
+  /* Keep label→value DOM order while matching the established visual order. */
+  .proof-strip__item {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+</style>

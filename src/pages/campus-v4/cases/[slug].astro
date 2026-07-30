@@ -1,0 +1,93 @@
+---
+/**
+ * Campus V4 — the ONE sanitized, ANONYMIZED MIRROR route for every public case.
+ *
+ * This is NOT a customer's real page. Each mirror reproduces the design of a real
+ * finished profile but carries NO real name, employer, school, brand, project
+ * name, date, region, contact, or original URL — it is built entirely from the
+ * anonymized case data (campus-v4-anon-cases.ts + campus-v4-anon/case-0X.ts),
+ * never from the real customer index. Two shapes share this single route:
+ *   - "profile" cases (case-02, case-03): an authored, de-identified
+ *     CampusAnonProfile rendered through the Campus-only anonymous layout.
+ *   - "clone" case (case-01): the self-contained <CaseOneMirror /> (its own
+ *     anonymized HTML/CSS/fonts/animations).
+ *
+ * FAIL-CLOSED (the whole point of this route):
+ *   getStaticPaths emits a mirror ONLY for a consented anon case. A normal
+ *   `npm run build` (every Vercel deploy) filters on approvedForCampus.
+ *   CAMPUS_PUBLIC_PREVIEW=1 emits all three for QA. CAMPUS_REVIEW=1 embeds the
+ *   real ORIGINAL pages live on the sales page instead and emits no mirrors.
+ *
+ * The original /profiles/{slug}/ routes and the customer data are untouched: the
+ * anon objects are authored throwaways, never a mutation of the source.
+ */
+import AnonProfilePage from "../../../layouts/campus-v4/AnonProfilePage.astro";
+import ProfileHero from "../../../components/profile/ProfileHero.astro";
+import AnonProofStrip from "../../../components/campus-v4/AnonProofStrip.astro";
+import IdentityStatement from "../../../components/profile/IdentityStatement.astro";
+import StrengthGrid from "../../../components/profile/StrengthGrid.astro";
+import SkillsStrip from "../../../components/profile/SkillsStrip.astro";
+import ExperienceTimeline from "../../../components/profile/ExperienceTimeline.astro";
+import ProjectHighlights from "../../../components/profile/ProjectHighlights.astro";
+import AnonContactCTA from "../../../components/campus-v4/AnonContactCTA.astro";
+import CaseOneMirror from "../../../components/campus-v4/CaseOneMirror.astro";
+import { campusV4AnonCases, approvedAnonCases } from "../../../data/campus-v4-anon-cases";
+import { getAnonProfile } from "../../../data/campus-v4-anon";
+import type { CampusAnonProfile } from "../../../data/campus-v4-anon/types";
+
+export function getStaticPaths() {
+  // getStaticPaths runs in its own build scope — read the flag here, do not lean
+  // on a page-module const. Same safe read as the sales page (no @types/node).
+  const env = (
+    globalThis as { process?: { env?: Record<string, string | undefined> } }
+  ).process?.env;
+  const PUBLIC_PREVIEW_MODE = env?.CAMPUS_PUBLIC_PREVIEW === "1";
+  const REVIEW_MODE = env?.CAMPUS_REVIEW === "1";
+
+  // Review uses live originals on the landing and needs no anonymous mirrors.
+  // Production emits consented anon cases; public-image QA emits all three.
+  const candidates = REVIEW_MODE
+    ? []
+    : PUBLIC_PREVIEW_MODE
+      ? campusV4AnonCases
+      : approvedAnonCases;
+
+  return candidates.map((c) => ({
+    params: { slug: c.id },
+    props: {
+      // "clone" → CaseOneMirror renders it; "profile" → resolve the anon object.
+      customer: c.renderer === "profile" ? getAnonProfile(c.id) : null,
+    },
+  }));
+}
+
+interface Props {
+  customer: CampusAnonProfile | null;
+}
+
+const { customer } = Astro.props;
+---
+
+{
+  customer ? (
+    <AnonProfilePage customer={customer}>
+      <ProfileHero customer={customer} />
+      <AnonProofStrip proofs={customer.proofs} />
+      <IdentityStatement
+        statement={customer.person.tagline}
+        support={customer.person.identitySupport ?? customer.person.summary}
+      />
+      <StrengthGrid strengths={customer.strengths} sectionNumber="01" />
+      <SkillsStrip skills={customer.skills ?? []} />
+      <ExperienceTimeline
+        experiences={customer.experiences}
+        additionalExperiences={customer.additionalExperiences}
+        sectionNumber="02"
+      />
+      <ProjectHighlights projects={customer.projects} sectionNumber="03" />
+      <AnonContactCTA sectionNumber="04" />
+    </AnonProfilePage>
+  ) : (
+    <CaseOneMirror />
+  )
+}

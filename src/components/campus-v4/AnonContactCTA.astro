@@ -1,0 +1,35 @@
+---
+import Bi from "../shared/Bi.astro";
+
+interface Props {
+  sectionNumber?: string;
+}
+
+const { sectionNumber = "04" } = Astro.props;
+---
+
+<section class="profile-section profile-section--loose" aria-labelledby="contact-title">
+  <div class="section-head">
+    <span class="section-head__number" aria-hidden="true">{sectionNumber}</span>
+    <h2 class="section-head__title" id="contact-title">Contact</h2>
+    <span class="section-head__rule" aria-hidden="true"></span>
+  </div>
+
+  <div class="contact-cta">
+    <p class="contact-cta__title">
+      <Bi ko="WeThru 제작 문의" en="Create with WeThru" />
+    </p>
+    <p class="contact-cta__note">
+      <Bi
+        ko="이 익명 사례에는 개인 연락처를 표시하지 않습니다. 제작 문의는 WeThru Campus에서 확인해 주세요."
+        en="This anonymous case does not display personal contact details. Visit WeThru Campus for production inquiries."
+      />
+    </p>
+
+    <div class="contact-cta__actions">
+      <a class="btn btn--primary" href="/campus-v4/#apply">
+        <Bi ko="WeThru 제작 문의" en="WeThru Inquiry" />
+      </a>
+    </div>
+  </div>
+</section>

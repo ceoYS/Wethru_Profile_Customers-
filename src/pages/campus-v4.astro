@@ -1,18 +1,30 @@
 ---
 import WeThruFooter from "../components/profile/WeThruFooter.astro";
-import { campusV4Offer, approvedV4Cases } from "../data/campus-v4";
+import { campusV4Offer } from "../data/campus-v4";
+import {
+  campusV4AnonCases,
+  approvedAnonCases,
+} from "../data/campus-v4-anon-cases";
+import { campusV4ReviewIdentities } from "../data/campus-v4-review-identities";
+import { getPublicPreview } from "../data/campus-v4-public-previews";
 import "../styles/global.css";
 import "../styles/profile-base.css";
 import "../styles/campus-v4.css";
 
-// Internal case-review mode. Off by default, so a normal `npm run build`
-// (every Vercel deploy) produces the PRODUCTION page. Turn it on only for local
-// review:  CAMPUS_REVIEW=1 npm run build   (or CAMPUS_REVIEW=1 npm run dev).
-// Read the build-time env without depending on @types/node globals.
+// Two local-only build flags; both OFF by default, so a normal `npm run build`
+// (every Vercel deploy) produces the PRODUCTION page. Read the build-time env
+// without depending on @types/node globals.
+//   CAMPUS_REVIEW=1         → internal review: embeds each real page live by
+//                             iframe, all candidates, red "배포 금지" ribbon.
+//   CAMPUS_PUBLIC_PREVIEW=1 → public-image QA: renders exactly what production
+//                             would (static, face-masked WebP, no iframe) for
+//                             all candidates, with a red "실제 Production 아님"
+//                             ribbon. It does NOT change approvedForCampus.
 const nodeEnv = (
   globalThis as { process?: { env?: Record<string, string | undefined> } }
 ).process?.env;
 const REVIEW_MODE = nodeEnv?.CAMPUS_REVIEW === "1";
+const PUBLIC_PREVIEW_MODE = nodeEnv?.CAMPUS_PUBLIC_PREVIEW === "1";
 
 const {
   hero,
@@ -28,28 +40,103 @@ const {
   applyFormUrl,
 } = campusV4Offer;
 
-// Cases: a production build shows only consented ones (currently none). Review
-// mode additionally surfaces the unapproved candidates behind a red "배포 금지"
-// ribbon. Gating is server-side, so unapproved names never enter production HTML.
-const visibleCases = REVIEW_MODE ? campusV4Offer.cases : approvedV4Cases;
-const showCases = visibleCases.length > 0;
-
+// Cases: a production build shows only consented anonymous cases. Both local
+// flags additionally surface candidates for checking without mutating
+// approvedForCampus. Gating is server-side, so unapproved names never enter a
+// real production build's HTML.
 const applyReady = applyFormUrl !== null;
-// No verified apply URL yet, or an internal review build → keep out of the index.
-const noindex = !applyReady || REVIEW_MODE;
+// No verified apply URL yet, or either local check build → keep out of the index.
+const noindex = !applyReady || REVIEW_MODE || PUBLIC_PREVIEW_MODE;
 
-// One source for a case's URL. The visible "완성된 프로필 보기" link, the live
-// preview iframe, and the fake address bar all derive from this — the URL is
-// never written twice.
-type Case = (typeof campusV4Offer.cases)[number];
-const caseHref = (c: Case): string | undefined =>
-  c.slug ? `/profiles/${c.slug}/` : (c.externalUrl ?? undefined);
-// Address-bar text: the public production URL, not the localhost one the review
-// build actually embeds.
-const frameUrl = (c: Case): string =>
-  c.slug
-    ? `profile.wethru.com/profiles/${c.slug}`
-    : (c.externalUrl ?? "").replace(/^https?:\/\//, "").replace(/\/$/, "");
+// A single normalized card list, built per mode so the JSX below has one shape.
+// PUBLIC (production + public-image QA) reads ONLY the anonymized case data and
+// the sanitized static image — no real name and no original URL ever enter this
+// HTML. INTERNAL REVIEW joins the review-only identity map to embed each real
+// ORIGINAL page live by iframe; that branch runs solely under CAMPUS_REVIEW=1 and
+// is never deployed. Production remains gated on approvedForCampus.
+interface V4Card {
+  key: string;
+  name: string;
+  sub?: string;
+  role: string;
+  blurb: string;
+  problem: string;
+  direction: string;
+  result: string;
+  href?: string;
+  barUrl: string;
+  linkExternal: boolean;
+  media:
+    | { kind: "iframe"; src: string; title: string }
+    | { kind: "image"; src: string; width: number; height: number; alt: string };
+}
+
+const stripProto = (u: string): string =>
+  u.replace(/^https?:\/\//, "").replace(/\/$/, "");
+
+let cards: V4Card[];
+if (REVIEW_MODE) {
+  // Internal review only: real identity + live embed of the ORIGINAL page.
+  const identity = new Map(
+    campusV4ReviewIdentities.map((r) => [r.anonId, r] as const),
+  );
+  cards = campusV4AnonCases.map((c) => {
+    const id = identity.get(c.id);
+    const href = id?.originalSlug
+      ? `/profiles/${id.originalSlug}/`
+      : id?.originalUrl;
+    return {
+      key: c.id,
+      name: id?.name ?? c.title,
+      sub: id?.englishName,
+      role: c.role,
+      blurb: c.blurb,
+      problem: c.problem,
+      direction: c.direction,
+      result: c.result,
+      href,
+      barUrl: id?.originalSlug
+        ? `profile.wethru.com/profiles/${id.originalSlug}`
+        : stripProto(id?.originalUrl ?? ""),
+      linkExternal: Boolean(id?.originalUrl && !id?.originalSlug),
+      media: {
+        kind: "iframe",
+        src: href ?? "",
+        title: `${id?.name ?? c.title} 커리어 프로필 미리보기`,
+      },
+    };
+  });
+} else {
+  // Public: anonymized identity + sanitized static image. Production shows only
+  // consented anon cases; public-image QA shows all three.
+  const visible = PUBLIC_PREVIEW_MODE ? campusV4AnonCases : approvedAnonCases;
+  cards = visible.map((c) => {
+    // Resolve the sanitized image now so a shown case with no asset fails the
+    // build (fail-closed) — never a placeholder, never the real screen.
+    const shot = getPublicPreview(c.previewKey, c.title);
+    return {
+      key: c.id,
+      name: c.title,
+      sub: c.short,
+      role: c.role,
+      blurb: c.blurb,
+      problem: c.problem,
+      direction: c.direction,
+      result: c.result,
+      href: c.publicCasePath,
+      barUrl: `profile.wethru.com${c.publicCasePath.replace(/\/$/, "")}`,
+      linkExternal: false,
+      media: {
+        kind: "image",
+        src: shot.src,
+        width: shot.width,
+        height: shot.height,
+        alt: `${c.title} 커리어 프로필 실제 제작 화면 — 얼굴 비공개 처리`,
+      },
+    };
+  });
+}
+const showCases = cards.length > 0;
 
 const site = Astro.site ?? new URL("https://profile.wethru.com");
 const canonicalUrl = new URL("/campus-v4/", site);
@@ -98,6 +185,11 @@ const seoDescription = showCases
             <p class="v4-review-ribbon">
               내부 검수용 · 동의 미확인 사례 포함 · 배포 금지
             </p>
+          )
+        }
+        {
+          !REVIEW_MODE && PUBLIC_PREVIEW_MODE && (
+            <p class="v4-review-ribbon">공개 이미지 검수용 · 실제 Production 아님</p>
           )
         }
 
@@ -199,33 +291,29 @@ const seoDescription = showCases
                 </div>
 
                 <div class="v4-cases">
-                  {visibleCases.map((c) => {
-                    const href = caseHref(c);
-                    const external = Boolean(c.externalUrl && !c.slug);
-                    return (
-                      <article class="v4-case">
-                        <div class="v4-case__media">
-                          {/* The preview is the live page itself, embedded by
-                              URL — no screenshot file, so nothing here can leak
-                              into a commit. It is decoration only: inert to the
-                              pointer, out of the tab order, hidden from screen
-                              readers. The real route out is the text link in
-                              the body, never an invisible overlay on the frame.
-                              Sandbox withholds allow-top-navigation, so an
-                              embedded page cannot redirect this one. */}
+                  {cards.map((card) => (
+                    <article class="v4-case">
+                      <div class="v4-case__media">
+                        {card.media.kind === "iframe" ? (
+                          /* Review only: the live ORIGINAL page embedded by URL —
+                             no screenshot committed. Decoration: inert to the
+                             pointer, out of the tab order, hidden from screen
+                             readers. Sandbox withholds allow-top-navigation, so
+                             the embed cannot redirect this page. Production and
+                             public-image QA never ship this iframe. */
                           <div class="v4-live-preview">
                             <div class="v4-live-preview__browser">
                               <div class="v4-live-preview__chrome" aria-hidden="true">
                                 <span class="v4-live-preview__dot" />
                                 <span class="v4-live-preview__dot" />
                                 <span class="v4-live-preview__dot" />
-                                <span class="v4-live-preview__url">{frameUrl(c)}</span>
+                                <span class="v4-live-preview__url">{card.barUrl}</span>
                               </div>
                               <div class="v4-live-preview__viewport">
                                 <iframe
                                   class="v4-live-preview__frame"
-                                  src={href}
-                                  title={`${c.name} 커리어 프로필 미리보기`}
+                                  src={card.media.src}
+                                  title={card.media.title}
                                   loading="lazy"
                                   tabindex="-1"
                                   aria-hidden="true"
@@ -236,44 +324,71 @@ const seoDescription = showCases
                               </div>
                             </div>
                           </div>
-                        </div>
+                        ) : (
+                          /* Production / public-image QA: a static, face-masked,
+                             PII-free capture of the finished first screen. No
+                             iframe, so mobile loads zero embeds and no face is
+                             shown. The image is inert (not a link) — the only
+                             route out is the "완성된 프로필 보기" text link. */
+                          <div class="v4-static-preview">
+                            <div class="v4-live-preview__browser">
+                              <div class="v4-live-preview__chrome" aria-hidden="true">
+                                <span class="v4-live-preview__dot" />
+                                <span class="v4-live-preview__dot" />
+                                <span class="v4-live-preview__dot" />
+                                <span class="v4-live-preview__url">{card.barUrl}</span>
+                              </div>
+                              <div class="v4-static-preview__viewport">
+                                <img
+                                  class="v4-static-preview__img"
+                                  src={card.media.src}
+                                  width={card.media.width}
+                                  height={card.media.height}
+                                  alt={card.media.alt}
+                                  loading="lazy"
+                                  decoding="async"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
 
-                        <div class="v4-case__body">
-                          <span class="v4-case__role">{c.role}</span>
-                          <h3 class="v4-case__name">
-                            {c.name}
-                            {c.englishName && <span>{c.englishName}</span>}
-                          </h3>
-                          <p class="v4-case__blurb">{c.blurb}</p>
-                          <dl class="v4-case__spine">
-                            <div class="v4-case__row">
-                              <dt class="v4-case__key">기존 자료</dt>
-                              <dd class="v4-case__val">{c.problem}</dd>
-                            </div>
-                            <div class="v4-case__row">
-                              <dt class="v4-case__key">설계 방향</dt>
-                              <dd class="v4-case__val">{c.direction}</dd>
-                            </div>
-                            <div class="v4-case__row v4-case__row--result">
-                              <dt class="v4-case__key">달라진 점</dt>
-                              <dd class="v4-case__val">{c.result}</dd>
-                            </div>
-                          </dl>
-                          {href && (
-                            <a
-                              class="v4-case__link"
-                              href={href}
-                              {...(external
-                                ? { target: "_blank", rel: "noopener noreferrer" }
-                                : {})}
-                            >
-                              완성된 프로필 보기 {external ? "↗" : "→"}
-                            </a>
-                          )}
-                        </div>
-                      </article>
-                    );
-                  })}
+                      <div class="v4-case__body">
+                        <span class="v4-case__role">{card.role}</span>
+                        <h3 class="v4-case__name">
+                          {card.name}
+                          {card.sub && <span>{card.sub}</span>}
+                        </h3>
+                        <p class="v4-case__blurb">{card.blurb}</p>
+                        <dl class="v4-case__spine">
+                          <div class="v4-case__row">
+                            <dt class="v4-case__key">기존 자료</dt>
+                            <dd class="v4-case__val">{card.problem}</dd>
+                          </div>
+                          <div class="v4-case__row">
+                            <dt class="v4-case__key">설계 방향</dt>
+                            <dd class="v4-case__val">{card.direction}</dd>
+                          </div>
+                          <div class="v4-case__row v4-case__row--result">
+                            <dt class="v4-case__key">달라진 점</dt>
+                            <dd class="v4-case__val">{card.result}</dd>
+                          </div>
+                        </dl>
+                        {card.href && (
+                          <a
+                            class="v4-case__link"
+                            href={card.href}
+                            {...(card.linkExternal
+                              ? { target: "_blank", rel: "noopener noreferrer" }
+                              : {})}
+                          >
+                            완성된 프로필 보기 {card.linkExternal ? "↗" : "→"}
+                          </a>
+                        )}
+                      </div>
+                    </article>
+                  ))}
                 </div>
               </div>
             </section>

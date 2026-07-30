@@ -1,0 +1,98 @@
+---
+import type { CampusAnonProfile } from "../../data/campus-v4-anon/types";
+import SkipLink from "../../components/shared/SkipLink.astro";
+import WeThruFooter from "../../components/profile/WeThruFooter.astro";
+import { hasEnglish } from "../../utils/i18n";
+import "../../styles/global.css";
+import "../../styles/profile-base.css";
+import "../../styles/themes/navy-black-white.css";
+import "../../styles/themes/warm-editorial.css";
+import "../../styles/themes/graphite-minimal.css";
+import "../../styles/themes/cobalt-air.css";
+import "../../styles/themes/terracotta-atelier.css";
+
+interface Props {
+  customer: CampusAnonProfile;
+}
+
+const { customer } = Astro.props;
+
+// Runtime backstop for JavaScript callers and future refactors. This layout is
+// never allowed to become a second entry point for ordinary customer records.
+if (!customer.campusAnonymous || !/^case-[a-z0-9-]+$/.test(customer.slug)) {
+  throw new Error(
+    "Campus V4: AnonProfilePage accepts only marked case-* anonymous data.",
+  );
+}
+
+const { seo } = customer;
+const bilingual = hasEnglish(customer);
+---
+
+<html
+  lang="ko"
+  data-lang="ko"
+  data-effects="on"
+  data-theme={customer.theme}
+  data-layout={customer.layout}
+>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline>
+      (function () {
+        try {
+          var fx = localStorage.getItem("wethru-profile-effects");
+          if (fx === "on" || fx === "off") {
+            document.documentElement.dataset.effects = fx;
+          }
+        } catch (error) {
+          /* storage blocked — keep the server-rendered default */
+        }
+      })();
+    </script>
+    {
+      bilingual && (
+        <script is:inline>
+          (function () {
+            try {
+              var lang = localStorage.getItem("wethru-profile-lang");
+              if (lang === "en" || lang === "ko") {
+                document.documentElement.dataset.lang = lang;
+                document.documentElement.lang = lang;
+              }
+            } catch (error) {
+              /* storage blocked — keep the server-rendered Korean default */
+            }
+          })();
+        </script>
+      )
+    }
+    <title>{seo.title}</title>
+    <meta name="description" content={seo.description} />
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    {/* Anonymous mirrors intentionally have no canonical, og:url, og:image,
+        twitter:image, or personal author metadata. */}
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={seo.title} />
+    <meta property="og:description" content={seo.description} />
+    <meta property="og:site_name" content="WeThru Campus" />
+    <meta property="og:locale" content="ko_KR" />
+
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={seo.title} />
+    <meta name="twitter:description" content={seo.description} />
+    <meta name="generator" content={Astro.generator} />
+  </head>
+  <body>
+    <div class="profile-shell">
+      <SkipLink />
+      <main id="main" class="profile-main">
+        <slot />
+      </main>
+      <WeThruFooter />
+    </div>
+  </body>
+</html>

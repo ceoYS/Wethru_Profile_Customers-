@@ -228,6 +228,9 @@ html:has(.v4-review-ribbon) {
 .v4-nav .btn {
   padding: 0.6rem 1.15rem;
   font-size: 0.85rem;
+  /* Tap target >=44px. Base .btn is inline-flex+centered, so min-height keeps
+     the label centered without touching padding/width/typography. */
+  min-height: 44px;
 }
 
 @media (max-width: 820px) {
@@ -535,6 +538,14 @@ html:has(.v4-review-ribbon) {
   align-items: center;
 }
 
+/* Grid item: min-width:auto would floor this at the preview frame's min-content
+   (the lazy, below-the-fold <img> reports its 1280px attribute width until it
+   loads), overflowing the column by ~1px at <=360px. min-width:0 lets the media
+   track honour the column — the frame already scales/crops via aspect-ratio. */
+.v4-case__media {
+  min-width: 0;
+}
+
 @media (min-width: 900px) {
   .v4-case {
     grid-template-columns: minmax(0, 1.06fr) minmax(0, 0.94fr);
@@ -734,6 +745,29 @@ html:has(.v4-review-ribbon) {
   transform-origin: top left;
   /* Decoration, not a destination: no clicks, no scroll, no focus. */
   pointer-events: none;
+}
+
+/* --------------------------------------------------------------------------
+   Static preview — PRODUCTION + public-image QA. Reuses the browser frame above
+   (.v4-live-preview__browser/__chrome/__url), but the viewport holds a static,
+   face-masked WebP of the real first screen instead of an iframe. No scale
+   maths: the viewport's aspect-ratio is pinned to the capture (1280×800), so it
+   reserves its height before the image loads (no CLS) and the card never
+   overflows its column — including a single-column 390px phone.
+   -------------------------------------------------------------------------- */
+.v4-static-preview__viewport {
+  position: relative;
+  aspect-ratio: 1280 / 800;
+  overflow: hidden;
+  background: #fff;
+}
+
+.v4-static-preview__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
 }
 
 /* ==========================================================================
