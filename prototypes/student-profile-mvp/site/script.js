@@ -1,0 +1,2 @@
+document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',e=>{const t=document.querySelector(a.getAttribute('href'));if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth'})}}));
+const form=document.querySelector('#student-form');if(form){form.addEventListener('submit',e=>{e.preventDefault();const data=new FormData(form);localStorage.setItem('wethru-student-lead',JSON.stringify(Object.fromEntries(data.entries())));location.href='success.html'})}
