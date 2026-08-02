@@ -12,14 +12,25 @@
  * (feat/campus-v3-hybrid) all stay frozen.
  *
  * Two public products only (unchanged policy, see docs/CAMPUS_OPERATIONS.md):
- *   A. 얼리버드 커리어 프로필 — 99,000원 (7월 31일까지 · 첫 10명 런칭가)
- *   B. Interview Portfolio     — 199,000원
+ *   A. 프로필 베이직 —  99,000원 (8월 31일까지 · 첫 10명 런칭가)
+ *      이미 가진 자료를 보기 좋은 커리어 페이지로 정리한다.
+ *   B. 커리어 스토리 — 199,000원
+ *      자료를 다시 해석해 지원 직무에 맞는 이야기로 설계한다.
+ *
+ * The boundary between them is the one thing a visitor must understand in five
+ * seconds: A organises material that is already written, B re-interprets it. The
+ * 30분 온라인 인터뷰 is what makes that possible, so it is B-only and is named in
+ * A's 포함하지 않음 list. Any edit that blurs the line — an interview in A, mere
+ * "정리" language in B, matching 경험 counts — removes the page's whole reason for
+ * showing two prices.
  *
  * The launch price is a real, dated window — not a discount theatre. There is no
  * prior list price for this product, so nothing here may render a struck-through
  * "정가", a "-50%", or a "기존가 198,000원". State the price, the end date, and
- * why it changes afterwards. When 7/31 passes, edit these numbers by hand; do
- * not build anything that rolls the same promotion forward on its own.
+ * why it changes afterwards. When 8/31 passes, edit these numbers by hand; the
+ * date lives in exactly three places that must move together — hero.deadline,
+ * products[0].priceBadge and products[0].priceNote. Do not build anything that
+ * rolls the same promotion forward on its own.
  *
  * Safety model carried over verbatim from V2/V3:
  * - applyFormUrl is the WeThru KakaoTalk channel 1:1 chat — the one verified
@@ -37,15 +48,15 @@
  *   address bar to `publicCasePath` only; `originalSlug`/`originalUrl` are
  *   REVIEW-ONLY (CAMPUS_REVIEW=1 live iframe + link, behind the red "배포 금지"
  *   ribbon) and must never appear in a public/production build's HTML.
- * - The Interview Portfolio 구성 예시 (ipPreview) is the ONLY illustrative block.
+ * - The 커리어 스토리 구성 예시 (ipPreview) is the ONLY illustrative block.
  *   It is small, secondary (inside the products area, never the hero), and always
  *   labelled "구성 예시 · 실제 구매 사례 아님". It invents no person, school, or metric.
  * - No copy judges whether a student's experience is worth a page or whether they
  *   qualify. WeThru organises what the current material can become; the three real
- *   cases prove design/editing ability, NOT that they bought Interview Portfolio.
+ *   cases prove design/editing ability, NOT that they bought 커리어 스토리.
  */
 
-export type CampusV4ProductId = "earlybird" | "interview-portfolio";
+export type CampusV4ProductId = "basic" | "story";
 
 export interface CampusV4Product {
   id: CampusV4ProductId;
@@ -58,7 +69,11 @@ export interface CampusV4Product {
   tagline: string;
   /** 2–3 sentence description. */
   summary: string;
-  /** Emphasis badge for the featured (Interview Portfolio) card. */
+  /**
+   * Emphasis badge for the featured (커리어 스토리) card. Exactly ONE badge is
+   * allowed here and it must describe the scope difference (e.g. "인터뷰 포함"),
+   * never rank or push — no "추천", no "베스트", no invented discount rate.
+   */
   featuredBadge?: string;
   /** Up to 6 headline scope items shown by default. */
   coreIncludes: string[];
@@ -135,7 +150,7 @@ export interface CampusV4Case {
   previewKey?: string;
 }
 
-/** The small, illustrative Interview Portfolio 구성 예시 (never a real case). */
+/** The small, illustrative 커리어 스토리 구성 예시 (never a real case). */
 export interface CampusV4IpPreview {
   title: string;
   /** Always-on label, e.g. "구성 예시 · 실제 구매 사례 아님". */
@@ -176,9 +191,22 @@ export interface CampusV4Offer {
     title: string;
     lead: string;
   };
+  /**
+   * The two-product split, stated in the visitor's own terms. `compare` is the
+   * plain-price version rendered as its own strip directly above the cards, so
+   * the difference is readable before anyone opens 세부 범위 보기. Each line is
+   * split into `price` + `body` so the template can bold the number without a
+   * second copy of the sentence living in the markup; the rendered result is
+   * "{price}은 {body}".
+   */
   difference: {
-    earlybird: string;
-    interviewPortfolio: string;
+    basic: string;
+    story: string;
+    compare: {
+      basic: { price: string; body: string };
+      story: { price: string; body: string };
+      note: string;
+    };
   };
   products: CampusV4Product[];
   ipPreview: CampusV4IpPreview;
@@ -198,11 +226,11 @@ export const campusV4Offer: CampusV4Offer = {
 
   hero: {
     eyebrow: "4학년·졸업예정자 첫 10명 초기 고객 모집",
-    deadline: "7.31 마감 · 첫 10명",
-    title: "좋은 경험도 흩어져 있으면\n약하게 읽힙니다.",
-    highlight: "흩어져 있으면",
+    deadline: "8.31 마감 · 첫 10명",
+    title: "이력서에 다 못 담은 나를,\n한 링크로 보여주세요.",
+    highlight: "한 링크로",
     subtitle:
-      "인턴, 공모전, 팀 프로젝트, 노션과 깃허브까지. 따로 흩어진 자료를 읽기 좋은 순서로 정리해 하나의 커리어 웹페이지로 만듭니다. 꾸미는 것보다 무엇을 먼저 보여줄지부터 함께 정합니다.",
+      "인턴, 공모전, 프로젝트, 노션과 깃허브까지. 흩어진 경험을 읽히는 순서로 정리해 나만의 커리어 웹페이지로 만듭니다.",
     primaryCtaLabel: "99,000원 런칭가 신청",
     secondaryCtaLabel: "두 상품 살펴보기",
     proof: ["모바일·PC 반응형", "링크 하나로 공유", "자료 검토·순서 구성 포함"],
@@ -238,36 +266,51 @@ export const campusV4Offer: CampusV4Offer = {
   },
 
   difference: {
-    earlybird: "나를 빠르게 이해시키는 맞춤형 1페이지",
-    interviewPortfolio: "내가 실제로 일한 방식을 프로젝트 사례로 증명하는 사이트",
+    basic: "이미 가진 자료를 보기 좋은 커리어 페이지로 정리",
+    story: "자료를 다시 해석해 지원 직무에 맞는 이야기로 설계",
+    compare: {
+      basic: { price: "99,000원", body: "기존 자료를 정리하는 상품입니다." },
+      story: {
+        price: "199,000원",
+        body: "커리어의 전달 구조부터 다시 설계하는 상품입니다.",
+      },
+      note: "두 상품 모두 상담으로 범위를 먼저 확인한 뒤 진행합니다. 신청한다고 바로 결제되지 않습니다.",
+    },
   },
 
   products: [
     {
-      id: "earlybird",
-      name: "얼리버드 커리어 프로필",
+      id: "basic",
+      name: "프로필 베이직",
       price: "99,000원",
-      priceBadge: "7월 31일까지 · 첫 10명 런칭가",
+      priceBadge: "8월 31일까지 · 첫 10명 런칭가",
       priceNote:
-        "8월부터 제작시간과 초기 고객 피드백을 반영해 가격이 조정됩니다.",
-      tagline: "나를 빠르게 이해시키는 맞춤형 1페이지",
+        "9월부터 제작시간과 초기 고객 피드백을 반영해 가격이 조정됩니다.",
+      tagline: "이미 가진 자료를 보기 좋은 커리어 페이지로 정리합니다.",
       summary:
-        "제출한 자료를 직접 읽고, 어떤 경험을 먼저 보여줄지 순서를 잡습니다. 첫 화면 소개 문장부터 경험·프로젝트가 읽히는 흐름까지 사람마다 다르게 구성한, 나에게 맞춘 1페이지입니다.",
+        "기존 자료는 준비되어 있고, 빠르게 하나의 링크로 정리하고 싶은 분께 적합합니다.",
+      // The six headline items are what the visitor compares against 커리어
+      // 스토리 line by line, so each one has a deliberate counterpart there:
+      // 최대 4개 vs 8개, 교정·요약 vs 전면 재작성, 수정 1회 vs 2회.
       coreIncludes: [
-        "제출 자료 검토와 핵심 경험 선별",
-        "첫 화면 소개 문장 작성",
-        "경험과 프로젝트 순서 설계",
-        "사람마다 다른 1페이지 웹사이트",
-        "모바일·PC 개인 URL",
-        "고객 피드백 일괄 반영 1회",
+        "이력서·자기소개서·포트폴리오 기반",
+        "지원 직무 1개 기준",
+        "기본 섹션 구성",
+        "핵심 경험·프로젝트 최대 4개",
+        "기존 문장 교정 및 요약",
+        "수정 1회",
       ],
       moreIncludes: [
-        "필요한 범위의 문장 재작성",
+        "모바일·PC 반응형 개인 URL",
         "이력서·노션·깃허브·PDF 등 외부 링크 연결",
-        "주요 경험 최대 4개 · 프로젝트 요약 최대 3개",
-        "자료 확인 또는 인터뷰 최대 30분",
+        "제출한 자료를 기준으로 제작 (별도 인터뷰 없음)",
       ],
+      // The interview is listed here on purpose. It is the single clearest
+      // dividing line between the two products, so naming it as "not included"
+      // is what stops 99,000원 from reading as a cheaper 커리어 스토리.
       excludes: [
+        "30분 온라인 인터뷰 (커리어 스토리에 포함)",
+        "지원 직무에 맞춘 강점 방향 재설계",
         "프로젝트별 상세 페이지와 별도 URL",
         "사이트 내부 프로젝트 사례 문서",
         "PDF 웹 뷰어 · 이미지 갤러리",
@@ -279,29 +322,32 @@ export const campusV4Offer: CampusV4Offer = {
       ],
     },
     {
-      id: "interview-portfolio",
-      name: "Interview Portfolio",
-      koreanLabel: "면접용 프로젝트 사례 사이트",
+      id: "story",
+      name: "커리어 스토리",
       price: "199,000원",
-      tagline: "내가 실제로 일한 방식을 프로젝트 사례로 증명하는 사이트",
+      tagline: "자료를 다시 해석해 지원 직무에 맞는 이야기로 설계합니다.",
       summary:
-        "“나는 이런 사람입니다”를 보여주는 1페이지를 넘어, “나는 실제로 이런 문제를 이렇게 해결했습니다”를 증명합니다. 대표 프로젝트를 상세 사례로 다시 쓰고 근거 자료까지 연결해, 면접에서 프로젝트를 설명하고 증명할 수 있게 합니다.",
+        "자료는 있지만 무엇을 강조해야 할지 모르거나, 지원 직무에 맞게 전달 구조부터 다시 만들고 싶은 분께 적합합니다.",
       featured: true,
-      featuredBadge: "면접에서 프로젝트를 설명해야 한다면",
+      // One badge only, and it names the scope difference rather than ranking
+      // the product. See CampusV4Product.featuredBadge.
+      featuredBadge: "인터뷰 포함",
       coreIncludes: [
-        "얼리버드 커리어 프로필의 전체 범위",
-        "대표 프로젝트 상세 사례 최대 2개",
-        "프로젝트별 고유 URL",
-        "문제·상황 → 역할 → 판단 이유 → 행동 → 결과와 근거 → 배운 점 구조화",
-        "고객 피드백 일괄 반영 2회",
+        "30분 온라인 인터뷰",
+        "지원 직무와 강점 방향 정리",
+        "개인별 섹션 구성 설계",
+        "핵심 경험·프로젝트 최대 8개",
+        "제목·소개·경험 문장 전면 재작성",
+        "수정 2회",
       ],
       moreIncludes: [
+        "모바일·PC 반응형 개인 URL",
+        "대표 프로젝트 상세 사례 최대 2개와 프로젝트별 고유 URL",
+        "문제·상황 → 역할 → 판단 이유 → 행동 → 결과와 근거 → 배운 점 구조화",
         "실제 기획서·보고서·이미지·영상 등 근거 자료 연결",
-        "PDF 웹 열람 최대 1개",
-        "이미지 갤러리 최대 1개",
+        "PDF 웹 열람 최대 1개 · 이미지 갤러리 최대 1개",
         "영상 또는 Figma 임베드 최대 1개",
         "면접 중 빠르게 넘겨볼 수 있는 프로젝트 탐색 구조",
-        "프로젝트 요약 인쇄용 보기",
       ],
       conditional: [
         "지원 직무별 첫 화면 2종",
@@ -314,7 +360,7 @@ export const campusV4Offer: CampusV4Offer = {
   ipPreview: {
     title: "프로젝트를 더 깊게 보여줘야 한다면",
     note: "구성 예시 · 실제 구매 사례 아님",
-    lead: "Interview Portfolio는 대표 프로젝트 하나를 아래 흐름으로 다시 씁니다. 실제 구매 사례가 아니라, 상품이 만드는 구성의 예시입니다.",
+    lead: "커리어 스토리는 대표 프로젝트 하나를 아래 흐름으로 다시 씁니다. 실제 구매 사례가 아니라, 상품이 만드는 구성의 예시입니다.",
     steps: [
       { key: "문제·상황", body: "어떤 상황에서 무엇이 문제였는지 (예시)" },
       { key: "역할", body: "그 안에서 내가 맡은 범위 (예시)" },
@@ -348,9 +394,10 @@ export const campusV4Offer: CampusV4Offer = {
     },
   ],
 
+  // Scope statements only. Two outcome-disclaimer lines were removed at the
+  // owner's request; do not reintroduce them here or as a reworded equivalent
+  // elsewhere on the route.
   boundaries: [
-    "합격을 보장하지 않습니다. 이 페이지는 경험을 더 쉽게 이해하도록 돕는 보조 자료입니다.",
-    "없는 경력이나 성과를 억지로 부풀리지 않습니다. 지금 가진 자료로 가능한 구성을 함께 정리합니다.",
     "무제한 수정은 아닙니다. 상품별로 정해진 피드백 반영 횟수 안에서 진행합니다.",
     "자소서 전체 첨삭이나 면접 컨설팅은 이 상품 범위가 아닙니다.",
   ],
@@ -423,35 +470,27 @@ export const campusV4Offer: CampusV4Offer = {
     },
     {
       q: "99,000원과 199,000원의 차이가 무엇인가요?",
-      a: "얼리버드 커리어 프로필(99,000원)은 흩어진 경험을 읽히는 순서로 정리한 맞춤형 1페이지입니다. Interview Portfolio(199,000원)는 여기에 더해 대표 프로젝트를 문제 → 역할 → 판단 → 행동 → 결과 구조의 상세 사례로 만들고 근거 자료까지 연결해, 면접에서 프로젝트를 설명하고 증명할 수 있게 합니다.",
+      a: "프로필 베이직(99,000원)은 이미 가진 자료를 정리하는 상품입니다. 제출한 이력서·자기소개서·포트폴리오를 기준으로 지원 직무 1개에 맞춰 핵심 경험·프로젝트를 최대 4개까지 배치하고, 기존 문장을 교정·요약합니다. 커리어 스토리(199,000원)는 전달 구조부터 다시 설계하는 상품입니다. 30분 온라인 인터뷰로 지원 직무와 강점 방향을 먼저 정리한 뒤 섹션 구성을 새로 짜고, 경험·프로젝트를 최대 8개까지 다루며 제목·소개·경험 문장을 전면 재작성합니다. 수정은 각각 1회와 2회입니다.",
     },
     {
       q: "그냥 노션을 쓰면 되지 않나요?",
       a: "노션도 좋은 방법입니다. 이미 잘 정리돼 있다면 새로 만들 필요가 없습니다. 차이는 직무에 맞춰 무엇을 먼저 보여줄지 순서를 잡고, 모바일에서 링크 하나로 깔끔하게 공유되도록 다듬는 부분입니다.",
     },
     {
-      q: "Interview Portfolio는 누구에게 필요한가요?",
-      a: "보여줄 대표 프로젝트가 1~2개 있고, 면접에서 그 프로젝트를 어떻게 해결했는지 근거와 함께 설명하고 싶은 분에게 맞습니다.",
+      q: "커리어 스토리는 누구에게 필요한가요?",
+      a: "자료는 모여 있지만 지원 직무에 맞춰 무엇을 앞세워야 할지 정하기 어려운 분에게 맞습니다. 30분 인터뷰로 강점 방향을 먼저 잡고 섹션 구성과 문장을 새로 씁니다.",
     },
     {
       q: "프로젝트가 별로 없어도 신청할 수 있나요?",
-      a: "가능합니다. 현재 가진 자료로 어떤 구성이 가능한지와, 1페이지형과 프로젝트 상세형 중 어느 쪽이 적합한지 안내드립니다. 없는 경력이나 성과를 억지로 부풀리지는 않습니다.",
-    },
-    {
-      q: "후기 작성이 필수인가요?",
-      a: "아니요. 첫 10명 초기 고객에게는 완성 후 5분 내외의 솔직한 사용 피드백을 부탁드리지만, 좋은 평가나 특정 별점을 요구하지 않습니다. 후기는 결과물을 받는 조건이 아닙니다.",
-    },
-    {
-      q: "합격을 보장하나요?",
-      a: "보장하지 않습니다. 합격은 여러 요인으로 결정됩니다. 이 페이지는 지원자의 경험을 더 쉽게 이해하도록 돕는 보조 자료입니다.",
+      a: "가능합니다. 현재 가진 자료로 어떤 구성이 가능한지와, 프로필 베이직과 커리어 스토리 중 어느 쪽이 적합한지 상담에서 안내드립니다.",
     },
     {
       q: "수정은 몇 번 가능한가요?",
-      a: "얼리버드 커리어 프로필은 피드백 일괄 반영 1회, Interview Portfolio는 2회를 기준으로 합니다. 무제한 수정은 아니며, 정해진 횟수 안에서 문구·순서·구성을 반영합니다.",
+      a: "프로필 베이직은 피드백 일괄 반영 1회, 커리어 스토리는 2회를 기준으로 합니다. 무제한 수정은 아니며, 정해진 횟수 안에서 문구·순서·구성을 반영합니다.",
     },
     {
       q: "어떤 자료를 준비해야 하나요?",
-      a: "지원 직무 한 가지, 보여줄 경험 2~4개, 이력서·노션·깃허브·PDF 같은 원본 링크면 시작할 수 있습니다. 부족한 설명은 30분 이내 자료 확인이나 인터뷰로 채웁니다. 완벽하지 않아도 됩니다.",
+      a: "지원 직무 한 가지, 보여줄 경험 2~4개, 이력서·노션·깃허브·PDF 같은 원본 링크면 시작할 수 있습니다. 부족한 설명은 상담에서 확인하고, 커리어 스토리는 30분 온라인 인터뷰로 채웁니다. 완벽하지 않아도 됩니다.",
     },
   ],
 };

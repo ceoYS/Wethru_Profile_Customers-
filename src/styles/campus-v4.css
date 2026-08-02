@@ -13,12 +13,23 @@
    ========================================================================== */
 
 :root {
-  --font-body: "Pretendard", system-ui, -apple-system, BlinkMacSystemFont,
-    "Segoe UI", sans-serif;
-  --font-display: "Pretendard", system-ui, -apple-system, BlinkMacSystemFont,
-    "Segoe UI", sans-serif;
-  --font-mono: "SF Mono", "JetBrains Mono", "Cascadia Code", ui-monospace, Menlo,
-    Consolas, monospace;
+  /* ONE sans stack for the whole route — body, display and every micro-label.
+     V4 originally set a Latin monospace on all the small caps-y labels (eyebrow,
+     deadline badge, 기존 자료/설계 방향/달라진 점 keys, 문제·상황 step keys, the
+     product badges, the footer mark). Those labels carry Korean, and no monospace
+     in that stack ships Hangul, so each one silently fell back to a different
+     system face — a visibly different font, lighter weight, and glyph-by-glyph
+     spacing that the tracking then widened further. Pointing --font-mono at the
+     same stack fixes the labels this stylesheet owns AND the ones that come from
+     shared rules rendering on this route (profile-base.css .wethru-footer__mark),
+     and it cannot leak: campus-v4.css is imported by /campus-v4/ pages only, so
+     these :root values do not exist on any other page. No new webfont is loaded —
+     Pretendard is already self-hosted through global.css, no CDN. */
+  --font-sans: "Pretendard Variable", Pretendard, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", sans-serif;
+  --font-body: var(--font-sans);
+  --font-display: var(--font-sans);
+  --font-mono: var(--font-sans);
 
   /* White-centric field + warm-neutral rhythm; dark ink for CTA/bands. */
   --bg: #ffffff;
@@ -57,7 +68,10 @@
   --shadow-ink: 0 26px 64px -34px rgba(16, 18, 22, 0.6);
 
   --measure: 62ch;
-  --eyebrow-tracking: 0.14em;
+  /* The eyebrow carries Korean ("4학년·졸업예정자 첫 10명 초기 고객 모집"), and
+     Hangul syllables are already square-set — extra tracking reads as broken
+     spacing, not as editorial. Latin-only meta lines set their own ≤0.08em. */
+  --eyebrow-tracking: 0;
   --section-number-color: rgba(20, 22, 27, 0.4);
 }
 
@@ -106,6 +120,35 @@ html:has(.v4-review-ribbon) {
 .btn--ink:hover {
   background: #000;
   border-color: #000;
+}
+
+/* KakaoTalk CTA — the one button that opens the channel's 1:1 chat. It lives on
+   the dark #apply band, where .btn--ink (background: var(--surface-ink)) renders
+   the same colour as the section behind it. Kakao yellow both fixes that and
+   matches the destination the label promises. Colours are Kakao's own brand
+   pair (#FEE500 / #191919, 13.7:1 — AAA); geometry stays inherited from .btn so
+   size, padding, radius and the 1px border box are identical to .btn--ink. */
+.btn--kakao {
+  background: #fee500;
+  color: #191919;
+  border-color: #fee500;
+}
+
+.btn--kakao:hover {
+  background: #f6dc00;
+  border-color: #f6dc00;
+}
+
+.btn--kakao:active {
+  background: #edd300;
+  border-color: #edd300;
+}
+
+/* The global :focus-visible ring is cobalt (--accent); on this dark band it only
+   just clears 3:1. Yellow against #101216 is 14.7:1, so keep the ring on-brand
+   and legible. */
+.btn--kakao:focus-visible {
+  outline-color: #fee500;
 }
 
 .btn--ghost {
@@ -269,8 +312,10 @@ html:has(.v4-review-ribbon) {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-family: var(--font-sans);
+  /* The recruiting status line is the first Korean a visitor reads; 0.72rem
+     (~11.5px) was sized for the Latin monospace this no longer uses. */
+  font-size: 0.8rem;
   font-weight: 600;
   letter-spacing: var(--eyebrow-tracking);
   text-transform: uppercase;
@@ -296,10 +341,10 @@ html:has(.v4-review-ribbon) {
 /* Deliberately quiet: an outlined pill, not a red urgency badge. The date does
    the work — there is no prior list price to discount against. */
 .v4-deadline {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
   font-weight: 600;
-  letter-spacing: 0.1em;
+  letter-spacing: 0;
   padding: 0.22rem 0.6rem;
   border: 1px solid var(--ink);
   border-radius: var(--radius-pill);
@@ -310,7 +355,7 @@ html:has(.v4-review-ribbon) {
 .v4-title {
   font-size: clamp(1.9rem, 4.4vw, 3rem);
   line-height: 1.08;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.02em;
   color: var(--ink);
   white-space: pre-line; /* honour \n line breaks in titles */
 }
@@ -347,12 +392,6 @@ html:has(.v4-review-ribbon) {
   align-items: center;
 }
 
-@media (min-width: 900px) {
-  .v4-hero__in {
-    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
-  }
-}
-
 .v4-hero__copy {
   display: flex;
   flex-direction: column;
@@ -360,13 +399,37 @@ html:has(.v4-review-ribbon) {
   gap: 1.2rem;
 }
 
+/* Mobile / tablet scale. Below 900px the hero is ONE column the full width of
+   .v4-hero__in, so this size sets both title lines on one line each and is
+   deliberately left alone by the desktop override below. */
 .v4-hero__title {
   font-size: clamp(2.6rem, 6.4vw, 4.7rem);
   line-height: 1.02;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.02em;
   color: var(--ink);
   white-space: pre-line;
   font-weight: 750;
+}
+
+/* The two-column hero. Declared AFTER .v4-hero__title on purpose: a media
+   query adds no specificity, so a font-size override written above that rule
+   would lose the cascade to it and silently do nothing. */
+@media (min-width: 900px) {
+  .v4-hero__in {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  }
+
+  /* From 900px the copy column is only 1.05fr of (container - gap) — about
+     433px at 900px and 559px at 1440px — while the mobile scale asks for up to
+     4.7rem. That overflows, so each authored line wrapped again and the two
+     deliberate lines rendered as four. This caps the desktop scale to what the
+     column can actually set: the title's longest line (이력서에 다 못 담은
+     나를, ≈ 9.53em at -0.02em tracking) stays inside the column at every width
+     from 900px up. Grid ratio, copy, highlight, line-height and tracking are
+     unchanged — only the type size moves, and only here. */
+  .v4-hero__title {
+    font-size: clamp(2.8rem, 4.9vw, 3.65rem);
+  }
 }
 
 /* Highlighter swipe — a cobalt small-accent under a phrase; the text itself
@@ -442,9 +505,9 @@ html:has(.v4-review-ribbon) {
 }
 
 .v4-showcard__num {
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-size: 0.72rem;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.08em;
   font-weight: 700;
   color: var(--muted);
 }
@@ -500,10 +563,10 @@ html:has(.v4-review-ribbon) {
 
 .v4-problem__num {
   display: block;
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-size: 0.78rem;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   color: var(--accent);
   margin-bottom: 2.25rem;
 }
@@ -564,9 +627,9 @@ html:has(.v4-review-ribbon) {
 }
 
 .v4-case__role {
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-size: 0.72rem;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.02em;
   text-transform: uppercase;
   color: var(--accent);
   font-weight: 600;
@@ -574,16 +637,16 @@ html:has(.v4-review-ribbon) {
 
 .v4-case__name {
   font-size: clamp(1.6rem, 3.4vw, 2.15rem);
-  letter-spacing: -0.03em;
+  letter-spacing: -0.02em;
   color: var(--ink);
   line-height: 1.1;
 }
 
 .v4-case__name span {
   margin-left: 0.6rem;
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-size: 0.78rem;
-  letter-spacing: 0.12em;
+  letter-spacing: 0;
   color: var(--muted);
   text-transform: uppercase;
 }
@@ -611,11 +674,12 @@ html:has(.v4-review-ribbon) {
 }
 
 .v4-case__key {
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.06em;
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0;
   text-transform: uppercase;
-  color: var(--section-number-color);
+  color: var(--muted);
   padding-top: 0.15rem;
 }
 
@@ -719,7 +783,7 @@ html:has(.v4-review-ribbon) {
   border-radius: 999px;
   background: #fff;
   border: 1px solid var(--line);
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-size: 0.62rem;
   color: var(--muted);
   display: flex;
@@ -774,6 +838,41 @@ html:has(.v4-review-ribbon) {
    Products — two cards; IP featured with a dark header.
    ========================================================================== */
 
+/* Two-line price comparison, sitting directly above the cards. The one thing a
+   visitor has to take away in five seconds is which price does WHICH job, so it
+   is stated in plain sentences before any feature list. No ranking, no discount
+   framing, no third "추천" option — just the two sentences and the 상담 후 진행
+   note that both products share. */
+.v4-compare {
+  display: grid;
+  gap: 0.5rem;
+  margin-bottom: 1.4rem;
+  padding: 1.15rem clamp(1.1rem, 3vw, 1.6rem);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+}
+
+.v4-compare__line {
+  font-size: clamp(0.97rem, 2vw, 1.08rem);
+  line-height: 1.5;
+  color: var(--text);
+}
+
+.v4-compare__price {
+  font-weight: 800;
+  color: var(--ink);
+}
+
+.v4-compare__note {
+  margin-top: 0.2rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid var(--line-soft);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
 .v4-products {
   display: grid;
   gap: 1.4rem;
@@ -809,10 +908,12 @@ html:has(.v4-review-ribbon) {
 }
 
 .v4-product__badge {
-  font-family: var(--font-mono);
-  font-size: 0.66rem;
+  font-family: var(--font-sans);
+  /* Korean at 0.66rem (~10.6px) was undersized once the Latin monospace — whose
+     x-height ran larger — stopped being used here. */
+  font-size: 0.74rem;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0;
   text-transform: uppercase;
   color: var(--accent-strong);
   background: var(--accent-wash);
@@ -837,7 +938,7 @@ html:has(.v4-review-ribbon) {
   margin-top: 1rem;
   font-size: 2.1rem;
   font-weight: 800;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.02em;
   color: var(--ink);
 }
 
@@ -875,9 +976,10 @@ html:has(.v4-review-ribbon) {
 }
 
 .v4-list__label {
-  font-family: var(--font-mono);
-  font-size: 0.66rem;
-  letter-spacing: 0.1em;
+  font-family: var(--font-sans);
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0;
   text-transform: uppercase;
   color: var(--muted);
   margin-bottom: 0.15rem;
@@ -889,6 +991,15 @@ html:has(.v4-review-ribbon) {
   font-size: 0.92rem;
   line-height: 1.5;
   color: var(--text);
+}
+
+/* The count tokens (최대 4개 vs 8개, 수정 1회 vs 2회, 30분 인터뷰) are exactly what
+   separates the two products, so they carry the emphasis — see emphasiseCounts()
+   in campus-v4.astro. Weight only, no colour shift, so the list keeps one
+   reading level. */
+.v4-list__item b {
+  font-weight: 800;
+  color: var(--ink);
 }
 
 .v4-list__item::before {
@@ -1008,10 +1119,10 @@ html:has(.v4-review-ribbon) {
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-size: 0.68rem;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0;
   text-transform: uppercase;
   color: var(--muted);
   border: 1px dashed var(--line);
@@ -1055,9 +1166,11 @@ html:has(.v4-review-ribbon) {
 }
 
 .v4-ip-step__key {
-  font-family: var(--font-mono);
-  font-size: 0.64rem;
-  letter-spacing: 0.06em;
+  font-family: var(--font-sans);
+  /* 문제·상황 / 역할 / 판단 / 행동 / 결과·근거 — Hangul at 0.64rem (~10.2px) is
+     below comfortable reading once the label is no longer set in a monospace. */
+  font-size: 0.76rem;
+  letter-spacing: 0;
   text-transform: uppercase;
   color: var(--accent);
   font-weight: 700;
@@ -1114,10 +1227,10 @@ html:has(.v4-review-ribbon) {
 }
 
 .v4-step__num {
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-size: 0.72rem;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   color: var(--accent);
 }
 
@@ -1250,7 +1363,7 @@ html:has(.v4-review-ribbon) {
 .v4-apply__title {
   font-size: clamp(1.6rem, 3.6vw, 2.5rem);
   line-height: 1.2;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.02em;
   color: #fff;
   max-width: 24ch;
 }
@@ -1263,9 +1376,9 @@ html:has(.v4-review-ribbon) {
 }
 
 .v4-apply__status {
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-size: 0.72rem;
-  letter-spacing: 0.1em;
+  letter-spacing: 0;
   text-transform: uppercase;
   color: var(--faint-ink);
 }
@@ -1276,6 +1389,21 @@ html:has(.v4-review-ribbon) {
 
 .wethru-footer {
   border-top: 1px solid var(--line);
+}
+
+/* ==========================================================================
+   Shared footer, on this route only. WeThruFooter is a shared component styled
+   by profile-base.css, which tracks .wethru-footer__mark at 0.18em — tuned for
+   the Latin monospace it sets there. This route resolves --font-mono to the same
+   sans as everything else, and at that width "PROFILE CRAFTED BY WETHRU" reads
+   as gapped rather than as a mark. Cap it at the 0.08em ceiling the rest of this
+   page's Latin meta uses. campus-v4.css loads on /campus-v4/ pages only, so a
+   customer profile's footer is untouched; this relies on the same import-order
+   override the .btn block above already uses.
+   ========================================================================== */
+
+.wethru-footer__mark {
+  letter-spacing: 0.08em;
 }
 
 /* ==========================================================================

@@ -77,6 +77,19 @@ interface V4Card {
 const stripProto = (u: string): string =>
   u.replace(/^https?:\/\//, "").replace(/\/$/, "");
 
+// The two products differ mostly by quantity — 최대 4개 vs 8개, 수정 1회 vs 2회,
+// 30분 인터뷰 or none — so those tokens carry the comparison and get bolded in
+// the 포함 (핵심) list. Applied with set:html, which is safe here only because
+// the input is literal copy from src/data/campus-v4.ts (no user input, no `<`
+// or `&` in the source strings) and the output markup is a single <b>. Do not
+// point this at anything a visitor can supply.
+// Lines that NEGATE a quantity keep flat weight — a bolded 30분 inside a 포함
+// list reads as something you get. (Same guard as /campus/.)
+const emphasiseCounts = (s: string): string =>
+  /없음|없습니다|아닙니다/.test(s)
+    ? s
+    : s.replace(/(최대 \d+개|\d+회|\d+분|\d+개)/g, "<b>$1</b>");
+
 let cards: V4Card[];
 if (REVIEW_MODE) {
   // Internal review only: real identity + live embed of the ORIGINAL page.
@@ -152,8 +165,8 @@ const seoTitle = showCases
   ? "WeThru Campus — 실제로 만든 커리어 프로필로 증명합니다"
   : "WeThru Campus — 흩어진 경험을 읽히는 순서로 정리합니다";
 const seoDescription = showCases
-  ? "흩어진 경험을 읽히는 순서로 정리한 맞춤형 커리어 웹페이지. 사람마다 다르게 만든 실제 제작 사례로 보여드립니다. 얼리버드 커리어 프로필(99,000원)과 Interview Portfolio(199,000원) 두 가지로 시작합니다."
-  : "인턴·공모전·팀 프로젝트처럼 흩어진 자료를 읽기 좋은 순서로 정리해 하나의 커리어 웹페이지로 만듭니다. 얼리버드 커리어 프로필(99,000원)과 Interview Portfolio(199,000원) 두 가지로 시작합니다.";
+  ? "흩어진 경험을 읽히는 순서로 정리한 맞춤형 커리어 웹페이지. 사람마다 다르게 만든 실제 제작 사례로 보여드립니다. 자료를 정리하는 프로필 베이직(99,000원)과 전달 구조부터 다시 설계하는 커리어 스토리(199,000원) 두 가지로 시작합니다."
+  : "인턴·공모전·팀 프로젝트처럼 흩어진 자료를 읽기 좋은 순서로 정리해 하나의 커리어 웹페이지로 만듭니다. 자료를 정리하는 프로필 베이직(99,000원)과 전달 구조부터 다시 설계하는 커리어 스토리(199,000원) 두 가지로 시작합니다.";
 ---
 
 <html lang="ko">
@@ -398,16 +411,29 @@ const seoDescription = showCases
           )
         }
 
-        {/* 5. 두 상품 비교  +  6. Interview Portfolio 구성 미리보기 */}
+        {/* 5. 두 상품 비교  +  6. 커리어 스토리 구성 미리보기 */}
         <section id="products" class="v4-section v4-section--tint">
           <div class="v4-wrap">
             <div class="v4-section__head">
               <h2 class="v4-title">필요한 만큼 골라서 시작하세요</h2>
               <p class="v4-lead">
                 두 상품 모두 자료를 직접 읽고 문장을 다듬어 만듭니다. 차이는 품질이
-                아니라 실제 작업 범위입니다. 얼리버드는 「{difference.earlybird}」,
-                Interview Portfolio는 「{difference.interviewPortfolio}」.
+                아니라 실제 작업 범위입니다. 프로필 베이직은 「{difference.basic}」,
+                커리어 스토리는 「{difference.story}」.
               </p>
+            </div>
+
+            {/* The difference stated in prices, directly above the cards so it is
+                read before anyone opens 세부 범위 보기. Two lines, no ranking. */}
+            <div class="v4-compare">
+              {
+                [difference.compare.basic, difference.compare.story].map((c) => (
+                  <p class="v4-compare__line">
+                    <b class="v4-compare__price">{c.price}</b>은 {c.body}
+                  </p>
+                ))
+              }
+              <p class="v4-compare__note">{difference.compare.note}</p>
             </div>
 
             <div class="v4-products">
@@ -444,7 +470,10 @@ const seoDescription = showCases
                       <ul class="v4-list">
                         <li class="v4-list__label">포함 (핵심)</li>
                         {product.coreIncludes.map((item) => (
-                          <li class="v4-list__item">{item}</li>
+                          <li
+                            class="v4-list__item"
+                            set:html={emphasiseCounts(item)}
+                          />
                         ))}
                       </ul>
 
@@ -486,8 +515,8 @@ const seoDescription = showCases
               }
             </div>
 
-            {/* 6. Interview Portfolio 구성 미리보기 (secondary, always labelled) */}
-            <div class="v4-ip-preview" aria-label="Interview Portfolio 구성 예시">
+            {/* 6. 커리어 스토리 구성 미리보기 (secondary, always labelled) */}
+            <div class="v4-ip-preview" aria-label="커리어 스토리 구성 예시">
               <span class="v4-ip-preview__note">{ipPreview.note}</span>
               <h3 class="v4-ip-preview__title">{ipPreview.title}</h3>
               <p class="v4-ip-preview__lead">{ipPreview.lead}</p>
@@ -582,7 +611,7 @@ const seoDescription = showCases
                     확인한 뒤, 가능한 구성과 적합한 상품 범위를 안내드립니다.
                   </p>
                   <a
-                    class="btn btn--ink"
+                    class="btn btn--kakao"
                     href={applyFormUrl!}
                     target="_blank"
                     rel="noopener noreferrer"
