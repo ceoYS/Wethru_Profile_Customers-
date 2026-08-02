@@ -22,8 +22,10 @@
  * not build anything that rolls the same promotion forward on its own.
  *
  * Safety model carried over verbatim from V2/V3:
- * - applyFormUrl stays null → the apply CTA renders disabled and every page on
- *   this route carries noindex,nofollow. Do NOT invent a URL.
+ * - applyFormUrl is the WeThru KakaoTalk channel 1:1 chat — the one verified
+ *   intake destination. Do NOT invent any other URL, and never point it at a
+ *   Google Form. Every page on this route still carries noindex,nofollow; that
+ *   gate is now set explicitly in campus-v4.astro, not derived from this field.
  * - Real case studies are consent-gated via `approvedForCampus` (default false).
  *   Zero approvals → the "실제 제작 사례" section and its nav link do not render
  *   in a production build (every Vercel deploy is a production build).
@@ -188,9 +190,11 @@ export interface CampusV4Offer {
 }
 
 export const campusV4Offer: CampusV4Offer = {
-  // Same rule as V2/V3: no verified intake destination exists yet. Keep null so
-  // the apply CTA stays disabled and the whole /campus-v4/ route stays noindex.
-  applyFormUrl: null,
+  // The verified intake destination is the WeThru KakaoTalk channel's 1:1 chat
+  // (not the channel home). It replaces the never-created apply form: there is
+  // no Google Form behind this route and none may be added. Indexing is decided
+  // separately in campus-v4.astro — this URL no longer lifts the noindex gate.
+  applyFormUrl: "https://pf.kakao.com/_wRVBX/chat",
 
   hero: {
     eyebrow: "4학년·졸업예정자 첫 10명 초기 고객 모집",

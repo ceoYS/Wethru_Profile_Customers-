@@ -45,8 +45,11 @@ const {
 // approvedForCampus. Gating is server-side, so unapproved names never enter a
 // real production build's HTML.
 const applyReady = applyFormUrl !== null;
-// No verified apply URL yet, or either local check build → keep out of the index.
-const noindex = !applyReady || REVIEW_MODE || PUBLIC_PREVIEW_MODE;
+// The apply CTA now has a verified destination (KakaoTalk channel 1:1 chat), but
+// opening the route to search engines is a separate decision that has not been
+// made. Keep the whole route out of the index unconditionally — do not re-derive
+// this from applyReady, or wiring up a CTA would silently publish the page.
+const noindex = true;
 
 // A single normalized card list, built per mode so the JSX below has one shape.
 // PUBLIC (production + public-image QA) reads ONLY the anonymized case data and
@@ -578,8 +581,13 @@ const seoDescription = showCases
                     신청했다고 바로 결제되지 않습니다. 지원 직무와 현재 자료를
                     확인한 뒤, 가능한 구성과 적합한 상품 범위를 안내드립니다.
                   </p>
-                  <a class="btn btn--ink" href={applyFormUrl!} rel="noopener">
-                    구성 상담 신청
+                  <a
+                    class="btn btn--ink"
+                    href={applyFormUrl!}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    카카오톡으로 상담하기
                   </a>
                 </>
               ) : (
