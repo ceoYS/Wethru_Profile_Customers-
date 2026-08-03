@@ -110,20 +110,17 @@ export type CampusV4BCase = CampusV4AnonCase & {
 };
 
 /*
- * `blurb` and `result` are restated here for every case — not to change their
- * meaning, but because both end in a noun phrase ("… 프로필", "… 1페이지",
- * "… 정보구조") and Variant B drops the sentence-final period on non-sentence
- * strings. They are written out one by one instead of stripped by a regex so the
- * sentence/noun-phrase call stays a manual, reviewable decision: `problem` and
- * `direction` ARE full sentences (…읽혔습니다 / …정리했습니다) and keep their periods.
+ * `blurb` and `result` are restated here for every case so A's punctuation
+ * treatment cannot leak into B. B keeps the pre-feedback sentence-final periods;
+ * `problem` and `direction` remain full sentences as well.
  */
 const caseOverrides: Record<string, Partial<CampusV4BCase>> = {
   "case-01": {
     roleScript: "latin",
     blurb:
-      "사람과 브랜드가 만나는 현장에서 전략을 경험과 성과로 연결하는 리테일·CX 프로필",
+      "사람과 브랜드가 만나는 현장에서 전략을 경험과 성과로 연결하는 리테일·CX 프로필.",
     result:
-      "첫 화면에서 ‘현장을 아는 리테일·CX 사람’이라는 인상이 먼저 잡히는 1페이지",
+      "첫 화면에서 ‘현장을 아는 리테일·CX 사람’이라는 인상이 먼저 잡히는 1페이지.",
     previewAlt:
       "리테일·고객경험 직무 지원자 커리어 프로필 실제 제작 화면 — 얼굴 비공개 처리",
   },
@@ -131,20 +128,20 @@ const caseOverrides: Record<string, Partial<CampusV4BCase>> = {
     title: "전략 컨설턴트 직무 지원자",
     role: "STRATEGY CONSULTANT",
     roleScript: "latin",
-    blurb: "데이터와 자동화로 운영 구조를 설계하는 전략 컨설턴트 지원자의 프로필",
+    blurb: "데이터와 자동화로 운영 구조를 설계하는 전략 컨설턴트 지원자의 프로필.",
     problem:
       "여러 자동화·데이터 경험이 도구 나열로만 남아, ‘구조를 설계하는 사람’이라는 강점이 약하게 읽혔습니다.",
     direction:
       "데이터와 운영 구조 설계를 중심에 두고 대표 경험을 앞세운 뒤, 나머지는 뒤로 정리했습니다.",
-    result: "‘구조를 설계하는 전략 컨설턴트’가 먼저 보이는 첫 화면과 정보구조",
+    result: "‘구조를 설계하는 전략 컨설턴트’가 먼저 보이는 첫 화면과 정보구조.",
     previewAlt:
       "전략 컨설턴트 직무 지원자 커리어 프로필 실제 제작 화면 — 얼굴 비공개 처리",
   },
   "case-03": {
     roleScript: "ko",
     blurb:
-      "데이터로 상품과 프로모션을 설계해 브랜드 매출 성장을 이끄는 커머스 MD 프로필",
-    result: "‘매출 성장을 만드는 커머스 MD’라는 인상이 첫 화면에서 먼저 오는 페이지",
+      "데이터로 상품과 프로모션을 설계해 브랜드 매출 성장을 이끄는 커머스 MD 프로필.",
+    result: "‘매출 성장을 만드는 커머스 MD’라는 인상이 첫 화면에서 먼저 오는 페이지.",
     previewAlt:
       "커머스·그로스 직무 지원자 커리어 프로필 실제 제작 화면 — 얼굴 비공개 처리",
   },
@@ -257,11 +254,7 @@ export interface CampusV4BOffer {
   };
   realCases: {
     title: string;
-    /**
-     * Rendered as one block element per entry, so the break before "사람마다"
-     * is in the MARKUP. It must not depend on the container width happening to
-     * wrap there — at 360px or 1440px the two sentences stay two blocks.
-     */
+    /** B keeps this as one continuous entry, without A's forced sentence break. */
     leadLines: string[];
   };
   difference: { earlybird: string; interviewPortfolio: string };
@@ -280,8 +273,6 @@ export interface CampusV4BOffer {
   };
   process: CampusV4Step[];
   boundaries: string[];
-  /** Same markup-level line split as realCases.leadLines (break before "좋은 평가"). */
-  reviewNoteLines: string[];
   faqs: CampusV4Faq[];
 }
 
@@ -351,79 +342,62 @@ const campusV4BProducts: CampusV4Product[] = campusV4Offer.products.map((p) => (
 }));
 
 /* --------------------------------------------------------------------------
-   Boundaries — Variant B keeps the two SCOPE limits and drops A's two
-   outcome/exaggeration disclaimers (they read as defensive on this page).
+   Boundaries — B-owned pre-feedback copy, independent from A.
    -------------------------------------------------------------------------- */
 
-/** The exact A lines B removes. Kept here so the removal can be verified. */
-const droppedBoundaries = [
+const BOUNDARIES: string[] = [
   "합격을 보장하지 않습니다. 이 페이지는 경험을 더 쉽게 이해하도록 돕는 보조 자료입니다.",
   "없는 경력이나 성과를 억지로 부풀리지 않습니다. 지금 가진 자료로 가능한 구성을 함께 정리합니다.",
+  "무제한 수정은 아닙니다. 상품별로 정해진 피드백 반영 횟수 안에서 진행합니다.",
+  "자소서 전체 첨삭이나 면접 컨설팅은 이 상품 범위가 아닙니다.",
 ];
 
-const BOUNDARIES: string[] = (() => {
-  for (const line of droppedBoundaries) {
-    if (!campusV4Offer.boundaries.includes(line)) {
-      throw new Error(
-        `Campus V4 B: boundary line to drop is no longer present in A ` +
-          `("${line}"). Re-check which lines Variant B should omit instead of ` +
-          `letting the removal become a silent no-op.`,
-      );
-    }
-  }
-  return campusV4Offer.boundaries.filter((b) => !droppedBoundaries.includes(b));
-})();
-
 /* --------------------------------------------------------------------------
-   FAQ — B removes two of A's entries, shortens one answer, and adds two.
+   FAQ — B-owned pre-feedback list plus its experiment-specific entries.
    -------------------------------------------------------------------------- */
 
-/** A questions Variant B does not ask at all. */
-const droppedFaqQuestions = ["후기 작성이 필수인가요?", "합격을 보장하나요?"];
-
-/** A answers Variant B rewrites (question text unchanged). */
-const faqAnswerOverrides: Record<string, string> = {
-  // The "없는 경력이나 성과를 억지로 부풀리지는 않습니다." sentence is dropped.
-  "프로젝트가 별로 없어도 신청할 수 있나요?":
-    "가능합니다. 현재 가진 자료로 어떤 구성이 가능한지와, 1페이지형과 프로젝트 상세형 중 어느 쪽이 적합한지 안내드립니다.",
-  // Restated on B's 지원 단계 / 면접 단계 axis so this answer cannot contradict
-  // the product cards above it. Same prices, same scope — only the framing.
-  "99,000원과 199,000원의 차이가 무엇인가요?":
-    "얼리버드 커리어 프로필(99,000원)은 지원 단계에서 학력·경력·활동·프로젝트를 한 장으로 구조화한 전체 커리어 프로필입니다. Interview Portfolio(199,000원)는 여기에 더해 대표 프로젝트를 문제·상황 → 역할 → 판단 → 행동 → 결과·근거 구조의 상세 사례로 다시 쓰고, 프로젝트별 별도 URL과 근거 자료까지 연결해 면접 단계에서 그 프로젝트를 설명할 수 있게 합니다.",
-};
-
-const FAQS: CampusV4Faq[] = (() => {
-  const questions = new Set(campusV4Offer.faqs.map((f) => f.q));
-  for (const q of [...droppedFaqQuestions, ...Object.keys(faqAnswerOverrides)]) {
-    if (!questions.has(q)) {
-      throw new Error(
-        `Campus V4 B: FAQ "${q}" no longer exists in A, so B's edit to it does ` +
-          `nothing. Re-check the FAQ list instead of shipping a stale override.`,
-      );
-    }
-  }
-
-  const inherited = campusV4Offer.faqs
-    .filter((f) => !droppedFaqQuestions.includes(f.q))
-    .map((f) => {
-      const a = faqAnswerOverrides[f.q];
-      return a ? { ...f, a } : f;
-    });
-
-  return [
-    {
-      q: "이력서와 무엇이 다른가요?",
-      a: "이력서는 정해진 양식에 맞춰 경력을 요약하는 문서입니다. 이 커리어 프로필은 지원 직무 기준으로 무엇을 먼저 보여줄지 순서를 정하고, 프로젝트와 성과를 그 순서대로 배치한 웹페이지입니다. 이력서를 대체하는 것이 아니라, 이력서와 함께 보내는 자료입니다.",
-    },
-    ...inherited,
-    {
-      q: "자체 도메인도 사용할 수 있나요?",
-      // No figure on screen yet: the connection fee is not decided, so it is
-      // described as 별도 안내 rather than a number nobody has confirmed.
-      a: "가능합니다. 자체 도메인 구매 비용과 연결 설정 비용은 별도로 안내드립니다.",
-    },
-  ];
-})();
+const FAQS: CampusV4Faq[] = [
+  {
+    q: "이력서와 무엇이 다른가요?",
+    a: "이력서는 정해진 양식에 맞춰 경력을 요약하는 문서입니다. 이 커리어 프로필은 지원 직무 기준으로 무엇을 먼저 보여줄지 순서를 정하고, 프로젝트와 성과를 그 순서대로 배치한 웹페이지입니다. 이력서를 대체하는 것이 아니라, 이력서와 함께 보내는 자료입니다.",
+  },
+  {
+    q: "두 상품 모두 개인 웹페이지 링크를 받나요?",
+    a: "네. 두 상품 모두 모바일과 PC에서 열리는 개인 웹페이지 URL을 드립니다. 이력서나 메시지에 링크 하나로 붙일 수 있습니다.",
+  },
+  {
+    q: "99,000원과 199,000원의 차이가 무엇인가요?",
+    a: "얼리버드 커리어 프로필(99,000원)은 지원 단계에서 학력·경력·활동·프로젝트를 한 장으로 구조화한 전체 커리어 프로필입니다. Interview Portfolio(199,000원)는 여기에 더해 대표 프로젝트를 문제·상황 → 역할 → 판단 → 행동 → 결과·근거 구조의 상세 사례로 다시 쓰고, 프로젝트별 별도 URL과 근거 자료까지 연결해 면접 단계에서 그 프로젝트를 설명할 수 있게 합니다.",
+  },
+  {
+    q: "그냥 노션을 쓰면 되지 않나요?",
+    a: "노션도 좋은 방법입니다. 이미 잘 정리돼 있다면 새로 만들 필요가 없습니다. 차이는 직무에 맞춰 무엇을 먼저 보여줄지 순서를 잡고, 모바일에서 링크 하나로 깔끔하게 공유되도록 다듬는 부분입니다.",
+  },
+  {
+    q: "Interview Portfolio는 누구에게 필요한가요?",
+    a: "보여줄 대표 프로젝트가 1~2개 있고, 면접에서 그 프로젝트를 어떻게 해결했는지 근거와 함께 설명하고 싶은 분에게 맞습니다.",
+  },
+  {
+    q: "프로젝트가 별로 없어도 신청할 수 있나요?",
+    a: "가능합니다. 현재 가진 자료로 어떤 구성이 가능한지와, 1페이지형과 프로젝트 상세형 중 어느 쪽이 적합한지 안내드립니다. 없는 경력이나 성과를 억지로 부풀리지는 않습니다.",
+  },
+  {
+    q: "후기 작성이 필수인가요?",
+    a: "아니요. 첫 10명 초기 고객에게는 완성 후 5분 내외의 솔직한 사용 피드백을 부탁드리지만, 좋은 평가나 특정 별점을 요구하지 않습니다. 후기는 결과물을 받는 조건이 아닙니다.",
+  },
+  {
+    q: "합격을 보장하나요?",
+    a: "보장하지 않습니다. 합격은 여러 요인으로 결정됩니다. 이 페이지는 지원자의 경험을 더 쉽게 이해하도록 돕는 보조 자료입니다.",
+  },
+  {
+    q: "수정은 몇 번 가능한가요?",
+    a: "얼리버드 커리어 프로필은 피드백 일괄 반영 1회, Interview Portfolio는 2회를 기준으로 합니다. 무제한 수정은 아니며, 정해진 횟수 안에서 문구·순서·구성을 반영합니다.",
+  },
+  {
+    q: "어떤 자료를 준비해야 하나요?",
+    a: "지원 직무 한 가지, 보여줄 경험 2~4개, 이력서·노션·깃허브·PDF 같은 원본 링크면 시작할 수 있습니다. 부족한 설명은 30분 이내 자료 확인이나 인터뷰로 채웁니다. 완벽하지 않아도 됩니다.",
+  },
+];
 
 export const campusV4BOffer: CampusV4BOffer = {
   // Single source of truth: whatever A's intake setting is, B has the same one.
@@ -431,7 +405,7 @@ export const campusV4BOffer: CampusV4BOffer = {
 
   hero: {
     eyebrow: "4학년·졸업예정자 첫 10명 초기 고객 모집",
-    deadline: "7.31 마감 · 첫 10명",
+    deadline: "8.31 마감 · 첫 10명",
     title: "이력서만 제출하는 지원자에서,\n한 번 더 준비한 지원자로.",
     // Kept to one phrase so the accent swipe lands on a single rendered line.
     highlight: "한 번 더 준비한",
@@ -452,17 +426,17 @@ export const campusV4BOffer: CampusV4BOffer = {
     cards: [
       {
         index: "01",
-        title: "이력서 하나로는 전달력이 약합니다",
-        body: "프로젝트 맥락, 내가 맡은 역할, 결과를 나열만 한다면, 와닿지 않습니다.",
+        title: "이력서는 가시성이 약합니다",
+        body: "프로젝트 맥락, 내가 맡은 역할, 결과를 한두 줄로 압축하면 강점이 사라집니다.",
       },
       {
         index: "02",
-        title: "분산된 이력을 한눈에 볼 수 있도록",
+        title: "여러 개의 자료보다 하나의 링크가 낫습니다",
         body: "노션·깃허브·PDF를 각각 보내면, 무엇부터 열어야 할지를 받는 사람이 정해야 합니다.",
       },
       {
         index: "03",
-        title: "이목을 끌 순서 정하기가 어렵습니다",
+        title: "꾸미기보다 순서가 어렵습니다",
         body: "지원 직무가 먼저 확인하고 싶은 것에 맞춰 정리하지 않으면, 강점이 뒤쪽에 남습니다.",
       },
     ],
@@ -471,8 +445,7 @@ export const campusV4BOffer: CampusV4BOffer = {
   realCases: {
     title: "같은 템플릿에 이름만\n바꾸지 않습니다.",
     leadLines: [
-      "아래는 실제로 제작한 1페이지 커리어 프로필입니다.",
-      "사람마다 강조해야 할 경험이 달라 첫 화면과 정보구조도 다르게 만들었습니다.",
+      "아래는 실제로 제작한 1페이지 커리어 프로필입니다. 사람마다 강조해야 할 경험이 달라 첫 화면과 정보구조도 다르게 만들었습니다.",
     ],
   },
 
@@ -535,20 +508,8 @@ export const campusV4BOffer: CampusV4BOffer = {
   // Same four steps as A — the intake and delivery process is not a variable.
   process: campusV4Offer.process,
 
-  /*
-   * Variant B states only the two SCOPE boundaries. A's first two lines ("합격을
-   * 보장하지 않습니다 …", "없는 경력이나 성과를 억지로 부풀리지 않습니다 …") are dropped
-   * from B on purpose — see droppedBoundaries below, which fails the build if
-   * those exact lines ever stop existing in A (i.e. if this deletion silently
-   * became a no-op). Dropping a disclaimer creates no claim: B still promises no
-   * outcome anywhere, and 합격/합격률 wording appears nowhere on the page.
-   */
+  // B owns the pre-feedback boundary copy; A edits cannot change this list.
   boundaries: BOUNDARIES,
-
-  reviewNoteLines: [
-    "첫 10명 초기 고객에게는 완성 후 5분 내외의 솔직한 사용 피드백을 부탁드립니다.",
-    "좋은 평가나 특정 별점을 요구하지 않으며, 후기는 결과물을 받는 조건이 아닙니다.",
-  ],
 
   faqs: FAQS,
 };

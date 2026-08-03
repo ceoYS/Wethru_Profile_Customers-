@@ -315,15 +315,13 @@ html:has(.v4b-ribbon) {
 }
 
 /* One sentence per block. The break is authored in the markup (see
-   realCases.leadLines / reviewNoteLines in campus-v4-b.ts) so it survives every
+   realCases.leadLines in campus-v4-b.ts) so it survives every
    viewport width; a long sentence still wraps normally inside its own block. */
-.v4b-lead__line,
-.v4b-note__line {
+.v4b-lead__line {
   display: block;
 }
 
-.v4b-lead__line + .v4b-lead__line,
-.v4b-note__line + .v4b-note__line {
+.v4b-lead__line + .v4b-lead__line {
   margin-top: 0.25rem;
 }
 
@@ -872,7 +870,7 @@ html:has(.v4b-ribbon) {
   margin-bottom: 0.9rem;
 }
 
-/* "7월 31일까지 · 첫 10명 런칭가" — Korean, so Pretendard 600 with no tracking
+/* "8월 31일까지 · 첫 10명 런칭가" — Korean, so Pretendard 600 with no tracking
    stretch (A rendered it in mono + 0.08em uppercase). */
 .v4b-product__badge {
   font-family: var(--v4b-font-ko);
@@ -1277,7 +1275,7 @@ html:has(.v4b-ribbon) {
 }
 
 /* ==========================================================================
-   Boundaries + review note
+   Boundaries
    ========================================================================== */
 
 .v4b-boundaries {
@@ -1302,20 +1300,6 @@ html:has(.v4b-ribbon) {
   left: 0;
   color: var(--v4b-accent-strong);
   font-weight: 700;
-}
-
-.v4b-note {
-  margin-top: 1.6rem;
-  padding: 1.15rem 1.3rem;
-  border-radius: var(--v4b-radius-card);
-  background: #fff;
-  border: 1px solid var(--v4b-line-card);
-  font-size: 0.92rem;
-  font-weight: 500;
-  line-height: 1.65;
-  letter-spacing: -0.01em;
-  color: var(--v4b-muted);
-  max-width: 52rem;
 }
 
 /* ==========================================================================

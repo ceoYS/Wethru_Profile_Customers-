@@ -55,7 +55,6 @@ const {
   ipAnatomy,
   process,
   boundaries,
-  reviewNoteLines,
   faqs,
   applyFormUrl,
 } = campusV4BOffer;
@@ -492,21 +491,11 @@ const seoDescription =
         >
           <div class="v4b-wrap">
             <div class="v4b-section__head">
-              <h2 class="v4b-title">미리 분명히 해두는 범위</h2>
-              <p class="v4b-lead">
-                과장하지 않기 위해, 이 상품이 하지 않는 것을 먼저 적어둡니다.
-              </p>
+              <h2 class="v4b-title">해당 상품의 제공 범위</h2>
             </div>
             <ul class="v4b-boundaries">
               {boundaries.map((b) => <li>{b}</li>)}
             </ul>
-            <p class="v4b-note">
-              {
-                reviewNoteLines.map((line) => (
-                  <span class="v4b-note__line">{line}</span>
-                ))
-              }
-            </p>
           </div>
         </section>
 
