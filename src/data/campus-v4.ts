@@ -212,7 +212,6 @@ export interface CampusV4Offer {
   ipPreview: CampusV4IpPreview;
   process: CampusV4Step[];
   boundaries: string[];
-  reviewNote: string;
   cases: CampusV4Case[];
   faqs: CampusV4Faq[];
 }
@@ -244,12 +243,12 @@ export const campusV4Offer: CampusV4Offer = {
     cards: [
       {
         index: "01",
-        title: "이력서 한 줄로는 줄어듭니다",
+        title: "이력서는 가시성이 약합니다",
         body: "프로젝트 맥락, 내가 맡은 역할, 결과를 한두 줄로 압축하면 강점이 사라집니다.",
       },
       {
         index: "02",
-        title: "링크가 너무 흩어집니다",
+        title: "여러 개의 자료보다 하나의 링크가 낫습니다",
         body: "노션·깃허브·블로그·PDF를 따로 보내면 상대가 무엇부터 봐야 할지 알기 어렵습니다.",
       },
       {
@@ -401,9 +400,6 @@ export const campusV4Offer: CampusV4Offer = {
     "무제한 수정은 아닙니다. 상품별로 정해진 피드백 반영 횟수 안에서 진행합니다.",
     "자소서 전체 첨삭이나 면접 컨설팅은 이 상품 범위가 아닙니다.",
   ],
-
-  reviewNote:
-    "첫 10명 초기 고객에게는 완성 후 5분 내외의 솔직한 사용 피드백을 부탁드립니다. 좋은 평가나 특정 별점을 요구하지 않으며, 후기는 결과물을 받는 조건이 아닙니다.",
 
   // Candidate cases, priority order 이준구 → 배지안 → 조예솔. All
   // approvedForCampus:false until the person explicitly consents to this SALES

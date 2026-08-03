@@ -1274,18 +1274,6 @@ html:has(.v4-review-ribbon) {
   font-weight: 700;
 }
 
-.v4-note {
-  margin-top: 1.6rem;
-  padding: 1.15rem 1.3rem;
-  border-radius: var(--radius-card);
-  background: #fff;
-  border: 1px solid var(--line);
-  font-size: 0.92rem;
-  line-height: 1.6;
-  color: var(--muted);
-  max-width: 52rem;
-}
-
 /* ==========================================================================
    FAQ accordion
    ========================================================================== */
