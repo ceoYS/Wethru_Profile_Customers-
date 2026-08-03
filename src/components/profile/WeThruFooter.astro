@@ -6,5 +6,9 @@
     Profile crafted by
     <a href="https://wethru.com" rel="noopener noreferrer" target="_blank">WeThru</a>
   </p>
-  <p class="wethru-footer__mark">profile.wethru.com</p>
+  {/* Brand mark only. Deliberately not a host name: this footer renders on the
+      public career landing AND on delivered customer profiles, which live on
+      different origins, and profile.wethru.com is a separate service this repo
+      does not deploy to. */}
+  <p class="wethru-footer__mark">wethru.com</p>
 </footer>

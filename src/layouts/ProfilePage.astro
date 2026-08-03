@@ -16,12 +16,21 @@ interface Props {
 }
 
 const { customer } = Astro.props;
-const { seo, person, status } = customer;
+const { seo, person } = customer;
 const bilingual = hasEnglish(customer);
 
-const site = Astro.site ?? new URL("https://profile.wethru.com");
-const canonicalUrl = new URL(`/profiles/${customer.slug}/`, site);
-const ogImageUrl = seo.ogImage ? new URL(seo.ogImage, site) : undefined;
+// No canonical / og:url on customer profiles — on purpose.
+//
+// These pages are never part of the public career build (CUSTOMER_PROFILES gates
+// them out) and they are noindex, so there is no public URL to declare. The
+// global `site` is https://career.wethru.com, where /profiles/{slug}/ does not
+// and must not exist; stamping that as canonical would advertise a 404. And
+// profile.wethru.com is a separate WeThru service this repo does not deploy to,
+// so it is not an origin for these pages either.
+//
+// A delivery build serves them from whatever origin they are handed over on, so
+// the honest markup is a relative og:image and no absolute self-reference at all.
+const ogImagePath = seo.ogImage || undefined;
 ---
 
 <html
@@ -69,22 +78,30 @@ const ogImageUrl = seo.ogImage ? new URL(seo.ogImage, site) : undefined;
     )}
     <title>{seo.title}</title>
     <meta name="description" content={seo.description} />
-    <link rel="canonical" href={canonicalUrl} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    {status === "draft" && <meta name="robots" content="noindex, nofollow" />}
+    {/* Every customer profile — draft AND published — stays out of search.
+        These pages carry the customer's real name, face, employer, and (when
+        showEmail/links are on) their email and social URLs. They are a delivered
+        artifact meant to be handed to a recruiter by link, not a public document
+        a stranger can find by searching the person's name. Sharing the URL still
+        works exactly as before; only crawler discovery is removed.
+        `status` no longer affects indexing at all — it stays in the data as the
+        publish gate for the operator dashboard.
+        noindex is not access control, so the pages themselves are additionally
+        gated out of any public build (CUSTOMER_PROFILES — see profiles/[slug]). */}
+    <meta name="robots" content="noindex, nofollow" />
 
     <meta property="og:type" content="profile" />
     <meta property="og:title" content={seo.title} />
     <meta property="og:description" content={seo.description} />
-    <meta property="og:url" content={canonicalUrl} />
     <meta property="og:site_name" content="WeThru Profile" />
     <meta property="og:locale" content="ko_KR" />
-    {ogImageUrl && <meta property="og:image" content={ogImageUrl} />}
+    {ogImagePath && <meta property="og:image" content={ogImagePath} />}
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={seo.title} />
     <meta name="twitter:description" content={seo.description} />
-    {ogImageUrl && <meta name="twitter:image" content={ogImageUrl} />}
+    {ogImagePath && <meta name="twitter:image" content={ogImagePath} />}
 
     <meta name="generator" content={Astro.generator} />
     <meta name="author" content={person.name} />

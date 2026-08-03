@@ -19,7 +19,7 @@ private/
 pictures/
 
 # stray raw photo originals dropped in the repo root — never publish
-# (optimized portraits live under public/images/customers/<slug>/*.webp)
+# (optimized portraits live under customer-assets/images/customers/<slug>/*.webp)
 /profile_picture.jpg
 /*.jpg
 /*.jpeg

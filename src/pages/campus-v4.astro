@@ -110,8 +110,11 @@ if (REVIEW_MODE) {
       direction: c.direction,
       result: c.result,
       href,
+      // Internal review renders the local delivery build, so an in-repo profile
+      // has no public host to name — show the bare path. (It is emphatically not
+      // profile.wethru.com: that is a separate service this repo never deploys.)
       barUrl: id?.originalSlug
-        ? `profile.wethru.com/profiles/${id.originalSlug}`
+        ? `/profiles/${id.originalSlug}`
         : stripProto(id?.originalUrl ?? ""),
       linkExternal: Boolean(id?.originalUrl && !id?.originalSlug),
       media: {
@@ -139,7 +142,7 @@ if (REVIEW_MODE) {
       direction: c.direction,
       result: c.result,
       href: c.publicCasePath,
-      barUrl: `profile.wethru.com${c.publicCasePath.replace(/\/$/, "")}`,
+      barUrl: `career.wethru.com${c.publicCasePath.replace(/\/$/, "")}`,
       linkExternal: false,
       media: {
         kind: "image",
@@ -153,8 +156,12 @@ if (REVIEW_MODE) {
 }
 const showCases = cards.length > 0;
 
-const site = Astro.site ?? new URL("https://profile.wethru.com");
-const canonicalUrl = new URL("/campus-v4/", site);
+// The public address of this page is the site root: career.wethru.com/ is
+// rewritten to /campus-v4/ in vercel.json, so the root is what visitors see and
+// what gets shared. Canonical and og:url therefore point at "/" — not at
+// /campus-v4/, which is the same document under an implementation-detail path.
+const site = Astro.site ?? new URL("https://career.wethru.com");
+const canonicalUrl = new URL("/", site);
 
 // SEO / share copy follows the consent gate. With zero approvals the cases
 // section does not render, so the shared-link title and description must not

@@ -20,7 +20,7 @@ npm run new:profile -- --slug hong-gildong --name "홍길동" \
 생성물:
 
 - `src/data/customers/hong-gildong.ts` — status는 `draft`로 시작
-- `public/images/customers/hong-gildong/` — 여기에 `profile.webp` 추가
+- `customer-assets/images/customers/hong-gildong/` — 여기에 `profile.webp` 추가
 
 ## 2. theme / layout 선택 (2분)
 
@@ -60,11 +60,11 @@ tagline 인터뷰 질문 (고객이 문장을 못 주는 경우):
 ## 4. 사진 (5분)
 
 - 원본은 `pictures/`에 두고 (gitignore — 커밋 금지), 웹용 webp만 git에 포함한다
-- `public/images/customers/{slug}/profile.webp` — 세로형(4:5) 권장, 800px 이상
+- `customer-assets/images/customers/{slug}/profile.webp` — 세로형(4:5) 권장, 800px 이상
 - 변환 (sharp — rotate로 EXIF 회전 보정, 폭 1200 제한, 품질 88):
 
 ```bash
-node -e "import('sharp').then(({default:s}) => s('pictures/원본.jpg').rotate().resize({width:1200,withoutEnlargement:true}).webp({quality:88}).toFile('public/images/customers/{slug}/profile.webp'))"
+node -e "import('sharp').then(({default:s}) => s('pictures/원본.jpg').rotate().resize({width:1200,withoutEnlargement:true}).webp({quality:88}).toFile('customer-assets/images/customers/{slug}/profile.webp'))"
 ```
 
 - 사진이 없으면 페이지는 모노그램 fallback으로 렌더링된다 (배포는 가능하지만 권장하지 않음)
@@ -98,5 +98,7 @@ npm run validate:customers && npm run build
 
 ## 6. 배포
 
-빌드 결과(`dist/`)를 배포한다. URL: `profile.wethru.com/profiles/{slug}/`
-커스텀 도메인 요청은 `docs/DOMAIN_STRATEGY.md` 절차를 따른다.
+고객 프로필은 공개 사이트(`career.wethru.com`)에 올라가지 않는다.
+`CUSTOMER_PROFILES=1 npm run build`로 로컬에서 빌드한 `dist/profiles/{slug}/`를
+고객에게 링크로 전달한다. `profile.wethru.com`은 별도 서비스이므로 납품 경로로
+쓰지 않는다. 커스텀 도메인 요청은 `docs/DOMAIN_STRATEGY.md` 절차를 따른다.

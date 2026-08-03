@@ -1,6 +1,42 @@
 ---
-import { publishedCustomers, draftCustomers } from "../data/customer-index";
-import { externalProfiles } from "../data/external-profiles";
+/**
+ * Operator dashboard — INTERNAL ONLY, and never built into a public deploy.
+ *
+ * This page lists every customer by real name and links straight at
+ * /profiles/{slug}/ plus the external customer deploys. That is exactly the
+ * material a public origin must not carry, so it is gated at BUILD time rather
+ * than at render time: getStaticPaths returns an empty array unless
+ * INTERNAL_DASHBOARD=1, and Astro then emits no HTML file for this route at all.
+ * A public build has no dist/index.html to leak — not a hidden one, not an empty
+ * one. career.wethru.com/ is served from /campus-v4/ by the rewrite in
+ * vercel.json, so the public root is the Campus landing, never this page.
+ *
+ * Why a rest-param route and not index.astro: a plain static page is always
+ * emitted, so there is no way to skip it. `[...dashboard]` is a dynamic route,
+ * so getStaticPaths decides whether it exists at all. Returning
+ * `{ params: { dashboard: undefined } }` maps back to "/", keeping the internal
+ * build's URL exactly what it has always been. Static routes take precedence
+ * over dynamic ones in Astro, and a dynamic route in a static build only ever
+ * emits the paths it returns — so this cannot shadow /campus-v4/, /campus/ or
+ * /profiles/{slug}/.
+ *
+ * The customer modules are pulled in with `await import()` INSIDE the gated
+ * branch instead of as top-level imports. On a public build this route never
+ * touches customer-index or external-profiles, so no name, slug, email, link or
+ * face-image reference can reach the build output through this file.
+ *
+ * The flag is deliberately NOT prefixed with PUBLIC_. Astro/Vite only inlines
+ * PUBLIC_* env vars into client-side code; a bare name stays build-time only and
+ * can never appear in a browser bundle.
+ *
+ *   npm run build                      → public: no dashboard, no customer list
+ *   INTERNAL_DASHBOARD=1 npm run build → internal: dashboard at /, as before
+ *
+ * Nothing is deleted or reduced here — the dashboard markup and the customer
+ * data are preserved in full for the internal build.
+ */
+import type { CustomerProfile } from "../types/profile";
+import type { ExternalProfile } from "../data/external-profiles";
 import { localize } from "../utils/i18n";
 import "../styles/global.css";
 import "../styles/profile-base.css";
@@ -10,7 +46,39 @@ import "../styles/themes/graphite-minimal.css";
 import "../styles/themes/cobalt-air.css";
 import "../styles/themes/terracotta-atelier.css";
 
-// Operator dashboard — internal showcase, not a public landing page.
+export async function getStaticPaths() {
+  // getStaticPaths runs in its own build scope — read the flag here. Same safe
+  // env read as campus-v4.astro (no dependency on @types/node globals).
+  const env = (
+    globalThis as { process?: { env?: Record<string, string | undefined> } }
+  ).process?.env;
+
+  // FAIL-CLOSED: anything other than an explicit "1" produces zero pages, and a
+  // normal `npm run build` — which is every Vercel deploy — takes this branch.
+  if (env?.INTERNAL_DASHBOARD !== "1") return [];
+
+  const [{ publishedCustomers, draftCustomers }, { externalProfiles }] =
+    await Promise.all([
+      import("../data/customer-index"),
+      import("../data/external-profiles"),
+    ]);
+
+  return [
+    {
+      // A rest param of `undefined` resolves to the route's own root → "/".
+      params: { dashboard: undefined },
+      props: { publishedCustomers, draftCustomers, externalProfiles },
+    },
+  ];
+}
+
+interface Props {
+  publishedCustomers: CustomerProfile[];
+  draftCustomers: CustomerProfile[];
+  externalProfiles: ExternalProfile[];
+}
+
+const { publishedCustomers, draftCustomers, externalProfiles } = Astro.props;
 ---
 
 <html lang="ko" data-theme="navy-black-white">

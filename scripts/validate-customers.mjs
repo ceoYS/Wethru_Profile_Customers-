@@ -19,7 +19,9 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const CUSTOMERS_DIR = path.join(ROOT, "src", "data", "customers");
-const PUBLIC_DIR = path.join(ROOT, "public");
+// Customer photos live outside publicDir: only a CUSTOMER_PROFILES=1 build copies
+// them into dist. The served path is unchanged, so resolve it from that root.
+const CUSTOMER_ASSETS_DIR = path.join(ROOT, "customer-assets");
 
 const THEMES = ["navy-black-white", "warm-editorial", "graphite-minimal", "cobalt-air", "terracotta-atelier"];
 const LAYOUTS = ["editorial-split", "dossier", "magazine", "minimal-card", "atelier-dossier"];
@@ -211,11 +213,11 @@ for (const entry of entries) {
       warn(file, "published without contact.email — CTA has no destination");
     }
     if (profile.person?.photo?.src) {
-      const photoPath = path.join(PUBLIC_DIR, profile.person.photo.src);
+      const photoPath = path.join(CUSTOMER_ASSETS_DIR, profile.person.photo.src);
       if (!(await fileExists(photoPath))) {
         warn(
           file,
-          `photo file missing: public${profile.person.photo.src} — page uses its configured missing-photo fallback`,
+          `photo file missing: customer-assets${profile.person.photo.src} — page uses its configured missing-photo fallback`,
         );
       }
     }

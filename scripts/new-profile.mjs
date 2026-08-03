@@ -8,7 +8,9 @@
  *
  * Creates:
  *   - src/data/customers/{slug}.ts   (draft profile, required fields stubbed)
- *   - public/images/customers/{slug}/ (drop profile.webp here)
+ *   - customer-assets/images/customers/{slug}/ (drop profile.webp here)
+ *     NOTE: customer-assets/ is outside publicDir on purpose — the photos are
+ *     copied into dist only by a CUSTOMER_PROFILES=1 build (astro.config.mjs).
  *
  * No index registration needed — src/data/customer-index.ts auto-collects
  * every file in src/data/customers/.
@@ -68,7 +70,7 @@ if (!LAYOUTS.includes(layout)) {
 }
 
 const dataFile = path.join(ROOT, "src", "data", "customers", `${slug}.ts`);
-const imageDir = path.join(ROOT, "public", "images", "customers", slug);
+const imageDir = path.join(ROOT, "customer-assets", "images", "customers", slug);
 
 if (existsSync(dataFile)) {
   fail(`customer already exists: src/data/customers/${slug}.ts`);
@@ -133,14 +135,14 @@ await writeFile(path.join(imageDir, ".gitkeep"), "", "utf8");
 console.log(`✔ created customer "${slug}" (status: draft)
 
   data file : src/data/customers/${slug}.ts
-  image dir : public/images/customers/${slug}/  ← profile.webp 추가
+  image dir : customer-assets/images/customers/${slug}/  ← profile.webp 추가
   theme     : ${theme}
   layout    : ${layout}
 
 next steps:
   1. src/data/customers/${slug}.ts 의 TODO 항목을 채운다
-  2. public/images/customers/${slug}/profile.webp 를 추가한다
+  2. customer-assets/images/customers/${slug}/profile.webp 를 추가한다
   3. npm run validate:customers   # 필수값/개인정보 검증
-  4. npm run dev                  # http://localhost:4321/profiles/${slug}/
+  4. npm run dev:customer         # http://localhost:4321/profiles/${slug}/
   5. 완성되면 status를 "published"로 변경한다
 `);

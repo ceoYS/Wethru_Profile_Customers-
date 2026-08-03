@@ -31,7 +31,7 @@ const noindex = !applyReady || REVIEW_MODE;
 const caseHref = (c: (typeof campusOffer.cases)[number]): string | undefined =>
   c.slug ? `/profiles/${c.slug}/` : (c.externalUrl ?? undefined);
 
-const site = Astro.site ?? new URL("https://profile.wethru.com");
+const site = Astro.site ?? new URL("https://career.wethru.com");
 const canonicalUrl = new URL("/campus/", site);
 
 const seoTitle = "WeThru Campus — 얼리버드 커리어 프로필";

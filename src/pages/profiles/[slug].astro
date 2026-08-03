@@ -12,10 +12,47 @@ import SkillsStrip from "../../components/profile/SkillsStrip.astro";
 import ExperienceTimeline from "../../components/profile/ExperienceTimeline.astro";
 import ProjectHighlights from "../../components/profile/ProjectHighlights.astro";
 import ContactCTA from "../../components/profile/ContactCTA.astro";
-import { customers } from "../../data/customer-index";
 import type { CustomerProfile } from "../../types/profile";
 
-export function getStaticPaths() {
+/**
+ * Real customer profiles — DELIVERY BUILD ONLY.
+ *
+ * Every page here carries a real person's name, face, employer, and (when
+ * showEmail/links are on) their email and social URLs. noindex keeps them out
+ * of search, but noindex is not access control: anyone holding the URL can
+ * still open the page. The only way a public origin cannot serve them is for
+ * the HTML to not exist, so the route is gated at BUILD time — getStaticPaths
+ * returns an empty array unless CUSTOMER_PROFILES=1 and Astro then emits no
+ * /profiles/* file at all.
+ *
+ * The customer index is pulled in with `await import()` INSIDE the gated branch
+ * rather than as a top-level import, so a public build never evaluates the
+ * customer modules from this route and no name, slug, email or photo path can
+ * reach the build output through it. The matching photos are gated by the same
+ * flag in astro.config.mjs (they live in customer-assets/, outside publicDir).
+ *
+ * The flag is deliberately NOT prefixed with PUBLIC_ — Astro/Vite only inlines
+ * PUBLIC_* env vars into client-side code, so a bare name stays build-time only.
+ *
+ *   npm run build                     → public career build: 0 profile pages
+ *   CUSTOMER_PROFILES=1 npm run build → delivery build: every profile, as before
+ *
+ * Nothing is deleted or reduced: the customer data and this page's markup are
+ * preserved in full for the delivery build.
+ */
+export async function getStaticPaths() {
+  // getStaticPaths runs in its own build scope — read the flag here. Same safe
+  // env read as campus-v4.astro (no dependency on @types/node globals).
+  const env = (
+    globalThis as { process?: { env?: Record<string, string | undefined> } }
+  ).process?.env;
+
+  // FAIL-CLOSED: anything other than an explicit "1" produces zero pages, and a
+  // normal `npm run build` — which is every public deploy — takes this branch.
+  if (env?.CUSTOMER_PROFILES !== "1") return [];
+
+  const { customers } = await import("../../data/customer-index");
+
   // Drafts are built too (for preview) but carry noindex — see ProfilePage.
   return customers.map((customer) => ({
     params: { slug: customer.slug },

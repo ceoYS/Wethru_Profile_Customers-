@@ -7,6 +7,9 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "dev:customer": "CUSTOMER_PROFILES=1 astro dev",
+    "build:customer": "CUSTOMER_PROFILES=1 astro build",
+    "build:internal": "INTERNAL_DASHBOARD=1 CUSTOMER_PROFILES=1 astro build",
     "preview": "astro preview",
     "check": "astro check",
     "new:profile": "node scripts/new-profile.mjs",

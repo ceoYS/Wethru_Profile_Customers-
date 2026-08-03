@@ -43,15 +43,20 @@ src/data/customers/{slug}.ts
 ## 이미지 위치
 
 ```
-public/images/customers/{slug}/profile.webp   # 웹 게시용 (git 포함)
-pictures/                                     # 원본 사진 (gitignore — 절대 커밋 금지)
-private/customers/{slug}/source/              # 이력서 등 원본 PDF (gitignore — 절대 커밋 금지)
+customer-assets/images/customers/{slug}/profile.webp   # 납품용 (git 포함, publicDir 밖)
+pictures/                                              # 원본 사진 (gitignore — 절대 커밋 금지)
+private/customers/{slug}/source/                       # 이력서 등 원본 PDF (gitignore — 절대 커밋 금지)
 ```
+
+`customer-assets/`는 `public/` 밖에 있으므로 기본 빌드에서는 `dist`에 복사되지 않습니다.
+`CUSTOMER_PROFILES=1` 빌드(`npm run build:customer`)에서만 `dist/images/customers/`로
+복사됩니다 (`astro.config.mjs`의 `wethru:customer-assets` 통합). 고객 얼굴 사진이 공개
+배포에 섞이지 않게 하기 위한 장치이며, 납품 빌드에서의 URL은 그대로입니다.
 
 원본 → webp 변환 (sharp, devDependency):
 
 ```bash
-node -e "import('sharp').then(({default:s}) => s('pictures/원본.jpg').rotate().resize({width:1200,withoutEnlargement:true}).webp({quality:88}).toFile('public/images/customers/{slug}/profile.webp'))"
+node -e "import('sharp').then(({default:s}) => s('pictures/원본.jpg').rotate().resize({width:1200,withoutEnlargement:true}).webp({quality:88}).toFile('customer-assets/images/customers/{slug}/profile.webp'))"
 ```
 
 사진이 없는 동안 페이지는 모노그램 fallback으로 렌더링됩니다 (깨진 이미지는 표시되지 않음).
@@ -80,9 +85,18 @@ npm run domains:map          # 도메인 매핑 검증
 
 ## 배포
 
-초기에는 `profile.wethru.com/profiles/{slug}/` 구조로 운영합니다.
-빌드 결과물은 `dist/`. 커스텀 도메인 연결은 `docs/DOMAIN_STRATEGY.md`를 따릅니다
-(도메인 매핑: `src/data/domain-map.ts`, 실제 DNS 연결은 아직 하지 않음).
+이 저장소가 배포하는 공개 사이트는 **`career.wethru.com` 하나뿐**입니다
+(Vercel 프로젝트 `wethru-profile-customers`, Build Command `npm run build`).
+공개 빌드에는 고객 프로필도, 원본 고객 사진도 들어가지 않습니다.
+
+`profile.wethru.com`은 **별도로 운영 중인 다른 WeThru 서비스**입니다.
+이 저장소의 배포·canonical·도메인 매핑 대상이 아니며, 여기서 건드리지 않습니다.
+
+고객 프로필(`/profiles/{slug}/`)은 공개 배포물이 아니라 **링크로 전달하는 납품물**입니다.
+`CUSTOMER_PROFILES=1 npm run build`로 로컬에서만 만들고, 이 플래그는 Vercel
+Production/Preview에 설정하지 않습니다. 커스텀 도메인 연결은
+`docs/DOMAIN_STRATEGY.md`를 따릅니다 (도메인 매핑: `src/data/domain-map.ts`,
+실제 DNS 연결은 아직 하지 않음).
 
 ## 개인정보 원칙
 

@@ -44,7 +44,11 @@ export interface ProfileSeo {
 }
 
 export interface ProfilePhoto {
-  /** Absolute path under /public, e.g. "/images/customers/bae-jian/profile.webp". */
+  /**
+   * Served path, e.g. "/images/customers/bae-jian/profile.webp". The file itself
+   * lives in customer-assets/ (outside publicDir) and only a CUSTOMER_PROFILES=1
+   * build copies it into dist — see astro.config.mjs.
+   */
   src: string;
   /** Required. The validator fails the build when missing. */
   alt: string;

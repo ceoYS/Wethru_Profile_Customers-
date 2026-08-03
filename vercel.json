@@ -3,5 +3,6 @@
   "redirects": [
     { "source": "/campus", "destination": "/campus-v4/", "permanent": true },
     { "source": "/campus/", "destination": "/campus-v4/", "permanent": true }
-  ]
+  ],
+  "rewrites": [{ "source": "/", "destination": "/campus-v4/" }]
 }
