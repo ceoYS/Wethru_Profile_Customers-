@@ -35,7 +35,6 @@ const {
   ipPreview,
   process,
   boundaries,
-  reviewNote,
   faqs,
   applyFormUrl,
 } = campusV4Offer;
@@ -566,15 +565,11 @@ const seoDescription = showCases
         <section class="v4-section v4-section--tint" aria-label="포함하지 않는 범위">
           <div class="v4-wrap">
             <div class="v4-section__head">
-              <h2 class="v4-title">미리 분명히 해두는 범위</h2>
-              <p class="v4-lead">
-                과장하지 않기 위해, 이 상품이 하지 않는 것을 먼저 적어둡니다.
-              </p>
+              <h2 class="v4-title">해당 상품의 제공 범위</h2>
             </div>
             <ul class="v4-boundaries">
               {boundaries.map((b) => <li>{b}</li>)}
             </ul>
-            <p class="v4-note">{reviewNote}</p>
           </div>
         </section>
 

@@ -67,7 +67,7 @@ export const campusV4AnonCases: CampusV4AnonCase[] = [
   },
   {
     id: "case-02",
-    title: "데이터 기반 마케팅 직무 지원자",
+    title: "데이터 기반 컨설턴트 직무 지원자",
     short: "지원자 B",
     role: "Data-Driven Marketing Strategist",
     blurb: "데이터와 자동화로 마케팅 운영 구조를 설계하는 전략가 프로필.",
